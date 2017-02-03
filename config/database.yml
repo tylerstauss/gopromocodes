@@ -1,0 +1,26 @@
+development:
+  adapter: postgresql
+  host: localhost
+  username:
+  password:
+  database: gopromocodes_dev
+  pool: 5
+  timeout: 5000
+
+test:
+  adapter: postgresql
+  host: localhost
+  username:
+  password:
+  database: gopromocodes
+  pool: 5
+  timeout: 5000
+
+  production:
+  adapter: postgresql
+  host: localhost
+  username:
+  password:
+  database: gopromocodes
+  pool: 5
+  timeout: 5000
