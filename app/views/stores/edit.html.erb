@@ -1,0 +1,40 @@
+<h1>Edit Store</h1>
+
+<%= form_for(@store) do |f| %>
+	<p>
+		<%= f.label :name %>
+		<%= f.text_field :name %>
+	</p>
+	<p>
+		<%= f.label :url %>
+		<%= f.text_field :url %>
+	</p>
+
+	<p>
+		<%= f.label :description %>
+		<%= f.text_area :description %>
+	</p>
+
+		<p>
+		<%= f.label :slug %>
+		<%= f.text_field :slug %>
+	</p>
+
+	<p>
+		<%= f.label :active %>
+		<%= f.radio_button(:active, "active", checked: true) %>
+	</p>
+
+	<p>
+		<%= f.label :user_submit %>
+		<%= f.radio_button(:user_submit, "user submit", checked: false) %>
+	</p>
+
+	<p>
+		<%= f.label :category %>
+		<%= f.collection_select(:category_id, Category.all, :id, :name) %>
+	</p>
+
+
+	<%= f.submit %>
+<% end %>
