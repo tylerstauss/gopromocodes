@@ -1,2 +1,18 @@
 <h1><%= @store.name %></h1>
 <p><%= @store.description %></p>
+
+<h2>Current Codes</h2>
+<% @promo_codes.each do |promo_code| %>
+	<div class="single-coupon">
+		<p><%= promo_code.title %></p>
+		<p><%= promo_code.description %></p>
+		<p><%= promo_code.expires %></p>
+		<p><% if promo_code.code %>
+			<%= promo_code.code %>
+			 <% else %>
+			<p>No Code Needed</p>
+			 <% end %>
+		</p>
+	</div>
+
+<% end %>

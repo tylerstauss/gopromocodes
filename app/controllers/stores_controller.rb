@@ -16,6 +16,7 @@ class StoresController < ApplicationController
 
 	def show
 		@store = Store.find(params[:id])
+		@promo_codes = @store.promo_codes
 	end
 
 	def edit
