@@ -1,1 +1,27 @@
-Homepage.
+<div class="row homepage-content">
+	<div class="nine columns coupon-list">
+		<% @promo_codes.each do |promo_code| %>
+			<div>
+				<h1><%= promo_code.title %></h1>
+				<p><%= promo_code.description %></p>
+				<p><%= promo_code.expires %></p>
+				<p><% if promo_code.code %>
+						<%= promo_code.code %>
+					 <% else %>
+						<p>No Code Needed</p>
+	 					<% end %>
+ 				</p>
+			</div>
+		<% end %>
+
+		
+	</div>
+	<div class="three columns category-list">
+		<ul>
+			<% @categories.each do |category| %>
+				<li><%= link_to category.name, category_path(category) %></li>
+			<% end %>
+
+		</ul>
+	</div>
+</div>
