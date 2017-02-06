@@ -1,5 +1,8 @@
+
+
 class PromoCodesController < ApplicationController
 
+require 'uri'
 	
 	def index
 		@promo_codes = PromoCode.all
@@ -18,6 +21,10 @@ class PromoCodesController < ApplicationController
 
 	def show
 		@promo_code = PromoCode.find(params[:id])
+		vl_api = '2629ea091f62c185fac384857620742c'
+		@link =  CGI.escape(@promo_code.link)
+		p @link
+		redirect_to "http://redirect.viglink.com/?u=#{@link}&key=#{vl_api}"
 	end
 
 	def edit
