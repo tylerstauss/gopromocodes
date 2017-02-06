@@ -1,3 +1,5 @@
+/*  HEADER */
+
 #logo {
 	margin: 20px; 
 }
@@ -27,4 +29,31 @@ div#blue-banner h3 {
 }
 div#blue-banner h3 span.highlight {
 	color: #abe1fa;
+}
+
+#top-menu {
+	background-color: #25475a;
+	min-height: 35px;
+
+}
+
+#top-menu div.menu-item {
+	margin: 5px;
+	text-align: center;
+}
+
+#top-menu div#hover {
+	background-color:#1a3748;
+}
+
+#top-menu div a {
+	font:15px 'MyriadProRegular'; 
+	color:#fff; 
+	text-decoration:none;
+}
+
+/*  HOMEPAGE  */
+
+div.homepage-content {
+	/*margin: 10px;*/
 }
