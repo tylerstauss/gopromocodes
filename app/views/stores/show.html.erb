@@ -4,7 +4,7 @@
 <h2>Current Codes</h2>
 <% @promo_codes.each do |promo_code| %>
 	<div class="single-coupon">
-		<p><%= promo_code.title %></p>
+		<p><%= link_to promo_code.title, promo_code_path(promo_code) %></p>
 		<p><%= promo_code.description %></p>
 		<p><%= promo_code.expires %></p>
 		<p><% if promo_code.code %>
