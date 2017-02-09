@@ -1,0 +1,29 @@
+<div class="row main-content">
+	<div class="eight columns coupon-list">
+		<h1>About GoPromoCodes</h1>
+		<p>GoPromoCodes.com is a simple, easy to use online shopping website that offers thousands of promotional codes and deals on over 3,500 unique stores, including big name stores such as Target, AT&T, Macy's, and Travelocity. Codes are rated and ranked by popularity to ensure users get easy access to the best discounts. Our stores feature a wide range of products-- everything from auto insurance to flowers to computer software. Go online today and start saving!</p>
+		 
+		<p>We have over 100 different categories of coupons and add dozens of new coupons each day to the site. We are a leading destination for holiday shopping coupons, especially on Black Friday and Cyber Monday. Users can save up to 50% just by using a promo code at GoPromoCodes.com. The average coupon provides a 15-20% discount on your order.
+		 
+		<p>Many of our retailer pages contain blog entries written by the owners and caretakers of this site. Reading these blogs can provide you with special insight into the coupons and discounting trends of certain retailers. We also use these blog posts to help bring to light special or unusual sales or discounts that you may want to take advantage of.</p>
+		 
+		<p>If you are a retailer with coupons featured on GoPromoCodes.com and you have a question for us, the best way to reach us is through the email address provided via the affiliate network that we are working with. If that doesn't work, please contact us using our online form. If you would like to submit a new coupon for your page, you can do so by searching for your store in the search bar at the top of the website. Then, scroll down your retailer's page and enter the information for your new coupon in the fields provided. GoPromoCodes.com will approve the deal prior to it going live on the site.</p>
+		 
+		<p>For all of GoPromoCodes.com users, because we allow users and retailers to submit coupons to our site, we cannot guarantee the accuracy or validity of all of the coupon codes listed at GoPromoCodes.com. We try our best to make sure that only valid codes are listed on each retailer page, but it is a nearly impossible job for 2 people to maintain 3,500 retailer pages and the hundreds of new and expiring coupons each day, so please bear with us. If you notice that a coupon is expired, please let us know. If you have a new coupon that we don't have listed, pretty pretty please share it! Thanks!</p>
+		 
+		<p>We have also started writing informative articles on a wide range of subjects, not always about coupons or savings. Mostly just to keep our writing abilities and because some people do find them interesting. If you are here just for saving money, which a majority of people are, then you can ignore these articles. You can view the GoPromoCodes.com sitemap by clicking this link. Also, please be sure to check out our terms and conditions as well as our privacy policy.</p>
+		 
+		<p>Thank you!</p>
+		<p>GoPromoCodes.com</p>
+	</div>
+		<div class="four columns right-side-bar">
+		<%= render partial: 'shared/top_stores', locals: {
+			top_stores: @top_stores 
+		} %>	
+		<%= render partial: 'shared/email_signup' %>
+		<%= render partial: 'shared/categories', locals: {
+			categories: @categories 
+		} %>
+	
+	</div>
+</div>

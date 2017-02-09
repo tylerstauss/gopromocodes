@@ -1,18 +1,26 @@
-<h1><%= @store.name %></h1>
-<p><%= @store.description %></p>
-
-<h2>Current Codes</h2>
-<% @promo_codes.each do |promo_code| %>
-	<div class="single-coupon">
-		<p><%= link_to promo_code.title, promo_code_path(promo_code) %></p>
-		<p><%= promo_code.description %></p>
-		<p><%= promo_code.expires %></p>
-		<p><% if promo_code.code %>
-			<%= promo_code.code %>
-			 <% else %>
-			<p>No Code Needed</p>
-			 <% end %>
-		</p>
+<div class="row main-content">
+	<div class="eight columns coupon-list">
+		<div class="store-info">
+			<h1><%= @store.name %> Promo Codes & Discounts</h1>
+			<h2><%= @store.name %> Promotion Codes and <%= @store.name %> Coupons for <%= Date.today.strftime('%a, %d %b %Y') %></h2>
+			<p class="store-description"><%= @store.description %></p>
+		</div>
+	
+<div class="red-banner">
+	<h2>Current Codes</h2>
+</div>
+		<% @promo_codes.each do |promo_code| %>
+		<%= render partial: 'shared/single_coupon', locals: {promo_code: promo_code} %>
+		<% end %>
 	</div>
-
-<% end %>
+		<div class="four columns right-side-bar">
+		<%= render partial: 'shared/top_stores', locals: {
+			top_stores: @top_stores 
+		} %>	
+		<%= render partial: 'shared/email_signup' %>
+		<%= render partial: 'shared/categories', locals: {
+			categories: @categories 
+		} %>
+	
+	</div>
+</div>

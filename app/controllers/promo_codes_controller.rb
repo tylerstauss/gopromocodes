@@ -6,6 +6,8 @@ require 'uri'
 	
 	def index
 		@promo_codes = PromoCode.all
+						@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def new
@@ -15,6 +17,8 @@ require 'uri'
 	def create
 		@promo_code = PromoCode.new(promo_code_params)
 	  @promo_code.save
+	  				@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
 
 	  redirect_to @promo_code
 	end
@@ -24,11 +28,15 @@ require 'uri'
 		vl_api = '2629ea091f62c185fac384857620742c'
 		@link =  CGI.escape(@promo_code.link)
 		p @link
+						@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
 		redirect_to "http://redirect.viglink.com/?u=#{@link}&key=#{vl_api}"
 	end
 
 	def edit
 		@promo_code = PromoCode.find(params[:id])
+						@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def update
