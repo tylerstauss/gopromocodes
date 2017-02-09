@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
   # Static
   get 'about', to: 'static#about'
+  get 'contact', to: 'static#contact'	
+  get 'search', to: 'static#search'		
 
   root :to => 'static#index'
 end
