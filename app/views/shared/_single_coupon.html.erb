@@ -1,0 +1,13 @@
+<div class="single-coupon">
+	<p class="coupon-title"><span class="coupon-store-name"><%= promo_code.store.name %>: </span><%= link_to promo_code.title, promo_code.link %></p>
+	<p class="coupon-description"><%= promo_code.description %></p>
+	<p class="coupon-expiration"><%= promo_code.expires %></p>
+	<p class="promo-code">
+		<% if promo_code.code %>
+			Use code: <%= link_to promo_code.code, promo_code.link %>
+		<% else %>
+			<p>No Code Needed</p>
+		<% end %>
+	</p>
+	<p>See more <%= link_to promo_code.store.name + "promo codes", store_path(promo_code.store) %></p>
+</div>

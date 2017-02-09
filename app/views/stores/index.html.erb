@@ -1,5 +1,21 @@
-<h1>Stores</h1>
+<div class="row main-content">
+	<div class="eight columns coupon-list">
 
-<% @stores.each do |store| %>
-	<%= link_to store.name, store_path(store) %>
-<% end %>
+		<h1>Stores</h1>
+
+		<% @stores.each do |store| %>
+			<%= link_to store.name, store_path(store) %>
+		<% end %>
+	</div>
+
+	<div class="four columns right-side-bar">
+		<%= render partial: 'shared/top_stores', locals: {
+			top_stores: @top_stores 
+		} %>	
+		<%= render partial: 'shared/email_signup' %>
+		<%= render partial: 'shared/categories', locals: {
+			categories: @categories 
+		} %>
+	
+	</div>
+</div>

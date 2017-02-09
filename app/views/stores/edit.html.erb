@@ -22,17 +22,22 @@
 
 	<p>
 		<%= f.label :active %>
-		<%= f.radio_button(:active, "active", checked: true) %>
+		<%= f.radio_button(:active, "active", checked: @store.active) %>
 	</p>
 
 	<p>
 		<%= f.label :user_submit %>
-		<%= f.radio_button(:user_submit, "user submit", checked: false) %>
+		<%= f.radio_button(:user_submit, "user submit", checked: @store.user_submit) %>
 	</p>
 
 	<p>
 		<%= f.label :category %>
 		<%= f.collection_select(:category_id, Category.all, :id, :name) %>
+	</p>
+
+		<p>
+		<%= f.label :top_store %>
+		<%= f.radio_button(:top_store, "Top Store?", checked: @store.top_store) %>
 	</p>
 
 

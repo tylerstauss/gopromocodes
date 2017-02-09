@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   resources :promo_codes
 
 
+  # Static
+  get 'about', to: 'static#about'
 
   root :to => 'static#index'
 end

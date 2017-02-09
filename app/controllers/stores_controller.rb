@@ -2,6 +2,8 @@ class StoresController < ApplicationController
 
 	def index
 		@stores = Store.all
+				@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def new
@@ -11,16 +13,22 @@ class StoresController < ApplicationController
 	def create
 		@store = Store.new(store_params)
 	  @store.save
+	  		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
 	  redirect_to @store
 	end
 
 	def show
 		@store = Store.find(params[:id])
 		@promo_codes = @store.promo_codes
+				@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def edit
 		@store = Store.find(params[:id])
+				@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def update
@@ -34,7 +42,7 @@ class StoresController < ApplicationController
 
 private
   def store_params
-    params.require(:store).permit(:name, :description, :url, :meta_keywords, :meta_description, :meta_title, :active, :user_submit, :category_id, :slug)
+    params.require(:store).permit(:name, :description, :url, :meta_keywords, :meta_description, :meta_title, :active, :user_submit, :category_id, :slug, :top_store)
   end
 	
 end
