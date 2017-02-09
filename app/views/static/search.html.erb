@@ -1,0 +1,24 @@
+<div class="row main-content">
+	<div class="eight columns coupon-list">
+		<h1>Search Results for: <%= @search_term %></h1>
+		<h2>Stores that match your search</h2>
+		<ul>
+		<% @stores.each do |store| %>
+			<li><%= link_to store.name, store_path(store) %></li>
+		<% end %>
+		</ul>
+		<h2>Promo Codes that match your search</h2>
+		<% @promo_codes.each do |promo_code| %>
+			<%= render partial: 'shared/single_coupon', locals: {promo_code: promo_code} %>
+		<% end %>
+	</div>
+		<div class="four columns right-side-bar">
+		<%= render partial: 'shared/top_stores', locals: {
+			top_stores: @top_stores 
+		} %>	
+		<%= render partial: 'shared/email_signup' %>
+		<%= render partial: 'shared/categories', locals: {
+			categories: @categories 
+		} %>
+	</div>
+</div>
