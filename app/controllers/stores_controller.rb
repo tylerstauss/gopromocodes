@@ -1,7 +1,7 @@
 class StoresController < ApplicationController
 
 	def index
-		@stores = Store.all
+		 @stores = Store.search(params[:term], params[:page])
 				@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
