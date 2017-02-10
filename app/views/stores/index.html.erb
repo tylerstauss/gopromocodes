@@ -1,11 +1,15 @@
 <div class="row main-content">
-	<div class="eight columns coupon-list">
+	<div class="eight columns">
+	<div class="red-banner"> 
+		<h1>Promo Codes by Stores</h1>
+	</div>
 
-		<h1>Stores</h1>
-
+	<ul class="single-coupon">
 		<% @stores.each do |store| %>
-			<%= link_to store.name, store_path(store) %>
+		<li><%= link_to store.name, store_path(store) %></li>
 		<% end %>
+	</ul>
+	<%= will_paginate @stores %>
 	</div>
 
 	<div class="four columns right-side-bar">

@@ -11,4 +11,12 @@ class Store < ActiveRecord::Base
    slug
    p slug
   end
+
+  def self.search(term, page)
+    if term
+      where('name LIKE ?', "%#{term}%").paginate(page: page, per_page: 50).order('name ASC')
+    else
+      paginate(page: page, per_page: 50).order('name ASC') 
+    end
+  end
 end

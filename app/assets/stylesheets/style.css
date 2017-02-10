@@ -89,16 +89,14 @@ div.categories ul li {
 
 div.categories li {
 	border-bottom: 1px solid #ECECEC;
-	padding: 5px 0 5px 15px;
 	margin-bottom: 1px;
 }
 
-div.categories a li{
+div.categories li a{
 	text-decoration: none;
 	font: normal 16px "Trebuchet MS", Arial, Helvetica, sans-serif;
 	color: #0B3C57;
-	padding-left: 15px;
-	padding-right: 150px;
+	padding: 10px 150px 10px 15px;
 }
 
 div.categories li a:before{
@@ -110,9 +108,7 @@ div.categories li a:hover{
 }
 
 div.categories ul li:hover {
-	background-color: #FF0000;
-	background-image:-moz-linear-gradient(0% 100% 90deg,#FF0000, #C9878B);
-	background-image:-webkit-gradient(linear, 0% 100%, 0% 0%, from(#FF0000), to(#C9878B));
+	background-color: #1a3748;
 	color: white;
 }
 
