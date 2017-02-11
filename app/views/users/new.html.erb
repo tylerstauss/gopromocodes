@@ -1,0 +1,22 @@
+<section id="sign-up">
+		  <%= form_for @user do |f| %> 
+	      <table>
+	        <tr>
+	          <td><%= f.label :email %></td>
+	          <td><%= f.text_field :email, :required => true %></td>
+	        </tr>
+	        <tr>
+	          <td><%= f.label :username %></td>
+	          <td><%= f.text_field :username, :required => true%></td>
+	        </tr>
+	        <tr>
+	          <td><%= f.label :password %></td>
+	          <td><%= f.password_field :password, :required => true %></td>
+	        </tr>
+	        <tr>
+	          <td></td>
+	          <td> <%= f.submit "Register" %></td>
+	        </tr>
+	      </table>
+      <% end %>
+  </section>
