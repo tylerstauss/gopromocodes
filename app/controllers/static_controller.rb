@@ -24,5 +24,10 @@ class StaticController < ApplicationController
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
+
+	def grocery
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+	end
 	
 end

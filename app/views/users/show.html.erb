@@ -1,0 +1,20 @@
+<div class="row main-content">
+	<div class="eight columns coupon-list">
+		<p>Username: <%= @user.username %></p>
+		<p>Email: <%= @user.email %></p>
+		<p>Member Since: <%= @user.created_at %></p>
+		<% if @user.admin %>
+			<p>Admin: <%= @user.admin %></p>
+		<% end %>
+		</div>
+		<div class="four columns right-side-bar">
+		<%= render partial: 'shared/top_stores', locals: {
+			top_stores: @top_stores 
+		} %>	
+		<%= render partial: 'shared/email_signup' %>
+		<%= render partial: 'shared/categories', locals: {
+			categories: @categories 
+		} %>
+	
+	</div>
+</div>

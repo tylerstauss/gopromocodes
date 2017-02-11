@@ -94,12 +94,12 @@ div.categories li {
 
 div.categories li a{
 	text-decoration: none;
-	font: normal 16px "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font: normal 14px "Trebuchet MS", Arial, Helvetica, sans-serif;
 	color: #0B3C57;
 	padding: 10px 150px 10px 15px;
 }
 
-div.categories li a:before{
+div.categories li a:before {
 	content: '< ';
 }
 
@@ -275,6 +275,11 @@ div.bottom-footer {
 	border-top: 1px solid #1a3748;
 	color: #d8d7d7;
 	padding: 20px;
+}
+
+div.bottom-footer li a {
+	font: normal 14px "Trebuchet MS", Arial, Helvetica, sans-serif;
+	color: #d8d7d7;
 }
 
 div ul.social_icons {
