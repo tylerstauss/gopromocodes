@@ -20,7 +20,12 @@ csv = CSV.parse(csv_text.gsub('/\r/', ''), :headers => false, :encoding => 'ISO-
 csv.each do |row|
 	user_submit = true if row[6] == 0
 	user_submit = false if row[6] == 1
-  Store.create(name: row[0], url: row[1], description: row[2], meta_title: row[5], meta_description: row[4], meta_keywords: row[3], slug: row[7].downcase, user_submit: user_submit)
+	if row[8] == 'yes'
+		top_store = true 
+	else
+		top_store = false
+	end
+  Store.create(name: row[0], url: row[1], description: row[2], meta_title: row[5], meta_description: row[4], meta_keywords: row[3], slug: row[7].downcase, old_slug: row[7], user_submit: user_submit, top_store: top_store, search_terms: row[9] )
 end
 
 
