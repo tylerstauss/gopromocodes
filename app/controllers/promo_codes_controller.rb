@@ -35,7 +35,7 @@ require 'uri'
 
 	def edit
 		@promo_code = PromoCode.find(params[:id])
-						@categories = Category.order('name ASC')
+		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 

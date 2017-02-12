@@ -12,5 +12,11 @@ Rails.application.routes.draw do
   get 'search', to: 'static#search'		
   get 'grocery-coupons', to: 'static#grocery'
 
+  # Sessions
+  match 'sign-out', to: 'sessions#destroy', via: [ :get, :post], as: :signout
+  get '/sign-in', :to => 'sessions#new', as: :signin
+  get '/sign-up', :to => 'users#new', as: :signup
+  post '/sessions', :to => 'sessions#create'
+
   root :to => 'static#index'
 end

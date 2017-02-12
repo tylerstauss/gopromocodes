@@ -8,6 +8,8 @@ class UsersController < ApplicationController
 
 	def new
 		@user = User.new
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def create
