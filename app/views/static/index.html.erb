@@ -8,6 +8,7 @@
 		<% end %>
 	</div>
 	<div class="four columns right-side-bar">
+		<%= render partial: 'shared/user_login' %>
 		<%= render partial: 'shared/top_stores', locals: {
 			top_stores: @top_stores 
 		} %>	
