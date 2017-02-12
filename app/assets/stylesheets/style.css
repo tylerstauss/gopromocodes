@@ -71,7 +71,7 @@ div.coupon-list {
 	font: bold 12px "Trebuchet MS", Arial, Helvetica, sans-serif;
 }
 
-div.categories, div.top-stores {
+div.side-bar-element {
 	border: 10px solid #ECECEC;
 	background-color: #ECECEC;
 	-webkit-border-radius: 5px;
@@ -80,34 +80,42 @@ div.categories, div.top-stores {
 	margin-bottom: 20px;
 }
 
-div.categories ul li {
+div.side-bar-element p {
+	background-color: white;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding: 10px 15px;
+}
+
+div.side-bar-element ul li {
 	background-color: white;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 }
 
-div.categories li {
+div.side-bar-element li {
 	border-bottom: 1px solid #ECECEC;
 	margin-bottom: 1px;
 }
 
-div.categories li a{
+div.side-bar-element li a{
 	text-decoration: none;
 	font: normal 14px "Trebuchet MS", Arial, Helvetica, sans-serif;
 	color: #0B3C57;
 	padding: 10px 150px 10px 15px;
 }
 
-div.categories li a:before {
+div.side-bar-element li a:before {
 	content: '< ';
 }
 
-div.categories li a:hover{
+div.side-bar-element li a:hover{
 	color: white;
 }
 
-div.categories ul li:hover {
+div.side-bar-element ul li:hover {
 	background-color: #1a3748;
 	color: white;
 }
@@ -143,7 +151,7 @@ div.email-signup form#email-signup {
 	float: left;
 }
 
-.top-stores table{
+.side-bar-element table{
 	background-color: white;
 	padding: 10px;
 	width: 100%;
@@ -152,7 +160,7 @@ div.email-signup form#email-signup {
 	border-radius: 5px;
 }
 
-.top-stores td {
+.side-bar-element td {
 	padding: 10px;
 	margin: 0 auto;
 	text-align: center;
@@ -160,15 +168,15 @@ div.email-signup form#email-signup {
 	border: 1px solid #ECECEC;
 }
 
-.top-stores td {
+.side-bar-element td {
 	font: normal 14px "Trebuchet MS", Arial, Helvetica, sans-serif;
 }
 
-.top-stores a{
+.side-bar-element a{
 	color: #0B3C57;
 }
 
-.top-stores a:hover {
+.side-bar-element a:hover {
 	color: #ff0000;
 	text-decoration: underline;
 }
@@ -257,7 +265,7 @@ div.store-info h1{
 	padding: 10px;
 
 }
-div.store-info h2, div.top-stores h2 {
+div.side-bar-element h2 {
 	color: #25475A;
 	padding: 10px;
 }

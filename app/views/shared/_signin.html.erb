@@ -1,0 +1,19 @@
+
+<%= form_for(:session, url: sessions_path(@user)) do |f| %>
+<table>
+<tr>
+  <td><%= f.label :email %></td>
+  <td><%= f.text_field :email, :required => true  %></td>
+</tr>
+<tr>
+  <td><%= f.label :password %></td>
+  <td><%= f.password_field :password, :required => true  %></td>
+</tr>
+<tr>
+  <td></td>
+  <td> <%= f.submit "Sign in" %></td>
+</tr>
+</table>
+<% end %>
+
+
