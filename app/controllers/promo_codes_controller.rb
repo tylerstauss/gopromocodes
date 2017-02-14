@@ -11,6 +11,7 @@ require 'uri'
 	end
 
 	def new
+		authenticate_admin!
 		@promo_code = PromoCode.new
 	end
 
@@ -34,6 +35,7 @@ require 'uri'
 	end
 
 	def edit
+		authenticate_admin!
 		@promo_code = PromoCode.find(params[:id])
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)

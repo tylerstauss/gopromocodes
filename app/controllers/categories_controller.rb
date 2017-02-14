@@ -1,12 +1,13 @@
 class CategoriesController < ApplicationController
 
 	def index
-				@categories = Category.order('name ASC')
+		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 
 	end
 
 	def new
+		authenticate_admin!
 		@category = Category.new
 	end
 
@@ -25,8 +26,9 @@ class CategoriesController < ApplicationController
 	end
 
 	def edit
+		authenticate_admin!
 		@category = Category.find(params[:id])
-								@categories = Category.order('name ASC')
+		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 

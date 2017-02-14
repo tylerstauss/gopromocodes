@@ -6,7 +6,7 @@
 		<% if @user.admin %>
 			<p>Admin: <%= @user.admin %></p>
 		<% end %>
-			<%= @current_user.username %>
+			<%= current_user.username %>
 		</div>
 		<div class="four columns right-side-bar">
 		<%= render partial: 'shared/top_stores', locals: {
