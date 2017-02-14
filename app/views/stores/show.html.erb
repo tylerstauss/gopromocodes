@@ -10,21 +10,14 @@
 			<p class="store-description"><%= @store.description %></p>
 		</div>
 	
-<div class="red-banner">
-	<h2>Current Codes</h2>
-</div>
+		<div class="red-banner">
+			<h2>Current Codes</h2>
+		</div>
 		<% @promo_codes.each do |promo_code| %>
 		<%= render partial: 'shared/single_coupon', locals: {promo_code: promo_code} %>
 		<% end %>
 	</div>
-		<div class="four columns right-side-bar">
-		<%= render partial: 'shared/top_stores', locals: {
-			top_stores: @top_stores 
-		} %>	
-		<%= render partial: 'shared/email_signup' %>
-		<%= render partial: 'shared/categories', locals: {
-			categories: @categories 
-		} %>
-	
+	<div class="four columns right-side-bar">
+		<%= render partial: 'shared/sidebar' %>
 	</div>
 </div>
