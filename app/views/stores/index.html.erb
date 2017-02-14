@@ -12,14 +12,7 @@
 	<%= will_paginate @stores %>
 	</div>
 
-	<div class="four columns right-side-bar">
-		<%= render partial: 'shared/top_stores', locals: {
-			top_stores: @top_stores 
-		} %>	
-		<%= render partial: 'shared/email_signup' %>
-		<%= render partial: 'shared/categories', locals: {
-			categories: @categories 
-		} %>
-	
-	</div>
+		<div class="four columns right-side-bar">
+			<%= render partial: 'shared/sidebar' %>
+		</div>
 </div>

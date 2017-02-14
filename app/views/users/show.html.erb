@@ -3,19 +3,12 @@
 		<p>Username: <%= @user.username %></p>
 		<p>Email: <%= @user.email %></p>
 		<p>Member Since: <%= @user.created_at %></p>
-		<% if @user.admin %>
+		<% if is_admin? %>
 			<p>Admin: <%= @user.admin %></p>
 		<% end %>
-			<%= current_user.username %>
 		</div>
 		<div class="four columns right-side-bar">
-		<%= render partial: 'shared/top_stores', locals: {
-			top_stores: @top_stores 
-		} %>	
-		<%= render partial: 'shared/email_signup' %>
-		<%= render partial: 'shared/categories', locals: {
-			categories: @categories 
-		} %>
-
+			<%= render partial: 'shared/sidebar' %>
+		</div>
 	</div>
 </div>
