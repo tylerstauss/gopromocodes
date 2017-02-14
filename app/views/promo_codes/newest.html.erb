@@ -1,0 +1,21 @@
+<div class="row main-content">
+	<div class="eight columns coupon-list">
+		<div class="red-banner">
+			<h1>Popular Promo Codes and Coupon Codes</h1>
+		</div>
+		<% @promo_codes.each do |promo_code| %>
+			<%= render partial: 'shared/single_coupon', locals: {promo_code: promo_code} %>
+		<% end %>
+	</div>
+	<div class="four columns right-side-bar">
+		<%= render partial: 'shared/user_login' %>
+		<%= render partial: 'shared/top_stores', locals: {
+			top_stores: @top_stores 
+		} %>	
+		<%= render partial: 'shared/email_signup' %>
+		<%= render partial: 'shared/categories', locals: {
+			categories: @categories 
+		} %>
+	
+	</div>
+</div>

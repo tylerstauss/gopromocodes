@@ -2,7 +2,7 @@
 <div class="row main-content">
 	<div class="eight columns coupon-list">
 		<div class="store-info">
-			<% if current_user %>
+			<% if is_admin? %>
 				<p><%= link_to "Edit Store", edit_store_path(@store) %></p>
 			<% end %>
 			<h1><%= @store.name %> Promo Codes & Discounts</h1>

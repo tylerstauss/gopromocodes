@@ -1,2 +1,30 @@
-<h1><%= @category.name %></h1>
-	<p><%= @category.description %></p>
+<% canonical(category_path(@category)) %>
+<div class="row main-content">
+	<div class="eight columns coupon-list">
+		<div class="store-info">
+			<% if is_admin? %>
+				<p><%= link_to "Edit Category", edit_category_path(@category) %></p>
+			<% end %>
+			<h1><%= @category.name %> Promo Codes & Discounts</h1>
+			<h2><%= @category.name %> Promotion Codes and <%= @category.name %> Coupons for <%= Date.today.strftime('%a, %d %b %Y') %></h2>
+			<p class="store-description"><%= @category.description %></p>
+		</div>
+	
+<div class="red-banner">
+	<h2>Current Codes</h2>
+</div>
+		<% @promo_codes.each do |promo_code| %>
+		<%= render partial: 'shared/single_coupon', locals: {promo_code: promo_code} %>
+		<% end %>
+	</div>
+		<div class="four columns right-side-bar">
+		<%= render partial: 'shared/top_stores', locals: {
+			top_stores: @top_stores 
+		} %>	
+		<%= render partial: 'shared/email_signup' %>
+		<%= render partial: 'shared/categories', locals: {
+			categories: @categories 
+		} %>
+	
+	</div>
+</div>

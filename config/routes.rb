@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   resources :promo_codes
   resources :users
 
+  # Coupons
+  get 'new-codes', to: 'promo_codes#newest' 
 
   # Static
   get 'about', to: 'static#about'
@@ -17,6 +19,12 @@ Rails.application.routes.draw do
   get '/sign-in', :to => 'sessions#new', as: :signin
   get '/sign-up', :to => 'users#new', as: :signup
   post '/sessions', :to => 'sessions#create'
+
+  @stores = Store.all
+
+  @stores.each do |store|
+    get "/store/#{store.old_slug}.html", to: redirect("/stores/#{store.slug}", status: 301)
+  end
 
   root :to => 'static#index'
 end

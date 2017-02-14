@@ -50,6 +50,12 @@ require 'uri'
 	def delete
 	end
 
+	def newest
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+		@promo_codes = PromoCode.order('created_at DESC').limit(50)
+	end
+
 	private
   def promo_code_params
     params.require(:promo_code).permit(:title,:description, :promo_code, :store_id, :category_id, :starts, :expires, :link, :homepage, :free_shipping, :user_submit)
