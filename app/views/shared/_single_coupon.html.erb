@@ -1,4 +1,7 @@
 <div class="single-coupon">
+	<% if is_admin? %>
+	<p><%= link_to 'Edit Coupon', edit_promo_code_path(promo_code) %></p>
+	<% end %>
 	<p class="coupon-title"><span class="coupon-store-name"><%= promo_code.store.name %>: </span><%= link_to promo_code.title, promo_code_path(promo_code) %></p>
 	<p class="coupon-description"><%= promo_code.description %></p>
 	<p class="coupon-expiration">Expires: 

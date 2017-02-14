@@ -14,14 +14,15 @@ class CategoriesController < ApplicationController
 	def create
 		@category = Category.new(category_params)
 	  @category.save
-	  						@categories = Category.order('name ASC')
+	  @categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	  redirect_to @category
 	end
 
 	def show
 		@category = Category.find(params[:id])
-								@categories = Category.order('name ASC')
+		@categories = Category.order('name ASC')
+		@promo_codes = @category.promo_codes
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
