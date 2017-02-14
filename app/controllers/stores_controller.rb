@@ -7,13 +7,14 @@ class StoresController < ApplicationController
 	end
 
 	def new
+		authenticate_admin!
 		@store = Store.new
 	end
 
 	def create
 		@store = Store.new(store_params)
 	  @store.save
-	  		@categories = Category.order('name ASC')
+	  @categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	  redirect_to @store
 	end
@@ -26,6 +27,7 @@ class StoresController < ApplicationController
 	end
 
 	def edit
+		authenticate_admin!
 		@store = Store.find(params[:id])
 				@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)

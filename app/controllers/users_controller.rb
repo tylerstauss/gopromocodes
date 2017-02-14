@@ -27,6 +27,7 @@ class UsersController < ApplicationController
 	end
 
 	def edit
+		authenticate_admin!
 		@user = User.find(params[:id])
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
