@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   get 'contact', to: 'static#contact'	
   get 'search', to: 'static#search'		
   get 'grocery-coupons', to: 'static#grocery'
+  get 'terms-and-privacy-policy', to: 'static#terms', as: :terms
+  get 'articles', to: 'static#articles'
 
   # Sessions
   match 'sign-out', to: 'sessions#destroy', via: [ :get, :post], as: :signout
@@ -28,7 +30,7 @@ Rails.application.routes.draw do
   get '/p/about-us.html', to: redirect("/about", status: 301)
   get 'contact_us', to: redirect("/contact", status: 301)
   get '/p/printable-grocery-coupons.html', to: redirect("/grocery-coupons", status: 301)
-
+  get '/p/Privacy.html', to: redirect("/terms-and-privacy-policy", status: 301)
 
   @stores = Store.all
 

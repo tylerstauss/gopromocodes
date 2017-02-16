@@ -53,7 +53,6 @@ div.coupon-list {
 .coupon-title {
 	color: #d9172c;
 	font: normal 17px "Trebuchet MS", Arial, Helvetica, sans-serif;
-	margin-left: 5px;
 }
 
 .coupon-title a:hover {
@@ -69,6 +68,10 @@ div.coupon-list {
 
 .coupon-expiration span {
 	font: bold 12px "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+div.single-coupon p.see-more-codes {
+	float: right;
 }
 
 div.side-bar-element {
@@ -263,11 +266,22 @@ div.store-info h1{
 	color: #25475A;
 	font-weight: bold;
 	padding: 10px;
-
 }
+div.store-info h2{
+	color: #25475A;
+	padding: 10px;
+	font-size: 15px;
+}
+
+div.store-info p {
+	font-size: 13px;
+}
+
+
 div.side-bar-element h2 {
 	color: #25475A;
 	padding: 10px;
+
 }
 
 p.store-description {
