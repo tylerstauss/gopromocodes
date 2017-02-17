@@ -39,5 +39,69 @@ class StaticController < ApplicationController
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
+
+	def gardening
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+	end
+
+	def games
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+	end
+
+	def clipart
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+	end
+
+	def entertainment
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+	end
+
+	def cellphones
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+	end
+
+	def moneysaving
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+	end
+
+	def photography
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+	end
+
+	def keyboarding
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+	end
+
+	def classics
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+	end
 	
+	def newyears
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+	end
+
+	def fairtrade
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+	end
+
+	def zoe_stauss
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+	end
+
+		def tyler_stauss
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+	end
 end
