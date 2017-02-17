@@ -19,8 +19,8 @@ test:
 production:
   adapter: postgresql
   host: localhost
-  username: qnbfosrvfpklce
-  password: 769c6b12b9ae08954f634af13876d3e1971f2a0130536becd360fb729f177215
-  database: d1qmon0crd30f7
+  username: 
+  password: 
+  database: 
   pool: 5
   timeout: 5000
