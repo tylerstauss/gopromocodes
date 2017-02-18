@@ -1,6 +1,7 @@
 class StaticController < ApplicationController
 	
 	def index
+		@subscriber = Subscriber.new
 		@promo_codes = PromoCode.where(homepage: true)
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
