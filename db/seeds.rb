@@ -7,6 +7,9 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 require 'csv'
 
+p 'seeding user'
+User.create(email: 'tyler.e.stauss@gmail.com', password: 'tyler11', username: 'tyler', admin: true)
+
 p "seeding categories"
 csv_text = File.read(Rails.root.join('lib', 'seeds', 'dc_categories.csv'))
 csv = CSV.parse(csv_text, :headers => false, :encoding => 'ISO-8859-1')
