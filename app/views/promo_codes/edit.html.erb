@@ -28,7 +28,7 @@
 
 	<p>
 		<%= f.label :store %>
-		<%= f.collection_select(:store_id, Store.all, :id, :name) %>
+		<%= f.collection_select(:store_id, Store.order("name ASC"), :id, :name) %>
 	</p>
 
 	<p>
