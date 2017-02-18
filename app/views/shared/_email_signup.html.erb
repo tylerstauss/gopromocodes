@@ -1,9 +1,9 @@
 <div class="email-signup">
 	<h3>Get Our Newsletter</h3>
-	<form id="email-signup">
-		<input type="text" placeholder="joan.smith@gmail.com">
-		<input class="button-primary" type="submit" value="OK">
-	</form>
+<%= form_for @subscriber, remote: true, :html => { :id => "email-signup" } do |f| %>
+	<%= f.text_field :email, :required => true, placeholder: "joan.smith@gmail.com" %>
+	<%= f.submit "OK" , :class => 'button-primary' %>
+	<% end %>
 	<div>
 		<p><%= image_tag("mailbox.png", :class => 'mailbox-image') %>Our most popular coupons sent directly to your inbox!</p>
 	</div>
