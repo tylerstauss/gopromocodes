@@ -1,8 +1,9 @@
 class StoresController < ApplicationController
 
 	def index
-		 @stores = Store.search(params[:term], params[:page])
-				@categories = Category.order('name ASC')
+		@stores = Store.search(params[:term], params[:page])
+		@subscriber = Subscriber.new
+		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
@@ -14,6 +15,7 @@ class StoresController < ApplicationController
 	def create
 		@store = Store.new(store_params)
 	  @store.save
+		@subscriber = Subscriber.new
 	  @categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	  redirect_to @store
@@ -22,14 +24,16 @@ class StoresController < ApplicationController
 	def show
 		@store = Store.find(params[:id])
 		@promo_codes = @store.promo_codes
-				@categories = Category.order('name ASC')
+		@subscriber = Subscriber.new
+		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def edit
 		authenticate_admin!
 		@store = Store.find(params[:id])
-				@categories = Category.order('name ASC')
+		@subscriber = Subscriber.new
+		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 

@@ -1,6 +1,6 @@
 <div class="email-signup">
 	<h3>Get Our Newsletter</h3>
-<%= form_for @subscriber, remote: true, :html => { :id => "email-signup" } do |f| %>
+<%= form_for @subscriber, :remote => true do |f| %>
 	<%= f.text_field :email, :required => true, placeholder: "joan.smith@gmail.com" %>
 	<%= f.submit "OK" , :class => 'button-primary' %>
 	<% end %>

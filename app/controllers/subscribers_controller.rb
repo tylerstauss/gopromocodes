@@ -2,7 +2,8 @@ class SubscribersController < ApplicationController
 
 	def index
 		authenticate_admin!
-		@subscribers = Subscriber.search(params[:term], params[:page])
+		@subscriber = Subscriber.new
+		@subscribers = Subscriber.all
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
@@ -14,15 +15,24 @@ class SubscribersController < ApplicationController
 	end
 
 	def create
+
 		@subscriber = Subscriber.new(subscriber_params)
 	  @subscriber.save
 	  @categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
-	  redirect_to @subscriber
+
+	 respond_to do |format|
+	    if @subscriber.save
+	      format.js   { p "via JS "}
+	    else
+	      redirect_to root_path
+	    end
+	  end
 	end
 
 	def show
 		authenticate_admin!
+		@subscriber = Subscriber.new
 		@subscriber = Subscriber.find(params[:id])
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
@@ -30,6 +40,7 @@ class SubscribersController < ApplicationController
 
 	def edit
 		authenticate_admin!
+		@subscriber = Subscriber.new
 		@subscriber = Subscriber.find(params[:id])
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
