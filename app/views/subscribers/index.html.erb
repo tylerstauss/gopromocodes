@@ -1,0 +1,14 @@
+<div class="row main-content">
+	<div class="eight columns coupon-list">
+		<div class="red-banner">
+			<h1>Email Subscribers</h1>
+		</div>
+		<% @subscribers.each do |subscriber| %>
+			<%= subscriber.email %>
+		<% end %>
+	</div>
+	<div class="four columns right-side-bar">
+		<%= render partial: 'shared/sidebar' %>
+	</div>
+</div>
+

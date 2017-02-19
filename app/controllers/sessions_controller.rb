@@ -1,6 +1,7 @@
 class SessionsController < ApplicationController
   def new
   	@user = User.new
+    @subscriber = Subscriber.new
     @categories = Category.order('name ASC')
     @top_stores = Store.where(top_store: true).limit(12)
   end
@@ -15,11 +16,13 @@ class SessionsController < ApplicationController
       @user = User.new
       render 'new'
     end
+    @subscriber = Subscriber.new
     @categories = Category.order('name ASC')
     @top_stores = Store.where(top_store: true).limit(12)
   end
 
   def destroy
+    @subscriber = Subscriber.new
     @categories = Category.order('name ASC')
     @top_stores = Store.where(top_store: true).limit(12)
     session.clear

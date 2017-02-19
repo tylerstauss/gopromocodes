@@ -1,6 +1,7 @@
 class CategoriesController < ApplicationController
 
 	def index
+				@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 
@@ -14,6 +15,7 @@ class CategoriesController < ApplicationController
 	def create
 		@category = Category.new(category_params)
 	  @category.save
+	  		@subscriber = Subscriber.new
 	  @categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	  redirect_to @category
@@ -21,6 +23,7 @@ class CategoriesController < ApplicationController
 
 	def show
 		@category = Category.find(params[:id])
+				@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@promo_codes = @category.promo_codes
 		@top_stores = Store.where(top_store: true).limit(12)
@@ -29,6 +32,7 @@ class CategoriesController < ApplicationController
 	def edit
 		authenticate_admin!
 		@category = Category.find(params[:id])
+				@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
