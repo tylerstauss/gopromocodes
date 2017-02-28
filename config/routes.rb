@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :promo_codes
   resources :users
   resources :subscribers
+  resources :store_blogs
 
   # Coupons
   get 'new-codes', to: 'promo_codes#newest' 

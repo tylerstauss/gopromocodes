@@ -16,6 +16,17 @@
 		<% @promo_codes.each do |promo_code| %>
 		<%= render partial: 'shared/single_coupon', locals: {promo_code: promo_code} %>
 		<% end %>
+		<div class="store-blogs">
+			<h2>All about <%= @store.name %> Coupon Codes</h2>
+			<% @blogs.each do |blog| %>
+			<% if is_admin? %>
+				<p><%= link_to "Edit Blog", edit_store_blog_path(blog) %></p>
+			<% end %>
+			<strong><%= blog.publish_date %></strong>
+			<%= raw(blog.post) %>
+			<br><br>
+			<% end %>
+		</div>
 	</div>
 	<div class="four columns right-side-bar">
 		<%= render partial: 'shared/sidebar' %>

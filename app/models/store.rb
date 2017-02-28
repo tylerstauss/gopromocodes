@@ -1,5 +1,6 @@
 class Store < ActiveRecord::Base
 	has_many :promo_codes
+  has_many :store_blogs
 
 	def self.find(input)
    input.to_i == 0 ? find_by_slug(input) : super
