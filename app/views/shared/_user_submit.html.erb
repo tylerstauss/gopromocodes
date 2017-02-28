@@ -1,0 +1,58 @@
+<%= form_for(@promo_code) do |f| %>
+	<p>
+		<%= f.label :title %>
+		<%= f.text_field :title %>
+	</p>
+	<p>
+		<%= f.label :link %>
+		<%= f.text_field :link %>
+	</p>
+
+	<p>
+		<%= f.label :description %>
+		<%= f.text_area :description %>
+	</p>
+
+	<p>
+		<%= f.label :starts %>
+		<%= f.date_select :starts %>
+	</p>
+
+	<p>
+		<%= f.label :expires %>
+		<%= f.date_select :expires %>
+	</p>
+
+	<p>
+		<%= f.label :active %>
+		<%= f.radio_button(:active, "active", checked: true) %>
+	</p>
+
+	<p>
+		<%= f.label :user_submit %>
+		<%= f.radio_button(:user_submit, "user submit", checked: false) %>
+	</p>
+
+		<p>
+		<%= f.label :homepage %>
+		<%= f.radio_button(:homepage, "homepage", checked: false) %>
+	</p>
+
+		<p>
+		<%= f.label :free_shipping %>
+		<%= f.radio_button(:free_shipping, "free shipping", checked: false) %>
+	</p>
+
+	<p>
+		<%= f.label :category %>
+		<%= f.collection_select(:category_id, Category.all, :id, :name) %>
+	</p>
+
+		<p>
+		<%= f.label :store %>
+		<%= f.collection_select(:store_id, Store.all, :id, :name) %>
+	</p>
+
+
+	<%= f.submit "Add Code" %>
+<% end %>
