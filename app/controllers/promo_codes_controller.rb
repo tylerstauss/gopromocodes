@@ -63,7 +63,12 @@ require 'uri'
     redirect_to store_path(promo_code.store)
 	end
 
-	def delete
+	def destroy
+		authenticate_admin!
+		@promo_code = PromoCode.find(params[:id])
+		store = @promo_code.store
+		@promo_code.destroy
+		redirect_to store_path(store)
 	end
 
 	def newest

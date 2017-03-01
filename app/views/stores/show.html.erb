@@ -19,10 +19,16 @@
 		
 		<% if @store.user_submit %>
 			<div class="store-info">
-				<p>Add A New Discount</p>
+				<p>
+Do you have a promotion code for <%= @store.name %>?
+Add your <%= @store.name %> promo code here for others' benefit.</p>
 				<%= render partial: 'shared/user_submit', locals: {promo_code: @promo_code, store: @store} %>
 				<p class='success'></p>
 				<p class='error'></p>
+				<p id="disclaimer">To signup for <%= @store.name %> coupon codes, please enter your email address in the Newsletter box on the right side of the page. 
+
+The <%= @store.name %> promotional codes listed above are available because GoPromoCodes.com is an affiliate of <%= @store.name %>. Tyler Stauss manages this partnership. Meet <%= link_to "Tyler", "https://plus.google.com/u/0/114616733302009885635?rel=author" %>!
+Since this site allows users to submit content, we cannot guarantee the accuracy of the content.</p>
 			</div>
 		<% end %>
 		
