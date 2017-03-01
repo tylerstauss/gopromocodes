@@ -1,5 +1,3 @@
-
-
 class PromoCodesController < ApplicationController
 
 require 'uri'
@@ -24,32 +22,21 @@ require 'uri'
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 		@promo_code = PromoCode.new(promo_code_params)
-		
+
 		respond_to do |format|
 			if is_admin?
 				if @promo_code.save
 					format.js { p 'code was successfully created.' }
 				end
 			else
-				if verify_recaptcha(model: @promo_code) && @promo_code.save
+				p verify_recaptcha
+				if verify_recaptcha == true && @promo_code.save
 					format.js { p 'code was successfully created.' }
 				else
-					format.html { render :new }
-	      	format.json { render json: @promo_code.errors, status: :unprocessable_entity }
+					render :status => 400
 				end
 			end
 		end
-		# if is_admin?
-		# 	@promo_code.save
-		# 	format.js { p 'code was successfully created.' }
-		# else
-		# 	if verify_recaptcha(model: @promo_code) && @promo_code.save
-		# 		format.js { p 'code was successfully created.' }
-		# 	else
-		# 		format.html { render :new }
-  #     	format.json { render json: @promo_code.errors, status: :unprocessable_entity }
-		# 	end
-		# end
 	end
 
 	def show
