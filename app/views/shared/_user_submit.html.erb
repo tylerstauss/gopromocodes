@@ -23,36 +23,33 @@
 		<%= f.date_select :expires %>
 	</p>
 
-	<p>
-		<%= f.label :active %>
-		<%= f.radio_button(:active, "active", checked: true) %>
-	</p>
+
 
 	<p>
-		<%= f.label :user_submit %>
-		<%= f.radio_button(:user_submit, "user submit", checked: false) %>
+		<%= f.hidden_field(:user_submit, value: true) %>
 	</p>
 
 		<p>
-		<%= f.label :homepage %>
-		<%= f.radio_button(:homepage, "homepage", checked: false) %>
+		<%= f.hidden_field(:homepage, value: false) %>
 	</p>
 
 		<p>
-		<%= f.label :free_shipping %>
-		<%= f.radio_button(:free_shipping, "free shipping", checked: false) %>
-	</p>
-
-	<p>
-		<%= f.label :category %>
-		<%= f.collection_select(:category_id, Category.all, :id, :name) %>
+		<%= f.hidden_field(:free_shipping, value: false) %>
 	</p>
 
 		<p>
-		<%= f.label :store %>
-		<%= f.collection_select(:store_id, Store.all, :id, :name) %>
+		<%= f.hidden_field(:store_id, value: @store.id) %>
 	</p>
-
-
+	<% if is_admin? %>
+		<p>
+		<%= f.hidden_field(:approved, value: true) %>
+	</p>
+		
+	<% else %>
+		<%= recaptcha_tags %>
+		<p>
+			<%= f.hidden_field(:approved, value: true) %>
+		</p>
+	<% end %>
 	<%= f.submit "Add Code" %>
 <% end %>

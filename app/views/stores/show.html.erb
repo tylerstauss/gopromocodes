@@ -19,7 +19,7 @@
 		<% if @store.user_submit %>
 			<div class="store-info">
 				<p>Add A New Discount</p>
-				<%= render partial: 'shared/user_submit', locals: {promo_code: @promo_code} %>
+				<%= render partial: 'shared/user_submit', locals: {promo_code: @promo_code, store: @store} %>
 			</div>
 		<% end %>
 		<div class="red-banner">

@@ -32,8 +32,13 @@
 	</p>
 
 	<p>
+		<%= f.label :approved %>
+		<%= f.check_box(:approved, checked: @promo_code.approved) %>
+	</p>
+
+	<p>
 		<%= f.label :user_submit %>
-		<%= f.radio_button(:user_submit, "user submit", checked: @promo_code.user_submit) %>
+		<%= f.check_box(:user_submit, checked: @promo_code.user_submit) %>
 	</p>
 
 	<p>
@@ -43,7 +48,7 @@
 
 		<p>
 		<%= f.label :homepage %>
-		<%= f.radio_button(:homepage, "Homepage?", checked: @promo_code.homepage) %>
+		<%= f.check_box(:homepage, checked: @promo_code.homepage) %>
 	</p>
 
 

@@ -10,13 +10,10 @@
 		<%= f.label :post %>
 		<%= f.text_area :post %>
 	</p>
-
-
 	<p>
 		<%= f.label :author %>
 		<%= f.text_field :author %>
 	</p>
-
 	<p>
 		<%= f.label :store %>
 		<%= f.collection_select(:store_id, Store.order("name ASC"), :id, :name) %>

@@ -5,7 +5,7 @@ class PromoCodesController < ApplicationController
 require 'uri'
 	
 	def index
-		@promo_codes = PromoCode.all
+		@promo_codes = PromoCode.where(approved: true)
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
@@ -26,7 +26,7 @@ require 'uri'
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 
-	  redirect_to @promo_code
+	  redirect_to store_path(@promo_code.store)
 	end
 
 	def show
@@ -50,7 +50,7 @@ require 'uri'
 	def update
 		promo_code = PromoCode.find(params[:id])
     promo_code.update!(promo_code_params)
-    redirect_to promo_code
+    redirect_to store_path(promo_code.store)
 	end
 
 	def delete
@@ -65,7 +65,7 @@ require 'uri'
 
 	private
   def promo_code_params
-    params.require(:promo_code).permit(:title,:description, :promo_code, :store_id, :category_id, :starts, :expires, :link, :homepage, :free_shipping, :user_submit)
+    params.require(:promo_code).permit(:title,:description, :promo_code, :store_id, :category_id, :starts, :expires, :link, :homepage, :free_shipping, :user_submit, :approved)
   end
 	
 	
