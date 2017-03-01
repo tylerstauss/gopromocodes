@@ -25,7 +25,7 @@ class CategoriesController < ApplicationController
 		@category = Category.find(params[:id])
 				@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
-		@promo_codes = @category.promo_codes
+		@promo_codes = @category.promo_codes.where(approved: true)
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 

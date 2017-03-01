@@ -23,7 +23,7 @@ class StoresController < ApplicationController
 
 	def show
 		@store = Store.find(params[:id])
-		@promo_codes = @store.promo_codes
+		@promo_codes = @store.promo_codes.where(approved: true)
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
