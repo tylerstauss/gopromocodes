@@ -1,54 +1,25 @@
 <%= form_for @promo_code, :remote => true do |f| %>
-	<p>
 		<%= f.label :title %>
 		<%= f.text_field :title, :required => true %>
-	</p>
-	<p>
+		
 		<%= f.label :link %>
 		<%= f.text_field :link, :required => true %>
-	</p>
-
-	<p>
+	
 		<%= f.label :description %>
 		<%= f.text_area :description, :required => true %>
-	</p>
-
-	<p>
+	
 		<%= f.label :starts %>
 		<%= f.date_select :starts %>
-	</p>
-
-	<p>
+	
 		<%= f.label :expires %>
 		<%= f.date_select :expires %>
-	</p>
-
-
-
-	<p>
+	
 		<%= f.hidden_field(:user_submit, value: true) %>
-	</p>
-
-		<p>
 		<%= f.hidden_field(:homepage, value: false) %>
-	</p>
-
-		<p>
 		<%= f.hidden_field(:free_shipping, value: false) %>
-	</p>
-
-		<p>
 		<%= f.hidden_field(:store_id, value: @store.id) %>
-	</p>
-	<% if is_admin? %>
-		<p>
-			<%= f.hidden_field(:approved, value: true) %>
-		</p>
-	<% else %>
+		<%= f.hidden_field(:approved, value: true) %>
 		<%= recaptcha_tags %>
-		<p>
-			<%= f.hidden_field(:approved, value: false) %>
-		</p>
-	<% end %>
+		<%= f.hidden_field(:approved, value: false) %>
 	<%= f.submit "Add Code" %>
 <% end %>
