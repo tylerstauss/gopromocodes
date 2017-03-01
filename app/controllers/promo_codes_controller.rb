@@ -20,13 +20,36 @@ require 'uri'
 	end
 
 	def create
-		@promo_code = PromoCode.new(promo_code_params)
-	  @promo_code.save
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
-
-	  redirect_to store_path(@promo_code.store)
+		@promo_code = PromoCode.new(promo_code_params)
+		
+		respond_to do |format|
+			if is_admin?
+				if @promo_code.save
+					format.js { p 'code was successfully created.' }
+				end
+			else
+				if verify_recaptcha(model: @promo_code) && @promo_code.save
+					format.js { p 'code was successfully created.' }
+				else
+					format.html { render :new }
+	      	format.json { render json: @promo_code.errors, status: :unprocessable_entity }
+				end
+			end
+		end
+		# if is_admin?
+		# 	@promo_code.save
+		# 	format.js { p 'code was successfully created.' }
+		# else
+		# 	if verify_recaptcha(model: @promo_code) && @promo_code.save
+		# 		format.js { p 'code was successfully created.' }
+		# 	else
+		# 		format.html { render :new }
+  #     	format.json { render json: @promo_code.errors, status: :unprocessable_entity }
+		# 	end
+		# end
 	end
 
 	def show

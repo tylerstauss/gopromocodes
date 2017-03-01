@@ -1,6 +1,7 @@
 $(document).ready(function(){
-	console.log("initialized js")
-	EmailSignup.init()
+	console.log("initialized js");
+	EmailSignup.init();
+	UserSubmit.init();
 })
 
 

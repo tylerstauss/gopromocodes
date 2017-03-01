@@ -1,16 +1,16 @@
-<%= form_for(@promo_code) do |f| %>
+<%= form_for @promo_code, :remote => true do |f| %>
 	<p>
 		<%= f.label :title %>
-		<%= f.text_field :title %>
+		<%= f.text_field :title, :required => true %>
 	</p>
 	<p>
 		<%= f.label :link %>
-		<%= f.text_field :link %>
+		<%= f.text_field :link, :required => true %>
 	</p>
 
 	<p>
 		<%= f.label :description %>
-		<%= f.text_area :description %>
+		<%= f.text_area :description, :required => true %>
 	</p>
 
 	<p>
@@ -42,13 +42,12 @@
 	</p>
 	<% if is_admin? %>
 		<p>
-		<%= f.hidden_field(:approved, value: true) %>
-	</p>
-		
+			<%= f.hidden_field(:approved, value: true) %>
+		</p>
 	<% else %>
 		<%= recaptcha_tags %>
 		<p>
-			<%= f.hidden_field(:approved, value: true) %>
+			<%= f.hidden_field(:approved, value: false) %>
 		</p>
 	<% end %>
 	<%= f.submit "Add Code" %>
