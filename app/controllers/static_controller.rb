@@ -2,7 +2,7 @@ class StaticController < ApplicationController
 	
 	def index
 		@subscriber = Subscriber.new
-		@promo_codes = PromoCode.where(homepage: true)
+		@promo_codes = PromoCode.where(homepage: true, approved: true)
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
@@ -14,7 +14,7 @@ class StaticController < ApplicationController
 	end
 
 	def search
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@search_term = params[:search_term]
 		p @search_term
 		@stores = Store.where("name like ? or description like ? or slug like ? or search_terms like ?", "%"+@search_term+"%", "%"+@search_term+"%", "%"+@search_term+"%", "%"+@search_term+"%")

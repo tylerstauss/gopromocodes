@@ -16,15 +16,20 @@
 		<% @promo_codes.each do |promo_code| %>
 		<%= render partial: 'shared/single_coupon', locals: {promo_code: promo_code} %>
 		<% end %>
+		
 		<% if @store.user_submit %>
 			<div class="store-info">
 				<p>Add A New Discount</p>
 				<%= render partial: 'shared/user_submit', locals: {promo_code: @promo_code, store: @store} %>
+				<p class='success'></p>
+				<p class='error'></p>
 			</div>
 		<% end %>
+		
 		<div class="red-banner">
 			<h2>Learn more about how to save the most at <%= @store.name %> </h2>
 		</div>
+		
 		<div class="store-blogs store-info">
 			<% @blogs.each do |blog| %>
 			<% if is_admin? %>
