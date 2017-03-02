@@ -1,7 +1,5 @@
 class PromoCode < ActiveRecord::Base
 	belongs_to :store
-	belongs_to :category
-
-
-
+	has_many :category_promo_codes
+	has_many :categories, through: :category_promo_codes
 end

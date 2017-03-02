@@ -15,6 +15,7 @@ require 'uri'
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 		@promo_code = PromoCode.new
+		@category_promo_code = CategoryPromoCode.new
 	end
 
 	def create
@@ -26,6 +27,12 @@ require 'uri'
 		respond_to do |format|
 			if is_admin?
 				if @promo_code.save
+					if params["promo_code"]["category_ids"]
+						params["promo_code"]["category_ids"].each do |category_id|
+			    	CategoryPromoCode.create(promo_code_id: @promo_code.id, category_id: category_id)
+				    end
+					end
+					format.html { redirect_to store_path(@promo_code.store) and return}
 					format.js { p 'code was successfully created.' }
 				end
 			else
@@ -55,11 +62,15 @@ require 'uri'
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
+		@category_promo_code = CategoryPromoCode.new
 	end
 
 	def update
 		promo_code = PromoCode.find(params[:id])
     promo_code.update!(promo_code_params)
+    params["promo_code"]["category_ids"].each do |category_id|
+    	CategoryPromoCode.create(promo_code_id: promo_code.id, category_id: category_id)
+    end
     redirect_to store_path(promo_code.store)
 	end
 

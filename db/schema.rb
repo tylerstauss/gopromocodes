@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170301020817) do
+ActiveRecord::Schema.define(version: 20170302031340) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,9 +27,17 @@ ActiveRecord::Schema.define(version: 20170301020817) do
     t.index ["name", "slug"], name: "index_categories_on_name_and_slug", unique: true, using: :btree
   end
 
+  create_table "category_promo_codes", force: :cascade do |t|
+    t.integer  "promo_code_id"
+    t.integer  "category_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["category_id"], name: "index_category_promo_codes_on_category_id", using: :btree
+    t.index ["promo_code_id"], name: "index_category_promo_codes_on_promo_code_id", using: :btree
+  end
+
   create_table "promo_codes", force: :cascade do |t|
     t.integer  "store_id"
-    t.integer  "category_id"
     t.string   "title"
     t.text     "description"
     t.date     "starts"
@@ -42,7 +50,6 @@ ActiveRecord::Schema.define(version: 20170301020817) do
     t.date     "expires"
     t.boolean  "user_submit",   default: false
     t.boolean  "approved",      default: true
-    t.index ["category_id"], name: "index_promo_codes_on_category_id", using: :btree
     t.index ["store_id"], name: "index_promo_codes_on_store_id", using: :btree
   end
 
