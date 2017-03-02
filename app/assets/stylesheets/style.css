@@ -50,6 +50,12 @@ div.coupon-list {
 	margin-bottom: 10px;
 }
 
+p.coupon-title span.coupon-store-name {
+	color: black;
+	font-size: 1.1em;
+	font-weight: bold;
+}
+
 .coupon-title {
 	color: #d9172c;
 	font: normal 17px "Trebuchet MS", Arial, Helvetica, sans-serif;

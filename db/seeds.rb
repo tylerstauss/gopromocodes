@@ -32,56 +32,55 @@ require 'csv'
 # end
 
 
-# p 'seeding codes'
-# csv_text = File.read(Rails.root.join('lib', 'seeds', 'dc_deals.csv'))
-# csv = CSV.parse(csv_text, :headers => false, :encoding => 'ISO-8859-1')
-# csv.each do |row|
-# 	store = Store.find(row[-1].downcase)
-#   promocode = PromoCode.create(title: row[0], description: row[3], code: row[2], store_id: store.id, link: row[1])
-#   if row[9] != 'NULL'
-# 		category = Category.find(row[9].downcase)
-# 		if category
-# 			promocode.category_id = category.id
-# 			promocode.save
-# 		end
-# 	end
-# end
-
-
-p "seeding store blogs"
-csv_text = File.read(Rails.root.join('lib', 'seeds', 'store_blogs.csv'))
+p 'seeding codes'
+csv_text = File.read(Rails.root.join('lib', 'seeds', 'dc_deals.csv'))
 csv = CSV.parse(csv_text, :headers => false, :encoding => 'ISO-8859-1')
 csv.each do |row|
-	post_data = {}
-	store = Store.find(row[2].downcase)
-	posts = row[1]
-	post_data["store_id"] = store.id
-	p 'row row' * 30
-	if posts
-		small_posts = posts.split(/(\d+\/\d+\/\d{4})/)
-		small_posts.each do |post|
-			post.length
-			if post.length <= 10 && post.length > 0
-				# p 'publish date'
-				publish_date = post
-				# p publish_date
-				post_data["publish_date"] = publish_date
-			elsif post.length >= 11
-				blog_post = post
-				# p 'blog post'
-				# p blog_post
-				post_data["blog_post"] = blog_post
-			else
-			end
-		if post_data.length == 3
-			p post_data
-			StoreBlog.create(store_id: post_data["store_id"], publish_date: post_data["publish_date"], post: post_data["blog_post"])
-
+	store = Store.find(row[-1].downcase)
+  promocode = PromoCode.create(title: row[0], description: row[3], code: row[2], store_id: store.id, link: row[1])
+  if row[9] != 'NULL'
+		category = Category.find(row[9].downcase)
+		if category
+			CategoryPromoCode.create(category_id: category.id, promo_code_id: promocode.id)
 		end
-		end
-		
 	end
 end
+
+
+# p "seeding store blogs"
+# csv_text = File.read(Rails.root.join('lib', 'seeds', 'store_blogs.csv'))
+# csv = CSV.parse(csv_text, :headers => false, :encoding => 'ISO-8859-1')
+# csv.each do |row|
+# 	post_data = {}
+# 	store = Store.find(row[2].downcase)
+# 	posts = row[1]
+# 	post_data["store_id"] = store.id
+# 	p 'row row' * 30
+# 	if posts
+# 		small_posts = posts.split(/(\d+\/\d+\/\d{4})/)
+# 		small_posts.each do |post|
+# 			post.length
+# 			if post.length <= 10 && post.length > 0
+# 				# p 'publish date'
+# 				publish_date = post
+# 				# p publish_date
+# 				post_data["publish_date"] = publish_date
+# 			elsif post.length >= 11
+# 				blog_post = post
+# 				# p 'blog post'
+# 				# p blog_post
+# 				post_data["blog_post"] = blog_post
+# 			else
+# 			end
+# 		if post_data.length == 3
+# 			p post_data
+# 			StoreBlog.create(store_id: post_data["store_id"], publish_date: post_data["publish_date"], post: post_data["blog_post"])
+
+# 		end
+# 		end
+		
+# 	end
+# end
 
 
 

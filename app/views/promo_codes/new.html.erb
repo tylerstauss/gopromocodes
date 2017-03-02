@@ -47,7 +47,12 @@
 
 	<p>
 		<%= f.label :category %>
-		<%= f.collection_select(:category_id, Category.all, :id, :name) %>
+		<ul>
+		<% @categories.each do |category| %>
+     <li> <%= check_box_tag "promo_code[category_ids][]", category.id, f.object.categories.include?(category) %>
+      <%= category.name %></li>
+    <% end %>
+    </ul>
 	</p>
 
 		<p>
