@@ -15,6 +15,8 @@ require 'uri'
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 		@promo_code = PromoCode.new
+		@stores = Store.order("name ASC")
+		@store = Store.find_by_id(params["store"]) if params["store"]
 		@category_promo_code = CategoryPromoCode.new
 	end
 

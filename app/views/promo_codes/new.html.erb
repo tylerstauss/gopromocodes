@@ -54,11 +54,18 @@
     <% end %>
     </ul>
 	</p>
-
-		<p>
-		<%= f.label :store %>
-		<%= f.collection_select(:store_id, Store.all, :id, :name) %>
-	</p>
+	
+		<% if @store %>
+			<p>
+				<%= f.label :store %>
+				<%= f.collection_select(:store_id, @stores, :id, :name, selected: @store.id) %>
+			</p>
+		<% else %>
+			<p>
+				<%= f.label :store %>
+				<%= f.collection_select(:store_id, Store.all, :id, :name) %>
+			</p>
+		<% end %>
 
 
 	<%= f.submit %>
