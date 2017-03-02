@@ -14,7 +14,7 @@
 			<h2>Current Codes</h2>
 		</div>
 		<% @promo_codes.each do |promo_code| %>
-		<%= render partial: 'shared/single_coupon', locals: {promo_code: promo_code} %>
+		<%= render partial: 'shared/single_coupon_stores', locals: {promo_code: promo_code} %>
 		<% end %>
 		
 		<% if @store.user_submit %>
