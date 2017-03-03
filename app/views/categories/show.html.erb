@@ -1,3 +1,6 @@
+<% title(@category.meta_title) %>
+<% meta_tag('keywords', @category.meta_keywords) %>
+<% meta_tag('description', @category.meta_description) %>
 <% canonical(category_path(@category)) %>
 <div class="row main-content">
 	<div class="eight columns coupon-list">
