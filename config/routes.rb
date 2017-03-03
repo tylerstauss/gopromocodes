@@ -49,12 +49,12 @@ Rails.application.routes.draw do
   get '/p/author-biography-zoe-stauss.html', to: redirect("/author-biography-zoe-stauss", status: 301) 
 
 
-  @stores = Store.all
+  # @stores = Store.all
 
-  @stores.each do |store|
-    get "/store/#{store.old_slug}.html", to: redirect("/stores/#{store.slug}", status: 301)
-    # get "/store/#{store.slug}.html", to: redirect("/stores/#{store.slug}", status: 301)
-  end
+  # @stores.each do |store|
+  #   get "/store/#{store.old_slug}.html", to: redirect("/stores/#{store.slug}", status: 301)
+  #   # get "/store/#{store.slug}.html", to: redirect("/stores/#{store.slug}", status: 301)
+  # end
 
   root :to => 'static#index'
 end

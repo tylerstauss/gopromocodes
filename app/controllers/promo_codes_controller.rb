@@ -36,6 +36,10 @@ require 'uri'
 					end
 					format.html { redirect_to store_path(@promo_code.store) and return}
 					format.js { p 'code was successfully created.' }
+				else
+					format.html { redirect_to new_promo_code_path(@promo_code) and return}
+					format.js { p 'code was NOT successfully created.' }
+					
 				end
 			else
 				p verify_recaptcha
@@ -64,6 +68,7 @@ require 'uri'
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
+		@stores = Store.order("name ASC")
 		@category_promo_code = CategoryPromoCode.new
 	end
 
@@ -93,7 +98,7 @@ require 'uri'
 
 	private
   def promo_code_params
-    params.require(:promo_code).permit(:title,:description, :promo_code, :store_id, :category_id, :starts, :expires, :link, :homepage, :free_shipping, :user_submit, :approved)
+    params.require(:promo_code).permit(:title,:description, :code, :store_id, { :category_ids => [] }, :starts, :expires, :link, :homepage, :free_shipping, :user_submit, :approved)
   end
 	
 	
