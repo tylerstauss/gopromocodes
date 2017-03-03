@@ -12,6 +12,15 @@
 	</p>
 
 	<p>
+		<%= f.label :code %>
+		<%= f.text_field :code %>
+	</p>
+
+		<p>
+		<%= f.label :description %>
+		<%= f.text_area :description %>
+	</p>
+	<p>
 		<%= f.label :starts %>
 		<%= f.date_select :starts %>
 	</p>
@@ -21,14 +30,11 @@
 		<%= f.date_select :expires %>
 	</p>
 
-	<p>
-		<%= f.label :description %>
-		<%= f.text_area :description %>
-	</p>
+
 
 	<p>
 		<%= f.label :store %>
-		<%= f.collection_select(:store_id, Store.order("name ASC"), :id, :name) %>
+		<%= f.collection_select(:store_id, @stores, :id, :name) %>
 	</p>
 
 	<p>
@@ -41,6 +47,11 @@
 		<%= f.check_box(:user_submit, checked: @promo_code.user_submit) %>
 	</p>
 
+			<p>
+		<%= f.label :homepage %>
+		<%= f.check_box(:homepage, checked: @promo_code.homepage) %>
+	</p>
+
 	<p>
 		<%= f.label :category %>
 		<ul>
@@ -51,10 +62,7 @@
     </ul>
 	</p>
 
-		<p>
-		<%= f.label :homepage %>
-		<%= f.check_box(:homepage, checked: @promo_code.homepage) %>
-	</p>
+
 
 
 	<%= f.submit %>
