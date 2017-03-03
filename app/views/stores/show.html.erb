@@ -1,4 +1,8 @@
+
+<% title(@store.meta_title) %>
 <% canonical(store_path(@store)) %>
+<% meta_tag('keywords', @store.meta_keywords) %>
+<% meta_tag('description', @store.meta_description) %>
 <div class="row main-content">
 	<div class="eight columns coupon-list">
 		<div class="store-info">
