@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'errors/not_found'
+
+  get 'errors/internal_server_error'
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   resources :categories
   resources :stores
@@ -56,6 +60,9 @@ Rails.application.routes.draw do
     get "/store/#{store.slug}.html", to: redirect("/stores/#{store.slug}", status: 301)
     # get "/store/#{store.slug}.html", to: redirect("/stores/#{store.slug}", status: 301)
   end
+  
+  match "/404", :to => "errors#not_found", :via => :all
+  match "/500", :to => "errors#internal_server_error", :via => :all
 
   root :to => 'static#index'
 end
