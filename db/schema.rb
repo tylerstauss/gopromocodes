@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170302031340) do
+ActiveRecord::Schema.define(version: 20170304011825) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(version: 20170302031340) do
     t.string   "author",       default: "Tyler"
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
+    t.date     "pub_date"
     t.index ["store_id"], name: "index_store_blogs_on_store_id", using: :btree
   end
 
