@@ -1,8 +1,8 @@
 class ErrorsController < ApplicationController
   def not_found
-    @subscriber = Subscriber.new
-		@categories = Category.order('name ASC')
-		@top_stores = Store.where(top_store: true).limit(12)
+  #   @subscriber = Subscriber.new
+		# @categories = Category.order('name ASC')
+		# @top_stores = Store.where(top_store: true).limit(12)
 		render(:status => 404)
   end
 
