@@ -3,7 +3,7 @@
 		<p><%= link_to 'Edit', edit_promo_code_path(promo_code) %> | <%= link_to 'Delete', promo_code_path(promo_code),
             data: {:confirm => 'Are you sure?'}, :method => :delete %> | <%= promo_code.link %></p>
 	<% end %>
-	<p class="coupon-title"><span class="coupon-store-name"><%= promo_code.store.name %>: </span><%= link_to promo_code.title, promo_code_path(promo_code) %></p>
+	<p class="coupon-title"><span class="coupon-store-name"><%= promo_code.store.name %>: </span><%= link_to promo_code.title, promo_code_path(promo_code), target: :_blank %></p>
 	<p class="coupon-description">
 		<% unless promo_code.description == 'NULL' %>
 			<%= promo_code.description %>
@@ -14,7 +14,7 @@
 
 	<p class="promo-code">
 		<% if promo_code.code %>
-			Use code: <%= link_to promo_code.code, promo_code_path(promo_code) %>
+			Use code: <%= link_to promo_code.code, promo_code_path(promo_code), target: :_blank %>
 		<% else %>
 			<p>No Code Needed</p>
 		<% end %>
