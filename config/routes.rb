@@ -53,6 +53,7 @@ Rails.application.routes.draw do
 
   @stores.each do |store|
     get "/store/#{store.old_slug}.html", to: redirect("/stores/#{store.slug}", status: 301)
+    get "/store/#{store.slug}.html", to: redirect("/stores/#{store.slug}", status: 301)
     # get "/store/#{store.slug}.html", to: redirect("/stores/#{store.slug}", status: 301)
   end
 
