@@ -1,12 +1,14 @@
 <div class="row main-content">
 	<div class="eight columns coupon-list">
 		<h1>Search Results for: <%= @search_term %></h1>
+		<br>
 		<h2>Stores that match your search</h2>
 		<ul>
 		<% @stores.each do |store| %>
 			<li><%= link_to store.name, store_path(store) %></li>
 		<% end %>
 		</ul>
+		<br>
 		<h2>Promo Codes that match your search</h2>
 		<% @promo_codes.each do |promo_code| %>
 			<%= render partial: 'shared/single_coupon', locals: {promo_code: promo_code} %>

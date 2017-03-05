@@ -8,7 +8,7 @@ class StaticController < ApplicationController
 	end
 
 	def about
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
@@ -24,104 +24,103 @@ class StaticController < ApplicationController
 	end
 
 	def contact
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def grocery
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def terms
-				@subscriber = Subscriber.new
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def articles
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def gardening
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def games
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def clipart
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def entertainment
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def cellphones
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def moneysaving
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def photography
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def keyboarding
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def classics
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 	
 	def newyears
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def fairtrade
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def zoe_stauss
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 		def tyler_stauss
-				@subscriber = Subscriber.new
+		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 	end

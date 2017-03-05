@@ -1,5 +1,14 @@
 class ApplicationController < ActionController::Base
+  before_filter :redirect_subdomain
   protect_from_forgery with: :exception
+
+  def redirect_subdomain
+    if request.host == 'gopromocodes.com'
+      redirect_to 'http://www.gopromocodes.com' + request.fullpath, :status => 301
+    end
+  end
+
+  
   
   def current_user
     @current_user ||= User.find session[:user_id] if session[:user_id]
