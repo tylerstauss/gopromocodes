@@ -21,12 +21,12 @@
 			Use code: <%= link_to promo_code.code, promo_code_path(promo_code), target: :_blank %>
 		<% end %>
 	</p>
-	<p class="coupon-expiration">Expires: 
-		<%= if promo_code.expires.to_s == '2099-12-31' %>
+<p class="coupon-expiration">Expires: 
+		<% if promo_code.expires.to_s == '2099-12-31' %>
 			on-going
-		<%= else %>
+		<% else %>
 			<%= promo_code.expires %>
-		<%= end %>
+		<% end %>
 	</p>
 	
 </div>
