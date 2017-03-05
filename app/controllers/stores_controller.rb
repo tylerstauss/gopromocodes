@@ -22,8 +22,9 @@ class StoresController < ApplicationController
 	end
 
 	def show
+		today = Date.today
 		@store = Store.find(params[:id])
-		@promo_codes = @store.promo_codes.where(approved: true).order("created_at DESC")
+		@promo_codes = @store.promo_codes.where(approved: true).where("expires >= ?", today).order("created_at DESC")
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)

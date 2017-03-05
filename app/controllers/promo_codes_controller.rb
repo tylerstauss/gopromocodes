@@ -98,7 +98,7 @@ require 'uri'
 
 	private
   def promo_code_params
-    params.require(:promo_code).permit(:title,:description, :code, :store_id, { :category_ids => [] }, :starts, :expires, :link, :homepage, :free_shipping, :user_submit, :approved)
+    params.require(:promo_code).permit(:title,:description, :code, :store_id, { :category_ids => [] }, :starts, :expires, :link, :homepage, :free_shipping, :user_submit, :approved, :expiration_date)
   end
 	
 	
