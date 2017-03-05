@@ -10,6 +10,10 @@ Rails.application.routes.draw do
   # Coupons
   get 'new-codes', to: 'promo_codes#newest' 
 
+  #Admins
+  get 'admin', to: 'admins#index'
+  get 'code-approval', to: 'admins#code_approval'
+
   # Static
   get 'about', to: 'static#about'
   get 'contact', to: 'static#contact'	

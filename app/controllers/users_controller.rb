@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
 
 	def index
-		@users = User.search(params[:term], params[:page])
+		authenticate_admin!
+		@users = User.all
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
