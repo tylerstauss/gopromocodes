@@ -2,7 +2,12 @@
 <div class="side-bar-element">
 	<h2 class="sidebar-header">Welcome to GoPromoCodes!</h2>
 	<% if current_user %>
-		<p>Welcome back <%= link_to current_user.username, user_path(current_user) %>!<br><%= link_to "Sign Out", signout_path %></p>
+		<p>Welcome back <%= link_to current_user.username, user_path(current_user) %>!<br><%= link_to "Sign Out", signout_path %>
+		<% if current_user.admin %>
+
+			| <%= link_to "Admin", admin_path %>
+		<% end %>
+		</p>
 	<% else %>
 	<p>
 		<%= link_to "Register", new_user_path %> /

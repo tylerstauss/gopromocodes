@@ -1,0 +1,14 @@
+<div class="row main-content">
+	<div class="eight columns">
+		<div class="red-banner"> 
+			<h1>Approve User Submitted Coupons</h1>
+		</div>
+		<% @promo_codes.each do |promo_code| %>
+		<%= render partial: 'shared/single_coupon_stores', locals: {promo_code: promo_code} %>
+		<% end %>
+
+	</div>
+	<div class="four columns right-side-bar">
+		<%= render partial: 'shared/sidebar' %>
+	</div>
+</div>
