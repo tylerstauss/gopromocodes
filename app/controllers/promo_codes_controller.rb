@@ -28,12 +28,15 @@ require 'uri'
 
 		respond_to do |format|
 			if is_admin?
-				if @promo_code.save
+				if @promo_code.save && params["promo_code"]["category_ids"]
 					if params["promo_code"]["category_ids"]
 						params["promo_code"]["category_ids"].each do |category_id|
 			    	CategoryPromoCode.create(promo_code_id: @promo_code.id, category_id: category_id)
 				    end
 					end
+					format.html { redirect_to store_path(@promo_code.store) and return}
+					format.js { p 'code was successfully created.' }
+				elsif @promo_code.save
 					format.html { redirect_to store_path(@promo_code.store) and return}
 					format.js { p 'code was successfully created.' }
 				else
@@ -75,9 +78,11 @@ require 'uri'
 	def update
 		promo_code = PromoCode.find(params[:id])
     promo_code.update!(promo_code_params)
-    params["promo_code"]["category_ids"].each do |category_id|
-    	CategoryPromoCode.create(promo_code_id: promo_code.id, category_id: category_id)
-    end
+    if params["promo_code"]["category_ids"]
+	    params["promo_code"]["category_ids"].each do |category_id|
+	    	CategoryPromoCode.create(promo_code_id: promo_code.id, category_id: category_id)
+	    end
+	  end
     redirect_to store_path(promo_code.store)
 	end
 
