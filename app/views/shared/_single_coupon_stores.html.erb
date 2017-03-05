@@ -13,10 +13,10 @@
 	</p>
 
 	<p class="promo-code">
-		<% if promo_code.code %>
-			Use code: <%= link_to promo_code.code, promo_code_path(promo_code), target: :_blank %>
-		<% else %>
+		<% if promo_code.code == "NULL" || promo_code.code == '' %>
 			<p>No Code Needed</p>
+		<% else %>
+			Use code: <%= link_to promo_code.code, promo_code_path(promo_code), target: :_blank %>
 		<% end %>
 	</p>
 	<p class="coupon-expiration">Expires: 
