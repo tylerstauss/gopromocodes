@@ -17,11 +17,13 @@ class UsersController < ApplicationController
 
 	def create
 		@user = User.new(user_params)
-	  @user.save
-	  @subscriber = Subscriber.new
-	  @categories = Category.order('name ASC')
-		@top_stores = Store.where(top_store: true).limit(12)
-	  redirect_to @user
+		if verify_recaptcha && @user.save
+	  	redirect_to(user_path(@user))
+	  else
+	  	redirect_to(new_user_path)
+	  end
+
+	  
 	end
 
 	def show
