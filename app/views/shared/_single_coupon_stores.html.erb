@@ -20,7 +20,7 @@
 		<% end %>
 	</p>
 <p class="coupon-expiration">Expires: 
-		<% if promo_code.expires == '2099-12-31' %>
+		<% if promo_code.expires.to_s == '2099-12-31' %>
 			on-going
 		<% else %>
 			<%= promo_code.expires %>
