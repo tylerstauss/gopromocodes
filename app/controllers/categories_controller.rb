@@ -22,6 +22,7 @@ class CategoriesController < ApplicationController
 	end
 
 	def show
+		today = Date.today
 		@category = Category.find(params[:id])
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
