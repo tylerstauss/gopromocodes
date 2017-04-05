@@ -7,6 +7,10 @@ Rails.application.routes.draw do
   resources :users
   resources :subscribers
   resources :store_blogs
+
+  constraints subdomain: false do
+    get ':any', to: redirect(subdomain: 'www', path: '/%{any}'), any: /.*/
+  end
   # Coupons
   get 'new-codes', to: 'promo_codes#newest' 
 
@@ -4612,6 +4616,8 @@ get '/store/asianfoodgrocer.html', to: redirect('/stores/asianfoodgrocer', 301)
   get 'errors/internal_server_error'
   match "/404", :to => "errors#not_found", :via => :all
   match "/500", :to => "errors#internal_server_error", :via => :all
+
+
 
   root :to => 'static#index'
 end
