@@ -8,9 +8,7 @@ Rails.application.routes.draw do
   resources :subscribers
   resources :store_blogs
 
-  constraints subdomain: false do
-    get ':any', to: redirect(subdomain: 'www', path: '/%{any}'), any: /.*/
-  end
+
   # Coupons
   get 'new-codes', to: 'promo_codes#newest' 
 
