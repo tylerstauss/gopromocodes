@@ -7,6 +7,42 @@ class StaticController < ApplicationController
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
+	def laptops
+		p params
+		if params['direct'] == "yes"
+			p "here?"
+			@keyword = params["keyword"] || "gaming laptop"
+			@all_offers = []
+			@url = "http://catalog.bizrate.com/services/catalog/v1/us/product?apiKey=cb889fdd39bf9f49d19e19253cef4245&publisherId=615103&placementId=1&categoryId=&keyword=#{@keyword}&offersOnly=true&biddedOnly=true&results=10&backfillResults=0&startOffers=0&resultsOffers=0&sort=ecpc_desc&minRelevancyScore=100&showRawUrl=true&format=json&callback=callback&showEcpc=true"		
+			@response = HTTParty.get(@url)
+			p "offers from pricegrabber"
+			@shopzilla_offers = @response["offers"]["offer"]
+			@shopzilla_offers.each do |shz|
+				p shz
+				@all_offers.push(category_id: shz["categoryId"], merchant: shz["merchantName"], price: shz["price"]["value"], discount: shz["markdownPercent"], keyword: @keyword, title: shz["title"].gsub("&", "&amp;" ), cpc: shz["estimatedCPC"]["integral"].to_f / 100, url: shz["url"]["value"], network: "SZ", img: shz["images"]["image"][-1]["value"])
+			end
+				@all_offers = @all_offers.sort_by { |x, y| x[:cpc]}
+				@all_offers = @all_offers.reverse
+				redirect_to("http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75&type=CO&u=#{CGI::escape(@all_offers.first[:url])}")
+		else
+			@subscriber = Subscriber.new
+			@categories = Category.order('name ASC')
+			@top_stores = Store.where(top_store: true).limit(12)
+			@keyword = params["keyword"] || "gaming laptop"
+			@all_offers = []
+			@url = "http://catalog.bizrate.com/services/catalog/v1/us/product?apiKey=cb889fdd39bf9f49d19e19253cef4245&publisherId=615103&placementId=1&categoryId=&keyword=#{@keyword}&offersOnly=true&biddedOnly=true&results=10&backfillResults=0&startOffers=0&resultsOffers=0&sort=ecpc_desc&minRelevancyScore=100&showRawUrl=true&format=json&callback=callback&showEcpc=true"		
+			@response = HTTParty.get(@url)
+			p "offers from pricegrabber"
+			@shopzilla_offers = @response["offers"]["offer"]
+			@shopzilla_offers.each do |shz|
+				p shz
+				@all_offers.push(category_id: shz["categoryId"], merchant: shz["merchantName"], price: shz["price"]["value"], discount: shz["markdownPercent"], keyword: @keyword, title: shz["title"].gsub("&", "&amp;" ), cpc: shz["estimatedCPC"]["integral"].to_f / 100, url: shz["url"]["value"], network: "SZ", img: shz["images"]["image"][-1]["value"])
+			end
+			@all_offers = @all_offers.reject { |c| c.empty? }
+		end
+		
+	end
+
 	def about
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
@@ -119,7 +155,7 @@ class StaticController < ApplicationController
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
-		def tyler_stauss
+	def tyler_stauss
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)

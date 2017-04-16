@@ -35,7 +35,8 @@ Rails.application.routes.draw do
   get 'classic-books-on-sat-reading-list', to: 'static#classics', as: :classics
   get 'new-years-traditions', to: 'static#newyears', as: :newyears
   get 'author-biography-zoe-stauss', to: 'static#zoe_stauss', as: :zoestauss
-    get 'author-biography-tyler-stauss', to: 'static#tyler_stauss', as: :tylerstauss
+  get 'author-biography-tyler-stauss', to: 'static#tyler_stauss', as: :tylerstauss
+  get 'laptops', to: 'static#laptops'
   # Sessions
   match 'sign-out', to: 'sessions#destroy', via: [ :get, :post], as: :signout
   get '/sign-in', :to => 'sessions#new', as: :signin
