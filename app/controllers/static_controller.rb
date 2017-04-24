@@ -43,6 +43,19 @@ class StaticController < ApplicationController
 		
 	end
 
+	def deals
+		keyword = params["keyword"]
+		cpc = params["cpc"]
+		if keyword && cpc
+			p url = "https://mysterious-spire-38481.herokuapp.com/offers.json?keyword=#{keyword}&cpc=#{cpc}&format=json"
+			response = HTTParty.get(url)
+			p response
+			@all_offers = []
+		else
+			p "hello"
+		end
+	end
+
 	def about
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
