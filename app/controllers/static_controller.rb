@@ -47,10 +47,22 @@ class StaticController < ApplicationController
 		keyword = params["keyword"]
 		cpc = params["cpc"]
 		if keyword && cpc
-			p url = "https://mysterious-spire-38481.herokuapp.com/offers.json?keyword=#{keyword}&cpc=#{cpc}&format=json"
+			p url = "https://mysterious-spire-38481.herokuapp.com/offers-api.json?keyword=#{keyword}&cpc=#{cpc}&format=json"
 			response = HTTParty.get(url)
-			p response
-			@all_offers = []
+			@all_offers = JSON.parse(response.body)
+			p @all_offers
+			p @all_offers.count
+			@offer = @all_offers.sample
+			p '$' * 50
+			p @offer
+			redirect_to("http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75&type=CO&cuid=#{@offer['cpc']}&u=#{CGI::escape(@offer['url'])}")
+		elsif keyword
+			p url = "https://mysterious-spire-38481.herokuapp.com/offers-api.json?keyword=#{keyword}&format=json"
+			response = HTTParty.get(url)
+			@all_offers = JSON.parse(response.body)
+			p @all_offers
+			p @all_offers.count
+			p '$' * 50
 		else
 			p "hello"
 		end

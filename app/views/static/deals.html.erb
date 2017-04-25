@@ -3,7 +3,13 @@
 		<div class="red-banner">
 			<h1>Today's Best Deals</h1>
 		</div>
-	
+		<p>Check out today's best deals from our favorite partners!</p>
+		<% @all_offers.each do |offer| %>
+			<%= offer['title'] %> - only <%= link_to(number_to_currency(offer['price']), "http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75&type=CO&u=#{CGI::escape(offer['url'])}") %>
+			<%=  offer['cpc'] if is_admin? %><br>
+			<%= link_to(image_tag(offer['image']), "http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75&type=CO&u=#{CGI::escape(offer['url'])}") %><br>
+		<% end %>
 	</div>
-
+	<div class="four columns right-side-bar">
+	</div>
 </div>
