@@ -55,7 +55,10 @@ class StaticController < ApplicationController
 			@offer = @all_offers.sample
 			p '$' * 50
 			p @offer
-			redirect_to("http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75&type=CO&cuid=#{@offer['cpc']}&u=#{CGI::escape(@offer['url'])}")
+			@viglink_redirect = "http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75"
+			@redirect_url = CGI::escape(@offer['url'])
+			@cuid = @offer['cpc']
+			# redirect_to("http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75&type=CO&cuid=#{@offer['cpc']}&u=#{CGI::escape(@offer['url'])}")
 		elsif keyword
 			p url = "https://mysterious-spire-38481.herokuapp.com/offers-api.json?keyword=#{keyword}&format=json"
 			response = HTTParty.get(url)

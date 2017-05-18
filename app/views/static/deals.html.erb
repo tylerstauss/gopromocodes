@@ -1,4 +1,12 @@
 <div class="row main-content">
+	<% if params['cpc'] && params['cpc'].to_i >= 1 %>
+		<script type="text/javascript">
+		console.log('<%= @viglink_redirect %>'+ '&type=CO' + '&cuid=' + '<%= @cuid %>' + '&u=' + '<%= @redirect_url %>');
+		var url = '<%= @viglink_redirect %>'+ '&type=CO' + '&cuid=' + '<%= @cuid %>' + '&u=' + '<%= @redirect_url %>';
+		window.location.href = url
+		
+		</script>
+	<% end %>
 	<div class="eight columns coupon-list">
 		<div class="red-banner">
 			<h1>Today's Best Deals</h1>
