@@ -2,18 +2,28 @@
 		<%= render partial: 'shared/top_stores', locals: {
 			top_stores: @top_stores 
 		} %>	
-	<!-- 	<div>
-			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- display -->
-<!-- <ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-5525308898632294"
-     data-ad-slot="7430294047"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
+		<div>
+		<div id="contentad380540"></div>
+<script type="text/javascript">
+    (function(d) {
+        var params =
+        {
+            id: "42dd1ba1-37f8-41c2-878e-19ea4f9227a8",
+            d:  "Z29wcm9tb2NvZGVzLmNvbQ==",
+            wid: "380540",
+            cb: (new Date()).getTime()
+        };
+
+        var qs=[];
+        for(var key in params) qs.push(key+'='+encodeURIComponent(params[key]));
+        var s = d.createElement('script');s.type='text/javascript';s.async=true;
+        var p = 'https:' == document.location.protocol ? 'https' : 'http';
+        s.src = p + "://api.content-ad.net/Scripts/widget2.aspx?" + qs.join('&');
+        d.getElementById("contentad380540").appendChild(s);
+    })(document);
 </script>
-		</div> --> -->
+                    
+		</div>
 		<%= render partial: 'shared/email_signup' %>
 		<%= render partial: 'shared/categories', locals: {
 			categories: @categories 
