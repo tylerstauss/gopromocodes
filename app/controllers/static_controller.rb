@@ -44,16 +44,37 @@ class StaticController < ApplicationController
 	end
 
 	def deals
-		keyword = params["keyword"]
+		keywords = [
+			['face scrub', 10 ], 
+			['dri-fit', 10 ],  
+			['earrings', 10 ], 
+			['laptop', 10 ],
+			['dress', 10 ],
+			['dining set', 20 ],
+			['sports bra', 10 ],
+			['headphones', 10 ],
+			['sunscreen', 10 ],
+			['boots', 10 ],
+			['makeup', 10 ],
+			['lipstick', 10 ],
+			['skirt', 10 ],
+			['soap', 10 ],
+			['treadmill', 10 ],
+			['bbq', 10 ],
+			['wine', 10 ],
+			['slow cooker', 10 ],
+			['microwave', 10]
+		]
+		keyword = keywords.sample
+		keyword = keyword[0]
+		cpc = keyword[1]
 		cpc = params["cpc"]
 		if keyword && cpc
-			p url = "https://mysterious-spire-38481.herokuapp.com/offers-api.json?keyword=#{keyword}&cpc=#{cpc}&format=json"
+			url = "https://mysterious-spire-38481.herokuapp.com/offers-api.json?keyword=#{keyword}&cpc=#{cpc}&format=json"
 			response = HTTParty.get(url)
 			@all_offers = JSON.parse(response.body)
-			p @all_offers
 			p @all_offers.count
 			@offer = @all_offers.sample
-			p '$' * 50
 			p @offer
 			@viglink_redirect = "http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75"
 			@redirect_url = CGI::escape(@offer['url'])
