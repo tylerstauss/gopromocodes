@@ -69,24 +69,32 @@ class StaticController < ApplicationController
 		keyword = keyword[0]
 		cpc = keyword[1]
 		cpc = params["cpc"]
+		# set cpc = false to go through the javascript redirect method calling io bids service
+		cpc = false
 		if keyword && cpc
 			url = "https://mysterious-spire-38481.herokuapp.com/offers-api.json?keyword=#{keyword}&cpc=#{cpc}&format=json"
 			response = HTTParty.get(url)
 			@all_offers = JSON.parse(response.body)
-			p @all_offers.count
 			@offer = @all_offers.sample
-			p @offer
 			@viglink_redirect = "http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75"
 			@redirect_url = CGI::escape(@offer['url'])
 			@cuid = @offer['cpc']
-			redirect_to("http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75&type=CO&cuid=#{@offer['cpc']}&u=#{CGI::escape(@offer['url'])}")
+			# redirect_to("http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75&type=CO&cuid=#{@offer['cpc']}&u=#{CGI::escape(@offer['url'])}")
 		elsif keyword
-			p url = "https://mysterious-spire-38481.herokuapp.com/offers-api.json?keyword=#{keyword}&format=json"
-			response = HTTParty.get(url)
-			@all_offers = JSON.parse(response.body)
-			p @all_offers
-			p @all_offers.count
 			p '$' * 50
+			p keyword
+			url = "http://viglink.io/bids?keywords=#{keyword}"
+			p url
+			headers = {Authorization: "secret a687ad9b2d71a29ec421bb941bfa709d51c7a940"}
+
+			response = HTTParty.get(url, headers: headers)
+			p response["bids"]["#{keyword}"]
+			bid = response["bids"]["#{keyword}"].sample
+			p bid["url"]
+			p bid["epc"]
+			@viglink_redirect = "http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75"
+			@redirect_url = CGI::escape(bid["url"])
+			@cuid = bid["epc"]
 		else
 			p "hello"
 		end
