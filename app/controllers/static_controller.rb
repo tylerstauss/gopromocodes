@@ -63,6 +63,16 @@ class StaticController < ApplicationController
 			['bbq', 10 ],
 			['wine', 10 ],
 			['slow cooker', 10 ],
+			# ['bikini', 10 ],
+			# ['computer', 10 ],
+			# ['camera', 10 ],
+			# ['television', 10 ],
+			# ['cellphone', 10 ],
+			# ['clothes', 10 ],
+			# ['dog', 10 ],
+			# ['winter tires', 10 ],
+			# ['strip light', 10 ],
+			# ['dry cat food', 10 ],
 			['microwave', 10]
 		]
 		keyword = keywords.sample
@@ -70,8 +80,9 @@ class StaticController < ApplicationController
 		cpc = keyword[1]
 		cpc = params["cpc"]
 		# set cpc = false to go through the javascript redirect method calling io bids service
-		cpc = false
+		# cpc = false
 		if keyword && cpc
+			p "here"
 			url = "https://mysterious-spire-38481.herokuapp.com/offers-api.json?keyword=#{keyword}&cpc=#{cpc}&format=json"
 			response = HTTParty.get(url)
 			@all_offers = JSON.parse(response.body)
