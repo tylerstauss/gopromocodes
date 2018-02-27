@@ -80,7 +80,7 @@ class StaticController < ApplicationController
 		cpc = keyword[1]
 		cpc = params["cpc"]
 		# set cpc = false to go through the javascript redirect method calling io bids service
-		# cpc = false
+		cpc = false
 		if keyword && cpc
 			p "here"
 			url = "https://mysterious-spire-38481.herokuapp.com/offers-api.json?keyword=#{keyword}&cpc=#{cpc}&format=json"
