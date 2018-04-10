@@ -23,7 +23,7 @@ class StaticController < ApplicationController
 			end
 				@all_offers = @all_offers.sort_by { |x, y| x[:cpc]}
 				@all_offers = @all_offers.reverse
-				redirect_to("http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75&type=CO&u=#{CGI::escape(@all_offers.first[:url])}")
+				redirect_to("http://redirect.viglink.com?key=b4519aa721815a266d11aa648fe4e825&type=CO&u=#{CGI::escape(@all_offers.first[:url])}")
 		else
 			@subscriber = Subscriber.new
 			@categories = Category.order('name ASC')
@@ -63,21 +63,20 @@ class StaticController < ApplicationController
 			['bbq', 10 ],
 			['wine', 10 ],
 			['slow cooker', 10 ],
-			# ['bikini', 10 ],
-			# ['computer', 10 ],
-			# ['camera', 10 ],
-			# ['television', 10 ],
-			# ['cellphone', 10 ],
-			# ['clothes', 10 ],
-			# ['dog', 10 ],
-			# ['winter tires', 10 ],
-			# ['strip light', 10 ],
-			# ['dry cat food', 10 ],
+			['bikini', 10 ],
+			['computer', 10 ],
+			['camera', 10 ],
+			['television', 10 ],
+			['cellphone', 10 ],
+			['clothes', 10 ],
+			['dog', 10 ],
+			['winter tires', 10 ],
+			['strip light', 10 ],
+			['dry cat food', 10 ],
 			['microwave', 10]
 		]
 		keyword = keywords.sample
 		keyword = keyword[0]
-		cpc = keyword[1]
 		cpc = params["cpc"]
 		# set cpc = false to go through the javascript redirect method calling io bids service
 		cpc = false
@@ -87,10 +86,10 @@ class StaticController < ApplicationController
 			response = HTTParty.get(url)
 			@all_offers = JSON.parse(response.body)
 			@offer = @all_offers.sample
-			@viglink_redirect = "http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75"
+			@viglink_redirect = "http://redirect.viglink.com?key=b4519aa721815a266d11aa648fe4e825"
 			@redirect_url = CGI::escape(@offer['url'])
 			@cuid = @offer['cpc']
-			# redirect_to("http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75&type=CO&cuid=#{@offer['cpc']}&u=#{CGI::escape(@offer['url'])}")
+			# redirect_to("http://redirect.viglink.com?key=b4519aa721815a266d11aa648fe4e825&type=CD&cuid=#{@offer['cpc']}&u=#{CGI::escape(@offer['url'])}")
 		elsif keyword
 			p '$' * 50
 			p keyword
@@ -103,7 +102,7 @@ class StaticController < ApplicationController
 			bid = response["bids"]["#{keyword}"].sample
 			p bid["url"]
 			p bid["epc"]
-			@viglink_redirect = "http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75"
+			@viglink_redirect = "http://redirect.viglink.com?key=b4519aa721815a266d11aa648fe4e825"
 			@redirect_url = CGI::escape(bid["url"])
 			@cuid = bid["epc"]
 		else
