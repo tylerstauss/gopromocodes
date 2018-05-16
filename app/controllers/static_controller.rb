@@ -93,18 +93,24 @@ class StaticController < ApplicationController
 		elsif keyword
 			p '$' * 50
 			p keyword
-			url = "http://viglink.io/bids?keywords=#{keyword}"
-			p url
+			url = "http://catalog.bizrate.com/services/catalog/v1/us/product?apiKey=cb889fdd39bf9f49d19e19253cef4245&publisherId=615103&placementId=1&categoryId=&keyword=#{keyword}&offersOnly=true&biddedOnly=true&results=10&backfillResults=0&startOffers=0&resultsOffers=0&sort=ecpc_desc&minRelevancyScore=100&showRawUrl=true&format=json&callback=callback&showEcpc=true"
+			# url = "http://viglink.io/bids?keywords=#{keyword}&categoryId=1"
+			# p url
 			headers = {Authorization: "secret a687ad9b2d71a29ec421bb941bfa709d51c7a940"}
-
-			response = HTTParty.get(url, headers: headers)
-			p response["bids"]["#{keyword}"]
-			bid = response["bids"]["#{keyword}"].sample
-			p bid["url"]
-			p bid["epc"]
+			response = HTTParty.get(url)
+			# response = HTTParty.get(url, headers: headers)
+			# p response["bids"]["#{keyword}"]
+			# bid = response["bids"]["#{keyword}"].sample
+			# p bid["url"]
+			# p bid["epc"]
+			bid = response["offers"]["offer"][0]
+			url = bid['url']['value']
+			p url
+			epc = bid["estimatedCPC"]["value"]
+			p epc
 			@viglink_redirect = "http://redirect.viglink.com?key=b4519aa721815a266d11aa648fe4e825"
-			@redirect_url = CGI::escape(bid["url"])
-			@cuid = bid["epc"]
+			@redirect_url = CGI::escape(url)
+			@cuid = bid[epc]
 		else
 			p "hello"
 		end
