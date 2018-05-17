@@ -110,7 +110,7 @@ class StaticController < ApplicationController
 			p epc
 			@viglink_redirect = "http://redirect.viglink.com?key=b4519aa721815a266d11aa648fe4e825"
 			@redirect_url = CGI::escape(url)
-			@cuid = epc
+			@cuid = "#{epc}-#{keyword}"
 		else
 			p "hello"
 		end
