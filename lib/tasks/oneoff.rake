@@ -4,7 +4,7 @@ namespace :oneoff do
   	stores = Store.all
   	stores.each do |store|
   		domain = URI.parse(store.url).host
-  		store.domain = domain
+  		store.domain = domain.gsub("www.","")
   		store.save
   	end
   end
