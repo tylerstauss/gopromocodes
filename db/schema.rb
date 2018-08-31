@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180831014527) do
+ActiveRecord::Schema.define(version: 20180831015616) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,6 +82,7 @@ ActiveRecord::Schema.define(version: 20180831014527) do
     t.string   "search_terms"
     t.string   "network_id"
     t.string   "network"
+    t.string   "domain"
     t.index ["category_id"], name: "index_stores_on_category_id", using: :btree
     t.index ["name", "slug"], name: "index_stores_on_name_and_slug", unique: true, using: :btree
   end
