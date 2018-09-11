@@ -108,7 +108,7 @@ class StaticController < ApplicationController
 			p url
 			epc = bid["estimatedCPC"]["value"]
 			p epc
-			@viglink_redirect = "http://redirect.viglink.com?key=b4519aa721815a266d11aa648fe4e825&loc=http://gopromocodes.com"
+			@viglink_redirect = "http://redirect.viglink.com?key=b4519aa721815a266d11aa648fe4e825&loc=http%3A%2F%2Fgopromocodes.com"
 			@redirect_url = CGI::escape(url)
 			@cuid = "#{epc}-#{keyword}"
 		else
