@@ -8,6 +8,7 @@ class StaticController < ApplicationController
 	end
 
 	def coupons_by_domain
+		today = Date.today
 		@domain = params[:domain]
 		@store = Store.where(domain: @domain).first
 		@promo_codes = @store.promo_codes.where(approved: true).where("expires >= ?", today).order("created_at DESC")
