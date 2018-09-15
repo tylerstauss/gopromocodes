@@ -19,7 +19,8 @@ Rails.application.routes.draw do
   # Static
   get 'about', to: 'static#about'
   get 'contact', to: 'static#contact'	
-  get 'search', to: 'static#search'		
+  get 'search', to: 'static#search'
+  get 'coupons-by-domain', to: 'static#coupons_by_domain'		
   get 'grocery-coupons', to: 'static#grocery'
   get 'terms-and-privacy-policy', to: 'static#terms', as: :terms
   get 'articles', to: 'static#articles'

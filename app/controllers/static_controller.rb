@@ -7,6 +7,14 @@ class StaticController < ApplicationController
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
+	def coupons_by_domain
+		@domain = params[:domain]
+		@store = Store.where(domain: @domain).first
+		@promo_codes = @store.promo_codes.where(approved: true).where("expires >= ?", today).order("created_at DESC")
+		@here = @promo_codes
+		render :layout => false
+	end
+
 	def laptops
 		p params
 		if params['direct'] == "yes"
