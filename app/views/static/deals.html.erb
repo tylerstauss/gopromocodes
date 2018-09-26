@@ -14,9 +14,9 @@
 		<p>Check out today's best deals from our favorite partners!</p>
 		<% if @all_offers %>
 			<% @all_offers.each do |offer| %>
-				<%= offer['title'] %> - only <%= link_to(number_to_currency(offer['price']), "http://redirect.viglink.com?key=b4519aa721815a266d11aa648fe4e825&type=CD&u=#{CGI::escape(offer['url'])}") %>
+				<%= offer['title'] %> - only <%= link_to(number_to_currency(offer['price']), "http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75&type=CD&u=#{CGI::escape(offer['url'])}") %>
 				<%=  offer['cpc'] if is_admin? %><br>
-				<%= link_to(image_tag(offer['image']), "http://redirect.viglink.com?key=b4519aa721815a266d11aa648fe4e825&type=CD&u=#{CGI::escape(offer['url'])}") %><br>
+				<%= link_to(image_tag(offer['image']), "http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75&type=CD&u=#{CGI::escape(offer['url'])}") %><br>
 			<% end %>
 		<% end %>
 	</div>
