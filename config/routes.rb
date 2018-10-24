@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   #Admins
   get 'admin', to: 'admins#index'
   get 'code-approval', to: 'admins#code_approval'
+  get 'admin/all-stores', to: 'stores#all_stores'
 
   # Static
   get 'about', to: 'static#about'

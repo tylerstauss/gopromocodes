@@ -7,6 +7,14 @@ class StoresController < ApplicationController
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
+	def all_stores
+		authenticate_admin!
+		@stores = Store.search(params[:term], params[:page])
+		@subscriber = Subscriber.new
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+	end
+
 	def new
 		authenticate_admin!
 		@store = Store.new
