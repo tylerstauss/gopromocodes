@@ -51,7 +51,7 @@ def self.get_cj_promotions
 	headers = {'authorization' => "#{Figaro.env.CJ_KEY}"}
 	url = "https://linksearch.api.cj.com/v2/link-search?website-id=5329581&advertiser-ids=joined&promotion-type=coupon&link-type=Text+Link&records-per-page=100&page-number=1"  
 	response = HTTParty.get(url, :headers => headers)
-	p response
+	# p response
 	total = response['cj_api']['links']['total_matched'].to_i
 	# p total
 	pages = (total /100.to_f).ceil
@@ -81,6 +81,9 @@ def self.get_cj_promotions
 						if store
 							p '$' * 10
 							p store.id, store.name
+							store.network = 'cj' if store.network == nil or store.network == ''
+							store.network_id = cj_id if store.network_id == nil or store.network_id = ''
+							store.save
 							PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
 						end
 					rescue
