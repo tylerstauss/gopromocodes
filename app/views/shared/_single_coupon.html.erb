@@ -15,7 +15,7 @@
 	</p>
 
 	<p class="promo-code">
-		<% if promo_code.code == "NULL" || promo_code.code == '' %>
+		<% if promo_code.code == "NULL" || promo_code.code == '' || promo_code.code  == nil %>
 			<p>No Code Needed</p>
 		<% else %>
 			Use code: <%= link_to promo_code.code, promo_code_path(promo_code), target: :_blank, rel: 'nofollow'  %>
