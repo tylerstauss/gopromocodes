@@ -143,9 +143,9 @@ end
 					p description = description + " " +link['couponrestriction'].to_s if link['couponrestriction']
 					p link_destination
 					p linkshare_id = link['advertiserid']
+					begin
 					domain = URI.parse(link_destination).host.gsub("www.","").downcase
 					p "domain: #{domain}" 
-					begin
 						store = Store.where(domain: domain).first
 						if store
 							p '$' * 10
