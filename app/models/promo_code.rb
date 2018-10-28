@@ -145,6 +145,7 @@ end
 					p linkshare_id = link['advertiserid']
 					domain = URI.parse(link_destination).host.gsub("www.","").downcase
 					p "domain: #{domain}" 
+					begin
 						store = Store.where(domain: domain).first
 						if store
 							p '$' * 10
@@ -154,6 +155,8 @@ end
 							store.save
 							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
 						end
+					rescue
+					end
 					end
 				end
 			end
