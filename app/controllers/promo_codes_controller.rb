@@ -105,6 +105,16 @@ require 'uri'
   def promo_code_params
     params.require(:promo_code).permit(:title,:description, :code, :store_id, { :category_ids => [] }, :starts, :expires, :link, :homepage, :free_shipping, :user_submit, :approved, :expiration_date)
   end
-	
-	
+
+  def get_pepperjam_promotions
+  	PromoCode.get_pepperjam_promotions
+  end
+  
+  def get_linkshare_promotions
+  	PromoCode.get_linkshare_promotions
+  end	
+  
+  def get_cj_promotions
+  	PromoCode.get_cj_promotions
+  end	
 end

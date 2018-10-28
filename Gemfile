@@ -1,3 +1,4 @@
+ruby '2.3.0'
 source 'https://rubygems.org'
 
 git_source(:github) do |repo_name|
@@ -27,7 +28,7 @@ gem 'bcrypt', '~> 3.1.7'
 gem "recaptcha", require: "recaptcha/rails"
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
-
+gem 'figaro'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
@@ -60,4 +61,3 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-ruby '2.3.0'
