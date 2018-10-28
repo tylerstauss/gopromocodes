@@ -97,7 +97,7 @@ end
 
 	def self.get_linkshare_promotions
 		puts 'Updating linkshare Promotions'
-		sleep(20)
+		
 
 		token_url = 'https://api.rakutenmarketing.com/token/'
 		token_payload = "grant_type=password&username=#{Figaro.env.LINKSHARE_USERNAME}&password=#{Figaro.env.LINKSHARE_PASSWORD}&scope=2454844"
@@ -127,21 +127,34 @@ end
 			response = HTTParty.get(url, :headers => headers)
 			links = response['couponfeed']['link']
 			links.each do |link|
+				unless link["advertisername"] == "LinkShare"
 				if link['offerenddate'] == 'ongoing' || link['offerenddate'] > Time.now || link['offerenddate'] == nil 
 					p link
-					# new_link = Promotion.where(advertiser: link['advertisername'], network_id: link['advertiserid'], affiliated_link: link['clickurl']).first_or_create
-					# new_link.network = 'linkshare'
-					# new_link.promo_code = link['couponcode']
-					# new_link.start_date = link['offerstartdate']
-					# new_link.end_date = link['offerenddate'] unless link['offerenddate'] == nil
-					# new_link.end_date = 'ongoing' if link['offerenddate'] == nil
-					# new_link.description = link['offerdescription'].to_s + link['couponrestriction'].to_s
-					# merchant = Merchant.where('network = ? and network_id = ?', 'linkshare', link['advertiserid'].to_s).first
-					# merchant.promotions << new_link if merchant
-					# new_link.viglink_merchant_id = merchant.viglink_id if merchant
-					# # p merchant.viglink_id if merchant
-					# # p new_link.viglink_merchant_id
-					# new_link.save
+					link_destination = FinalRedirectUrl.final_redirect_url(link["clickurl"])
+					p code = link['couponcode']
+					p start_date = link['offerstartdate']
+					p end_date = link['offerenddate'] unless link['offerenddate'] == nil
+					p end_date = 'ongoing' if link['offerenddate'] == nil
+					p title = link['offerdescription'].to_s 
+					
+					# p description = link["advertisername"] + " - " +link['couponrestriction'].to_s if link['couponrestriction']
+					
+					description = title + " at #{link['advertisername']}."
+					p description = description + " " +link['couponrestriction'].to_s if link['couponrestriction']
+					p link_destination
+					p linkshare_id = link['advertiserid']
+					domain = URI.parse(link_destination).host.gsub("www.","").downcase
+					p "domain: #{domain}" 
+						store = Store.where(domain: domain).first
+						if store
+							p '$' * 10
+							p store.id, store.name
+							store.network = 'linkshare' if store.network == nil or store.network == ''
+							store.network_id = linkshare_id if store.network_id == nil or store.network_id = ''
+							store.save
+							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+						end
+					end
 				end
 			end
 

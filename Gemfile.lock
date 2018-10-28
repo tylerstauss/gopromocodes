@@ -57,6 +57,7 @@ GEM
     ffi (1.9.25)
     figaro (1.1.1)
       thor (~> 0.14)
+    final_redirect_url (0.1.0)
     friendly_id (5.1.0)
       activerecord (>= 4.0.0)
     globalid (0.4.1)
@@ -176,6 +177,7 @@ DEPENDENCIES
   byebug
   coffee-rails (~> 4.2)
   figaro
+  final_redirect_url
   friendly_id (~> 5.1.0)
   httparty
   jbuilder (~> 2.5)
