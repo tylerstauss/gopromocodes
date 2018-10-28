@@ -49,10 +49,9 @@ def self.get_pepperjam_promotions
 def self.get_cj_promotions
 	puts 'Updating cj Promotions'
 	headers = {'authorization' => "#{Figaro.env.CJ_KEY}"}
-	p headers
 	url = "https://linksearch.api.cj.com/v2/link-search?website-id=5329581&advertiser-ids=joined&promotion-type=coupon&link-type=Text+Link&records-per-page=100&page-number=1"  
 	response = HTTParty.get(url, :headers => headers)
-	# p response
+	p response
 	total = response['cj_api']['links']['total_matched'].to_i
 	# p total
 	pages = (total /100.to_f).ceil
