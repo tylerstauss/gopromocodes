@@ -21,23 +21,33 @@ def self.get_pepperjam_promotions
 			links = response['data']
 			links.each do |link|
 				p link
-				# if link['end_date'] == '0000-00-00 00:00:00' || link['end_date'] > Time.now || link['end_date'] == nil || link['end_date'] == 'ongoing'
-				# 	new_link = Promotion.where(advertiser: link['program_name'], network_id: link['program_id'], link_id: link['id']).first_or_create
-				# 	new_link.network = 'pepperjam'
-				# 	new_link.affiliated_link = link['code']
-				# 	new_link.promo_code = link['coupon']
-				# 	new_link.start_date = link['start_date']
-				# 	new_link.end_date = link['end_date'].to_i unless link['end_date'] == nil
-				# 	new_link.end_date = 'ongoing' if link['end_date'] == nil || link['end_date'] == '0000-00-00 00:00:00'
-				# 	new_link.description = link['description'].to_s
-				# 	merchant = Merchant.where('network = ? and network_id = ?', 'pepperjam', link['program_id'].to_s).first
-				# 	merchant.promotions << new_link if merchant
-				# 	new_link.tld = merchant.url if merchant
-				# 	new_link.viglink_merchant_id = merchant.viglink_id if merchant
-				# 	# p merchant.viglink_id if merchant
-				# 	# p new_link.viglink_merchant_id
-				# 	new_link.save
-				# end
+				if link['end_date'] == '0000-00-00 00:00:00' || link['end_date'] > Time.now || link['end_date'] == nil || link['end_date'] == 'ongoing'
+					network = 'pepperjam'
+					title = link['name']
+					link_destination = FinalRedirectUrl.final_redirect_url(link['code'])
+					code = link['coupon']
+					start_date = link['start_date']
+					end_date = link['end_date'].to_i unless link['end_date'] == nil
+					end_date = 'ongoing' if link['end_date'] == nil || link['end_date'] == '0000-00-00 00:00:00'
+					description = link['description'].to_s
+					pepperjam_id = link['program_id']
+					begin
+					p link_destination
+						domain = URI.parse(link_destination).host.gsub("www.","").downcase
+						p "domain: #{domain}" 
+							store = Store.where(domain: domain).first
+							p store
+							if store
+								p '$' * 10
+								p store.id, store.name
+								store.network = 'pepperjam' if store.network == nil or store.network == ''
+								store.network_id = pepperjam_id if store.network_id == nil or store.network_id = ''
+								store.save
+								p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+							end
+					rescue
+					end
+				end
 			end
 			pages = pages - 1
 		end
