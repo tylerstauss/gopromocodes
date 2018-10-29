@@ -3,7 +3,8 @@ namespace :oneoff do
   task populate_domain: :environment do
   	stores = Store.all
   	stores.each do |store|
-  		domain = URI.parse(store.url).host.gsub("www.","").downcase
+  		domain = URI.parse(store.url).host
+  		store.domain = domain.gsub("www.","").downcase
   		store.save
   	end
   end
