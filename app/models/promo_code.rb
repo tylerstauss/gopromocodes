@@ -35,28 +35,30 @@ def self.get_pepperjam_promotions
 					description = link['description'].to_s
 					pepperjam_id = link['program_id']
 					slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.co.uk','').downcase
-					begin
-					p link_destination
-						domain = URI.parse(link_destination).host.gsub("www.","").downcase
-						p "domain: #{domain}" 
-							store = Store.where(domain: domain).first
-							p store
-							if store
-								p '$' * 10
-								p store.id, store.name
-								store.network = 'pepperjam' if store.network == nil or store.network == ''
-								store.network_id = pepperjam_id if store.network_id == nil or store.network_id = ''
-								store.save
-								p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date) if store.active
-							else
-								store = Store.create(name: store_name,network: 'pepperjam', network_id: pepperjam_id, domain: domain, url: "http://www.#{domain}", slug: slug, top_store: false)
-								p store.id, store.name
-								store.network = 'pepperjam' if store.network == nil or store.network == ''
-								store.network_id = pepperjam_id if store.network_id == nil or store.network_id = ''
-								store.save
-								p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
-							end
-					rescue
+					if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
+						begin
+						p link_destination
+							domain = URI.parse(link_destination).host.gsub("www.","").downcase
+							p "domain: #{domain}" 
+								store = Store.where(domain: domain).first
+								p store
+								if store
+									p '$' * 10
+									p store.id, store.name
+									store.network = 'pepperjam' if store.network == nil or store.network == ''
+									store.network_id = pepperjam_id if store.network_id == nil or store.network_id = ''
+									store.save
+									p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date) if store.active
+								else
+									store = Store.create(name: store_name,network: 'pepperjam', network_id: pepperjam_id, domain: domain, url: "http://www.#{domain}", slug: slug, top_store: false)
+									p store.id, store.name
+									store.network = 'pepperjam' if store.network == nil or store.network == ''
+									store.network_id = pepperjam_id if store.network_id == nil or store.network_id = ''
+									store.save
+									p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+								end
+						rescue
+						end
 					end
 				end
 			end
@@ -96,7 +98,7 @@ def self.get_cj_promotions
 					p description = link['description']
 					p code = link['coupon_code']
 					p title = link["link_name"]
-					if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%')
+					if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
 						begin
 							p domain = URI.parse(link['destination']).host.gsub("www.","").downcase
 							store = Store.where(domain: domain).first
@@ -166,19 +168,21 @@ end
 					p description = description + " " +link['couponrestriction'].to_s if link['couponrestriction']
 					p link_destination
 					p linkshare_id = link['advertiserid']
-					begin
-					domain = URI.parse(link_destination).host.gsub("www.","").downcase
-					p "domain: #{domain}" 
-						store = Store.where(domain: domain).first
-						if store
-							p '$' * 10
-							p store.id, store.name
-							store.network = 'linkshare' if store.network == nil or store.network == ''
-							store.network_id = linkshare_id if store.network_id == nil or store.network_id = ''
-							store.save
-							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+					if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
+						begin
+						domain = URI.parse(link_destination).host.gsub("www.","").downcase
+						p "domain: #{domain}" 
+							store = Store.where(domain: domain).first
+							if store
+								p '$' * 10
+								p store.id, store.name
+								store.network = 'linkshare' if store.network == nil or store.network == ''
+								store.network_id = linkshare_id if store.network_id == nil or store.network_id = ''
+								store.save
+								p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+							end
+						rescue
 						end
-					rescue
 					end
 					end
 				end
