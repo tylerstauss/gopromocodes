@@ -1,4 +1,5 @@
 namespace :oneoff do
+  
   desc "TODO"
   task populate_domain: :environment do
   	stores = Store.all
@@ -8,6 +9,11 @@ namespace :oneoff do
   		store.save
   	end
   end
+  	task get_all_promotions: :environment do
+  		PromoCode.get_pepperjam_promotions
+		PromoCode.get_cj_promotions
+		PromoCode.get_linkshare_promotions
+  	end
 	task get_pepperjam_promotions: :environment do
 		PromoCode.get_pepperjam_promotions
 	end
@@ -17,4 +23,5 @@ namespace :oneoff do
 	task get_linkshare_promotions: :environment do
 		PromoCode.get_linkshare_promotions
 	end	
+
 end

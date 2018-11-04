@@ -13,14 +13,14 @@
 	</p>
 
 	<p class="promo-code">
-		<% if promo_code.code == "NULL" || promo_code.code == '' || promo_code.code  == nil %>
+		<% if promo_code.code == "NULL" || promo_code.code == '' || promo_code.code  == nil || promo_code.code == 'n/a' %>
 			<p>No Code Needed</p>
 		<% else %>
 			Use code: <%= link_to promo_code.code, promo_code_path(promo_code), target: :_blank, rel: 'nofollow' %>
 		<% end %>
 	</p>
 <p class="coupon-expiration">Expires: 
-		<% if promo_code.expires.to_s == '2099-12-31' %>
+		<% if promo_code.expires.to_s == '2099-12-31' || promo_code.expires == nil || promo_code.expires.to_s == nil %>
 			on-going
 		<% else %>
 			<%= promo_code.expires %>
