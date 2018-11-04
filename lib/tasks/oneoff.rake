@@ -13,7 +13,7 @@ namespace :oneoff do
   	task cleanup_promotions: :environment do 
   		codes = PromoCode.where(approved: true)
   		codes.each do |code|
-  			if code.description.downcase.include?("off") || code.description.downcase.include?('free') || code.description.downcase.include?('%') || code.title.downcase.include?("off") || code.title.downcase.include?('free') || code.title.downcase.include?('%')
+  			if code.description.downcase.include?("off") || code.description.downcase.include?('free') || code.description.downcase.include?('%') || code.title.downcase.include?("off") || code.title.downcase.include?('free') || code.title.downcase.include?('%') || code.description.downcase.include?("$") || code.title.downcase.include?("off")
   				p 'code contains desirable info'
   			else
   				p code
