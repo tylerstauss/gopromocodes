@@ -16,7 +16,8 @@ namespace :oneoff do
   			if code.description.downcase.include?("off") || code.description.downcase.include?('free') || code.description.downcase.include?('%') || code.title.downcase.include?("off") || code.title.downcase.include?('free') || code.title.downcase.include?('%') || code.description.downcase.include?("$") || code.title.downcase.include?("off")
   				p 'code contains desirable info'
   			else
-  				p code
+  				code.approved = false
+  				code.save
   			end
   		end
   	end
