@@ -46,7 +46,7 @@ def self.get_pepperjam_promotions
 								store.network = 'pepperjam' if store.network == nil or store.network == ''
 								store.network_id = pepperjam_id if store.network_id == nil or store.network_id = ''
 								store.save
-								p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+								p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date) if store.active
 							else
 								store = Store.create(name: store_name,network: 'pepperjam', network_id: pepperjam_id, domain: domain, url: "http://www.#{domain}", slug: slug, top_store: false)
 								p store.id, store.name
