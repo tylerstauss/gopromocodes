@@ -50,11 +50,8 @@ def self.get_pepperjam_promotions
 									store.save
 									p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date) if store.active
 								else
-									store = Store.create(name: store_name,network: 'pepperjam', network_id: pepperjam_id, domain: domain, url: "http://www.#{domain}", slug: slug, top_store: false)
+									store = Store.create(name: store_name,network: 'pepperjam', network_id: pepperjam_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
 									p store.id, store.name
-									store.network = 'pepperjam' if store.network == nil or store.network == ''
-									store.network_id = pepperjam_id if store.network_id == nil or store.network_id = ''
-									store.save
 									p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
 								end
 						rescue
@@ -109,6 +106,10 @@ def self.get_cj_promotions
 								store.network_id = cj_id if store.network_id == nil or store.network_id = ''
 								store.save
 								PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+							else
+								store = Store.create(name: store_name,network: 'cj', network_id: cj_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
+								p store.id, store.name
+								p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
 							end
 						rescue
 						end
@@ -179,6 +180,10 @@ end
 								store.network = 'linkshare' if store.network == nil or store.network == ''
 								store.network_id = linkshare_id if store.network_id == nil or store.network_id = ''
 								store.save
+								p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+							else
+								store = Store.create(name: store_name,network: 'linkshare', network_id: linkshare_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
+								p store.id, store.name
 								p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
 							end
 						rescue
