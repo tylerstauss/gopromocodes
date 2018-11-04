@@ -6,16 +6,17 @@ class PromoCode < ActiveRecord::Base
 	validates_presence_of :title, :description, :link, :store_id
 
 def self.get_pepperjam_promotions
+		today = Date.today
 		puts 'Updating pepperjam Promotions'
-		url = "http://api.pepperjamnetwork.com/20120402/publisher/creative/coupon?apiKey=#{Figaro.env.PEPPERJAM_KEY}&format=json"
-		# p url
+		url = "http://api.pepperjamnetwork.com/20120402/publisher/creative/coupon?apiKey=#{Figaro.env.PEPPERJAM_KEY}&format=json&startDate=#{today}"
+		p url
 		response = HTTParty.get(url)
 		# p response
 		pages = response['meta']['pagination']['total_pages']
 		p pages
 
 		while pages > 0
-			url = "http://api.pepperjamnetwork.com/20120402/publisher/creative/coupon?apiKey=#{Figaro.env.PEPPERJAM_KEY}&format=json&page=#{pages}"
+			url = "http://api.pepperjamnetwork.com/20120402/publisher/creative/coupon?apiKey=#{Figaro.env.PEPPERJAM_KEY}&format=json&page=#{pages}&startDate=#{today}"
 			response = HTTParty.get(url)
 			# p response
 			links = response['data']
@@ -95,18 +96,20 @@ def self.get_cj_promotions
 					p description = link['description']
 					p code = link['coupon_code']
 					p title = link["link_name"]
-					begin
-						p domain = URI.parse(link['destination']).host.gsub("www.","").downcase
-						store = Store.where(domain: domain).first
-						if store
-							p '$' * 10
-							p store.id, store.name
-							store.network = 'cj' if store.network == nil or store.network == ''
-							store.network_id = cj_id if store.network_id == nil or store.network_id = ''
-							store.save
-							PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+					if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%')
+						begin
+							p domain = URI.parse(link['destination']).host.gsub("www.","").downcase
+							store = Store.where(domain: domain).first
+							if store
+								p '$' * 10
+								p store.id, store.name
+								store.network = 'cj' if store.network == nil or store.network == ''
+								store.network_id = cj_id if store.network_id == nil or store.network_id = ''
+								store.save
+								PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+							end
+						rescue
 						end
-					rescue
 					end
 				end
 			end

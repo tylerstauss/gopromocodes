@@ -9,6 +9,17 @@ namespace :oneoff do
   		store.save
   	end
   end
+
+  	task cleanup_promotions: :environment do 
+  		codes = PromoCode.where(approved: true)
+  		codes.each do |code|
+  			if code.description.downcase.include?("off") || code.description.downcase.include?('free') || code.description.downcase.include?('%') || code.title.downcase.include?("off") || code.title.downcase.include?('free') || code.title.downcase.include?('%')
+  				p 'code contains desirable info'
+  			else
+  				p code
+  			end
+  		end
+  	end
   	task get_all_promotions: :environment do
   		PromoCode.get_pepperjam_promotions
 		PromoCode.get_cj_promotions

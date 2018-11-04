@@ -98,7 +98,7 @@ require 'uri'
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
-		@promo_codes = PromoCode.order('created_at DESC').limit(50)
+		@promo_codes = PromoCode.where(approved: true).order('created_at DESC').limit(50)
 	end
 
 	private
