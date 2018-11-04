@@ -87,7 +87,7 @@ def self.get_cj_promotions
 				p link
 				if link['promotion_end_date'] != nil && link['promotion_end_date'] > Time.now
 					p cj_id = link["advertiser_id"]
-					p merchant_name = link["advertiser_name"]
+					p store_name = link["advertiser_name"]
 					p link_destination = link['destination']  unless link['destination'].match(/doubleclick.net|mediaplex.com|7eer.net/)
 					p start_date = link['promotion_start_date']
 					p end_date = link['promotion_end_date'] unless link['promotion_end_date'] == nil
@@ -95,6 +95,8 @@ def self.get_cj_promotions
 					p description = link['description']
 					p code = link['coupon_code']
 					p title = link["link_name"]
+					slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.co.uk','').downcase
+
 					if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
 						begin
 							p domain = URI.parse(link['destination']).host.gsub("www.","").downcase
@@ -162,9 +164,9 @@ end
 					p end_date = link['offerenddate'] unless link['offerenddate'] == nil
 					p end_date = 'ongoing' if link['offerenddate'] == nil
 					p title = link['offerdescription'].to_s 
-					
+					store_name = link['advertisername']
 					# p description = link["advertisername"] + " - " +link['couponrestriction'].to_s if link['couponrestriction']
-					
+					slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.co.uk','').downcase
 					description = title + " at #{link['advertisername']}."
 					p description = description + " " +link['couponrestriction'].to_s if link['couponrestriction']
 					p link_destination
