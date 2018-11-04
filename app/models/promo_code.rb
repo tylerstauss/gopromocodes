@@ -33,7 +33,7 @@ def self.get_pepperjam_promotions
 					end_date = 'ongoing' if link['end_date'] == nil || link['end_date'] == "0000-00-00 00:00:00"
 					description = link['description'].to_s
 					pepperjam_id = link['program_id']
-					slug = store_name.gsub(' ', '-').downcase
+					slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.co.uk','').downcase
 					begin
 					p link_destination
 						domain = URI.parse(link_destination).host.gsub("www.","").downcase

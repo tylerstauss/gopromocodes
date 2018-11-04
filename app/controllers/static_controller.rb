@@ -11,7 +11,7 @@ class StaticController < ApplicationController
 		today = Date.today
 		@domain = params[:domain]
 		@store = Store.where(domain: @domain).first
-		@promo_codes = @store.promo_codes.select("title","description","starts","code","link","free_shipping").where(approved: true).where("expires >= ?", today).order("created_at ASC")
+		@promo_codes = @store.promo_codes.select("title","description","starts","code","link","free_shipping").where(approved: true).order("created_at DESC")
 		@here = @promo_codes
 		render json: @promo_codes
 	end
