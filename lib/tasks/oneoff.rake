@@ -21,8 +21,8 @@ namespace :oneoff do
   			end
   		end
   	end
-  	task get_all_promotions: :environment do
-  		PromoCode.get_pepperjam_promotions
+	task get_all_promotions: :environment do
+		PromoCode.get_pepperjam_promotions
 		PromoCode.get_cj_promotions
 		PromoCode.get_linkshare_promotions
   	end
