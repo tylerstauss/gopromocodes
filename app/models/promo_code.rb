@@ -6,79 +6,83 @@ class PromoCode < ActiveRecord::Base
 	validates_presence_of :title, :description, :link, :store_id
 
 def self.get_pepperjam_promotions
-		today = Date.today
-		puts 'Updating pepperjam Promotions'
-		url = "http://api.pepperjamnetwork.com/20120402/publisher/creative/coupon?apiKey=#{Figaro.env.PEPPERJAM_KEY}&format=json&startDate=#{today}"
-		p url
+	today = Date.today
+	puts 'Updating pepperjam Promotions'
+	url = "http://api.pepperjamnetwork.com/20120402/publisher/creative/coupon?apiKey=#{Figaro.env.PEPPERJAM_KEY}&format=json&startDate=#{today}"
+	p url
+	response = HTTParty.get(url)
+	# p response
+	pages = response['meta']['pagination']['total_pages']
+	p pages
+
+	while pages > 0
+		url = "http://api.pepperjamnetwork.com/20120402/publisher/creative/coupon?apiKey=#{Figaro.env.PEPPERJAM_KEY}&format=json&page=#{pages}&startDate=#{today}"
 		response = HTTParty.get(url)
 		# p response
-		pages = response['meta']['pagination']['total_pages']
-		p pages
-
-		while pages > 0
-			url = "http://api.pepperjamnetwork.com/20120402/publisher/creative/coupon?apiKey=#{Figaro.env.PEPPERJAM_KEY}&format=json&page=#{pages}&startDate=#{today}"
-			response = HTTParty.get(url)
-			# p response
-			links = response['data']
-			links.each do |link|
-				p link
-				if link['end_date'] == '0000-00-00 00:00:00' || link['end_date'] > Time.now || link['end_date'] == nil || link['end_date'] == 'ongoing'
-					p link['end_date']
-					network = 'pepperjam'
-					title = link['name']
-					link_destination = FinalRedirectUrl.final_redirect_url(link['code'])
-					code = link['coupon']
-					store_name = link["program_name"]
-					start_date = link['start_date']
-					end_date = link['end_date'].to_i unless link['end_date'] == nil
-					end_date = 'ongoing' if link['end_date'] == nil || link['end_date'] == "0000-00-00 00:00:00"
-					description = link['description'].to_s
-					pepperjam_id = link['program_id']
-					slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.co.uk','').downcase
-					if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
-						begin
-						p link_destination
-							domain = URI.parse(link_destination).host.gsub("www.","").downcase
-							p "domain: #{domain}" 
-								store = Store.where(domain: domain).first
-								p store
-								if store
-									p '$' * 10
-									p store.id, store.name
-									store.network = 'pepperjam' if store.network == nil or store.network == ''
-									store.network_id = pepperjam_id if store.network_id == nil or store.network_id = ''
-									store.save
-									p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date) if store.active
-								else
-									store = Store.create(name: store_name,network: 'pepperjam', network_id: pepperjam_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
-									p store.id, store.name
-									p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
-								end
-						rescue
-						end
+		links = response['data']
+		links.each do |link|
+			p link
+			if link['end_date'] == '0000-00-00 00:00:00' || link['end_date'] > Time.now || link['end_date'] == nil || link['end_date'] == 'ongoing'
+				p link['end_date']
+				network = 'pepperjam'
+				title = link['name']
+				link_destination = FinalRedirectUrl.final_redirect_url(link['code'])
+				code = link['coupon']
+				store_name = link["program_name"]
+				start_date = link['start_date']
+				end_date = link['end_date'].to_i unless link['end_date'] == nil
+				end_date = 'ongoing' if link['end_date'] == nil || link['end_date'] == "0000-00-00 00:00:00"
+				description = link['description'].to_s
+				pepperjam_id = link['program_id']
+				slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.co.uk','').downcase
+				if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
+					begin
+					p link_destination
+						domain = URI.parse(link_destination).host.gsub("www.","").downcase
+						p "domain: #{domain}" 
+							store = Store.where(domain: domain).first
+							p store
+							if store
+								p '$' * 10
+								p store.id, store.name
+								store.network = 'pepperjam' if store.network == nil or store.network == ''
+								store.network_id = pepperjam_id if store.network_id == nil or store.network_id = ''
+								store.save
+								p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date) if store.active
+							else
+								store = Store.create(name: store_name,network: 'pepperjam', network_id: pepperjam_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
+								p store.id, store.name
+								p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+							end
+					rescue
 					end
 				end
 			end
-			pages = pages - 1
 		end
+		pages = pages - 1
 	end
+end
 
 
 
 
 def self.get_cj_promotions
+	today = Time.now.strftime("%m/%d/%Y")
+	p today
 	puts 'Updating cj Promotions'
 	headers = {'authorization' => "#{Figaro.env.CJ_KEY}"}
-	url = "https://linksearch.api.cj.com/v2/link-search?website-id=5329581&advertiser-ids=joined&promotion-type=coupon&link-type=Text+Link&records-per-page=100&page-number=1"  
+	url = "https://linksearch.api.cj.com/v2/link-search?website-id=5329581&advertiser-ids=joined&promotion-type=coupon&link-type=Text+Link&records-per-page=100&page-number=1&promotion-start-date=#{today}" 
+	p url 
 	response = HTTParty.get(url, :headers => headers)
 	# p response
 	total = response['cj_api']['links']['total_matched'].to_i
 	# p total
 	pages = (total /100.to_f).ceil
-	# p pages
+	p pages
 
 	while pages > 0
-		url = "https://linksearch.api.cj.com/v2/link-search?website-id=5329581&advertiser-ids=joined&promotion-type=coupon&link-type=Text+Link&records-per-page=100&page-number=#{pages}"
+		url = "https://linksearch.api.cj.com/v2/link-search?website-id=5329581&advertiser-ids=joined&promotion-type=coupon&link-type=Text+Link&records-per-page=100&page-number=#{pages}&promotion-start-date=#{today}"
+		p url
 		response = HTTParty.get(url, :headers => headers)
 		# p response
 		links = response['cj_api']['links']['link']
