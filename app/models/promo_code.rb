@@ -228,35 +228,40 @@ def self.get_avantlink_promotions
 			avantlink_id = link["Merchant_Id"]
 			network = 'avantlink'
 			affiliated_link = link['Ad_Url']
-			link_destination = FinalRedirectUrl.final_redirect_url(affiliated_link)
-
-			title = link["Ad_Title"]
-			start_date = link['Ad_Start_Date']
-			end_date = link['Ad_Expiration_Date'] unless link['Ad_Expiration_Date'] == nil
-			end_date = 'ongoing' if link['Ad_Expiration_Date'] == nil
-			description = link['Ad_Content']
-			code = link['Coupon_Code']
-			slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.co.uk','').downcase
-
-			if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
-				begin
-					domain = URI.parse(link_destination).host.gsub("www.","").downcase
-					p "domain: #{domain}" 
-					store = Store.where(domain: domain).first
-					if store
-						p '$' * 10
-						p store.id, store.name
-						store.network = 'avantlink' if store.network == nil or store.network == ''
-						store.network_id = avantlink_id if store.network_id == nil or store.network_id = ''
-						store.save
-						p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
-					else
-						store = Store.create(name: store_name,network: 'avantlink', network_id: avantlink_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
-						p store.id, store.name
-						p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
-					end
-				rescue
+			begin
+				Timeout.timeout(3) do
+					link_destination = FinalRedirectUrl.final_redirect_url(affiliated_link)
 				end
+				title = link["Ad_Title"]
+				start_date = link['Ad_Start_Date']
+				end_date = link['Ad_Expiration_Date'] unless link['Ad_Expiration_Date'] == nil
+				end_date = 'ongoing' if link['Ad_Expiration_Date'] == nil
+				description = link['Ad_Content']
+				code = link['Coupon_Code']
+				slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.co.uk','').downcase
+
+				if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
+					begin
+						domain = URI.parse(link_destination).host.gsub("www.","").downcase
+						p "domain: #{domain}" 
+						store = Store.where(domain: domain).first
+						if store
+							p '$' * 10
+							p store.id, store.name
+							store.network = 'avantlink' if store.network == nil or store.network == ''
+							store.network_id = avantlink_id if store.network_id == nil or store.network_id = ''
+							store.save
+							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+						else
+							store = Store.create(name: store_name,network: 'avantlink', network_id: avantlink_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
+							p store.id, store.name
+							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+						end
+					rescue
+					end
+				end
+			rescue
+				next
 			end
 		end
 	end
