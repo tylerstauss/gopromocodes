@@ -168,45 +168,48 @@ def self.get_linkshare_promotions
 		links = response['couponfeed']['link']
 		links.each do |link|
 			unless link["advertisername"] == "LinkShare"
-			if link['offerenddate'] == 'ongoing' || link['offerenddate'] > Time.now || link['offerenddate'] == nil 
-				p link
-				link_destination = FinalRedirectUrl.final_redirect_url(link["clickurl"])
-				p code = link['couponcode']
-				p start_date = link['offerstartdate']
-				p end_date = link['offerenddate'] unless link['offerenddate'] == nil
-				p end_date = 'ongoing' if link['offerenddate'] == nil
-				p title = link['offerdescription'].to_s 
-				store_name = link['advertisername']
-				# p description = link["advertisername"] + " - " +link['couponrestriction'].to_s if link['couponrestriction']
-				slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.co.uk','').downcase
-				description = title + " at #{link['advertisername']}."
-				p description = description + " " +link['couponrestriction'].to_s if link['couponrestriction']
-				p link_destination
-				p linkshare_id = link['advertiserid']
-				if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
+				if link['offerenddate'] == 'ongoing' || link['offerenddate'] > Time.now || link['offerenddate'] == nil 
+					p link
 					begin
-					domain = URI.parse(link_destination).host.gsub("www.","").downcase
-					p "domain: #{domain}" 
-						store = Store.where(domain: domain).first
-						if store
-							p '$' * 10
-							p store.id, store.name
-							store.network = 'linkshare' if store.network == nil or store.network == ''
-							store.network_id = linkshare_id if store.network_id == nil or store.network_id = ''
-							store.save
-							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
-						else
-							store = Store.create(name: store_name,network: 'linkshare', network_id: linkshare_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
-							p store.id, store.name
-							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+						link_destination = FinalRedirectUrl.final_redirect_url(link["clickurl"])
+						p code = link['couponcode']
+						p start_date = link['offerstartdate']
+						p end_date = link['offerenddate'] unless link['offerenddate'] == nil
+						p end_date = 'ongoing' if link['offerenddate'] == nil
+						p title = link['offerdescription'].to_s 
+						store_name = link['advertisername']
+						# p description = link["advertisername"] + " - " +link['couponrestriction'].to_s if link['couponrestriction']
+						slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.co.uk','').downcase
+						description = title + " at #{link['advertisername']}."
+						p description = description + " " +link['couponrestriction'].to_s if link['couponrestriction']
+						p link_destination
+						p linkshare_id = link['advertiserid']
+						if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
+							begin
+							domain = URI.parse(link_destination).host.gsub("www.","").downcase
+							p "domain: #{domain}" 
+							store = Store.where(domain: domain).first
+								if store
+									p '$' * 10
+									p store.id, store.name
+									store.network = 'linkshare' if store.network == nil or store.network == ''
+									store.network_id = linkshare_id if store.network_id == nil or store.network_id = ''
+									store.save
+									p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+								else
+									store = Store.create(name: store_name,network: 'linkshare', network_id: linkshare_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
+									p store.id, store.name
+									p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+								end
+							rescue
+							end
 						end
 					rescue
+						next
 					end
-				end
 				end
 			end
 		end
-
 		pages = pages - 1
 		p pages
 		sleep(13) if pages > 1
