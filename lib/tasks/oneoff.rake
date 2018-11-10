@@ -34,6 +34,9 @@ namespace :oneoff do
 	end
 	task get_linkshare_promotions: :environment do
 		PromoCode.get_linkshare_promotions
-	end	
+	end
+  task get_avantlink_promotions: :environment do
+    PromoCode.get_avantlink_promotions
+  end 	
 
 end

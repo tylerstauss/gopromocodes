@@ -63,9 +63,6 @@ def self.get_pepperjam_promotions
 	end
 end
 
-
-
-
 def self.get_cj_promotions
 	today = Time.now.strftime("%m/%d/%Y")
 	p today
@@ -139,10 +136,14 @@ def self.get_linkshare_promotions
 	refresh_token = response['refresh_token']
 	access_token = response['access_token']
 	expires_in = response['expires_in']
-	url = "https://api.rakutenmarketing.com/coupon/1.0?promotiontype=2|4|5|6|7|8|9|11|30|31"
+	# url = "https://api.rakutenmarketing.com/coupon/1.0?promocat=1"
+	url = "https://api.rakutenmarketing.com/coupon/1.0"
+	p url
 	headers = {'authorization' => "#{token_type} #{access_token}"}
 	response = HTTParty.get(url, :headers => headers)
-
+	# response["couponfeed"]["network"].each do |network|
+	# 	p network
+	# end
 	pages = response['couponfeed']['TotalPages'].to_i
 	p pages
 
@@ -155,7 +156,7 @@ def self.get_linkshare_promotions
 		refresh_token = response['refresh_token']
 		access_token = response['access_token']
 		expires_in = response['expires_in']
-		url = "https://api.rakutenmarketing.com/coupon/1.0?promotiontype=2|4|5|6|7|8|9|11|30|31&pagenumber=#{pages}&resultsperpage=500"
+		url = "https://api.rakutenmarketing.com/coupon/1.0?pagenumber=#{pages}&resultsperpage=500"
 		headers = {'authorization' => "#{token_type} #{access_token}"}
 		response = HTTParty.get(url, :headers => headers)
 		links = response['couponfeed']['link']
@@ -205,5 +206,51 @@ def self.get_linkshare_promotions
 		sleep(13) if pages > 1
 	end
 end
+
+	def self.get_avantlink_promotions
+		puts 'Updating Avantlink Promotions'
+		url = "http://www.avantlink.com/api.php?affiliate_id=41227&module=AdSearch&output=xml&website_id=55963&ad_type=text&coupons_only=1"
+		response = HTTParty.get(url)
+		links = response['NewDataSet']['Table1']
+		links.each do |link|
+			if link['Ad_Expiration_Date'] == '' || link['Ad_Expiration_Date'] == nil || link['Ad_Expiration_Date'] == 'ongoing' || link['Ad_Expiration_Date'] > Time.now 
+				p link
+				store_name = link["Merchant_Name"]
+				avantlink_id = link["Merchant_Id"]
+				network = 'avantlink'
+				affiliated_link = link['Ad_Url']
+				link_destination = FinalRedirectUrl.final_redirect_url(affiliated_link)
+
+				title = link["Ad_Title"]
+				start_date = link['Ad_Start_Date']
+				end_date = link['Ad_Expiration_Date'] unless link['Ad_Expiration_Date'] == nil
+				end_date = 'ongoing' if link['Ad_Expiration_Date'] == nil
+				description = link['Ad_Content']
+				code = link['Coupon_Code']
+				slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.co.uk','').downcase
+
+				if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
+					begin
+						domain = URI.parse(link_destination).host.gsub("www.","").downcase
+						p "domain: #{domain}" 
+						store = Store.where(domain: domain).first
+						if store
+							p '$' * 10
+							p store.id, store.name
+							store.network = 'avantlink' if store.network == nil or store.network == ''
+							store.network_id = avantlink_id if store.network_id == nil or store.network_id = ''
+							store.save
+							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+						else
+							store = Store.create(name: store_name,network: 'avantlink', network_id: avantlink_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
+							p store.id, store.name
+							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+						end
+					rescue
+					end
+				end
+			end
+		end
+	end
 
 end	
