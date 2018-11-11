@@ -42,7 +42,10 @@ namespace :oneoff do
   task get_shareasale_promotions: :environment do
     PromoCode.get_shareasale_promotions
   end
-    task get_awin_promotions: :environment do
+  task get_awin_promotions: :environment do
     PromoCode.get_awin_promotions
   end  
+  task get_commission_factory_promotions: :environment do
+    PromoCode.get_commission_factory_promotions
+  end 
 end

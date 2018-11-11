@@ -335,4 +335,51 @@ class PromoCode < ActiveRecord::Base
 		end
 	end
 
+
+	def self.get_commission_factory_promotions
+		puts "updating commission factory promotions"
+		url = 'https://dashboard.commissionfactory.com/Affiliate/Creatives/Coupons/jvjbrpjyi7vb7N652fuD-pqvjueU6pv1heeY-oT7nP62qvy_9O7djNaNCg==/'
+		response = HTTParty.get(url)
+		response.each do |coupon|
+			p coupon
+			commissionfactory_coupon_id = coupon['Id']
+			commissionfactory_id = coupon['MerchantId']
+			store_name = coupon['MerchantCampaignName']
+			network_id = 'commission factory'
+			title = coupon['Name']
+			code = coupon['Code']
+			affiliated_link = coupon['TargetUrl']
+			description = title + " at #{store_name}."
+			description = title + " at #{store_name}. " + coupon['description'] if coupon['description']
+			start_date = coupon['StartDate']
+			end_date = coupon['EndDate'] unless coupon['EndDate'] == nil
+			'ongoing' if coupon['EndDate'] == nil
+			slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.com.au','').downcase
+			if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
+				begin
+					Timeout.timeout(5) do
+						link_destination = FinalRedirectUrl.final_redirect_url(affiliated_link)
+						domain = URI.parse(link_destination).host.gsub("www.","").downcase
+						p "domain: #{domain}" 
+						store = Store.where(domain: domain).first
+						if store
+							p '$' * 10
+							p store.id, store.name
+							store.network = 'commissionfactory' if store.network == nil or store.network == ''
+							store.network_id = commissionfactory_id if store.network_id == nil or store.network_id = ''
+							store.save
+							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+						else
+							store = Store.create(name: store_name,network: 'commissionfactory', network_id: commissionfactory_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
+							p store.id, store.name
+							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+						end
+					end
+				rescue
+					next
+				end
+			end
+		end
+	end
+
 end	
