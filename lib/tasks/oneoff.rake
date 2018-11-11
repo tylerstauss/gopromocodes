@@ -48,4 +48,7 @@ namespace :oneoff do
   task get_commission_factory_promotions: :environment do
     PromoCode.get_commission_factory_promotions
   end 
+  task get_webgains_promotions: :environment do
+    PromoCode.get_webgains_promotions
+  end 
 end
