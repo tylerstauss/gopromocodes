@@ -19,6 +19,7 @@ class StaticController < ApplicationController
 			else
 				@promo_codes = []
 			end
+		end
 		render json: @promo_codes
 	end
 
