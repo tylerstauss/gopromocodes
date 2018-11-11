@@ -11,12 +11,14 @@ class StaticController < ApplicationController
 		today = Date.today
 		@domain = params[:domain]
 		@store = Store.where(domain: @domain).first
-		@promo_codes = @store.promo_codes.select("title","description","starts","code","link","free_shipping").where(approved: true).order("created_at DESC")
-		if @promo_codes.length > 0
-			@here = @promo_codes
-		else
-			@promo_codes = []
-		end
+		@promo_codes = []
+		if @store
+			@promo_codes = @store.promo_codes.select("title","description","starts","code","link","free_shipping").where(approved: true).order("created_at DESC")
+			if @promo_codes.length > 0
+				@here = @promo_codes
+			else
+				@promo_codes = []
+			end
 		render json: @promo_codes
 	end
 
