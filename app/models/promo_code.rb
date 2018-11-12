@@ -1,3 +1,5 @@
+require 'socket'
+
 class PromoCode < ActiveRecord::Base
 	belongs_to :store
 	has_many :category_promo_codes, :dependent => :destroy
@@ -269,6 +271,8 @@ class PromoCode < ActiveRecord::Base
 
 	def self.get_shareasale_promotions
 		puts 'Updating shareasale Promotions'
+		ip=Socket.ip_address_list.detect{|intf| intf.ipv4_private?}
+		p ip.ip_address if ip
 		time = Time.now.utc.to_s
 		time = time.split(" ")
 		date = Time.now.utc
@@ -280,7 +284,7 @@ class PromoCode < ActiveRecord::Base
 		header = {'x-ShareASale-Date' => date ,'x-ShareASale-Authentication' => authentication_hash}
 		url = "https://shareasale.com/x.cfm?action=couponDeals&affiliateId=389818&token=#{Figaro.env.SHAREASALE_TOKEN}&current=1&modifiedSince=#{last_update}&version=2.3&XMLFormat=1"
 		response = HTTParty.get(url, :headers => header)
-		# p response
+		p response
 		# hash = Hash.from_xml(response.gsub("\n",""))
 		# p hash
 		links = response['dealcouponlistreport']['dealcouponlistreportrecord']
