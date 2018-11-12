@@ -279,6 +279,8 @@ class PromoCode < ActiveRecord::Base
 		date = date.strftime('%a, %d %b %Y')
 		date = date + time[1] + " GMT"
 		last_update = Time.now.strftime("%m/%d/%Y")
+		p Figaro.env.SHAREASALE_SECRET
+		p Figaro.env.SHAREASALE_TOKEN
 		authentication = "#{Figaro.env.SHAREASALE_TOKEN}:#{date}:couponDeals:#{Figaro.env.SHAREASALE_SECRET}"
 		authentication_hash = Digest::SHA256.hexdigest(authentication)
 		header = {'x-ShareASale-Date' => date ,'x-ShareASale-Authentication' => authentication_hash}
