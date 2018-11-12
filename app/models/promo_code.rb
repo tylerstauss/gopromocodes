@@ -299,7 +299,7 @@ class PromoCode < ActiveRecord::Base
 				end_date = link['enddate'] unless link['enddate'] == nil
 				end_date = 'ongoing' if link['enddate'] == nil
 				description = link['description']
-				description = description  + link['restrictions'] unless link['restrictions'] == nil
+				description = description  + " " + link['restrictions'] unless link['restrictions'] == nil
 				title = link['title']
 				code = link['couponcode']
 				slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.','-').gsub('.co.uk','').downcase
