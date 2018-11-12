@@ -271,16 +271,12 @@ class PromoCode < ActiveRecord::Base
 
 	def self.get_shareasale_promotions
 		puts 'Updating shareasale Promotions'
-		ip=Socket.ip_address_list.detect{|intf| intf.ipv4_private?}
-		p ip.ip_address if ip
 		time = Time.now.utc.to_s
 		time = time.split(" ")
 		date = Time.now.utc
 		date = date.strftime('%a, %d %b %Y')
 		date = date + time[1] + " GMT"
 		last_update = Time.now.strftime("%m/%d/%Y")
-		p Figaro.env.SHAREASALE_SECRET
-		p Figaro.env.SHAREASALE_TOKEN
 		authentication = "#{Figaro.env.SHAREASALE_TOKEN}:#{date}:couponDeals:#{Figaro.env.SHAREASALE_SECRET}"
 		authentication_hash = Digest::SHA256.hexdigest(authentication)
 		header = {'x-ShareASale-Date' => date ,'x-ShareASale-Authentication' => authentication_hash}
