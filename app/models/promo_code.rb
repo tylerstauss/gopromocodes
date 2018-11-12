@@ -418,23 +418,23 @@ class PromoCode < ActiveRecord::Base
 	end
 
 	def self.get_webgains_promotions
-		url = "https://www.webgains.com/2.0/vouchers?key=#{Figaro.env.WEBGAINS_KEY}&campaignId=129013"
+		url = "http://api.webgains.com/2.0/vouchers?key=#{Figaro.env.WEBGAINS_KEY}"
 		# url = 'http://api.webgains.com/2.0/offers?key=d6e7edff59c9584fdaa4d7a35f430107&campaignId=129013&filters={"showexpired":"false","orderby":"programName","order":"asc","filterby":"ALL_PROGRAMS"}'
 		response = HTTParty.get(url)
 		p response
 		response.each do |coupon|
 			webgains_coupon_id = coupon['id']
-			webgains_id = coupon['program']['id']
-			store_name = coupon['program']['name']
+			webgains_id = coupon['programId']
+			store_name = coupon['program_name']
 			network_id = 'webgains'
-			title = coupon['title']
-			code = coupon['Code']
-			link_destination = coupon['destinationURL']['destination_url']
+			title = coupon['description']
+			code = coupon['code']
+			link_destination = coupon['destinationUrl']
+			p link_destination
 			description = title + " at #{store_name}."
-			description = title + " at #{store_name}. " + coupon['Description'] if coupon['Description']
-			start_date = coupon['startdate']
-			end_date = coupon['enddate'] unless coupon['enddate'] == nil
-			'ongoing' if coupon['enddate'] == nil
+			start_date = coupon['startDate']
+			end_date = coupon['expiryDate'] unless coupon['expiryDate'] == nil
+			'ongoing' if coupon['expiryDate'] == nil
 			slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.','-').gsub('.com.au','').downcase
 			if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
 				begin
