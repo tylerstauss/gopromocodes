@@ -307,20 +307,23 @@ class PromoCode < ActiveRecord::Base
 					begin
 					Timeout.timeout(5) do
 						link_destination = FinalRedirectUrl.final_redirect_url(affiliated_link)
-						domain = URI.parse(link_destination).host.gsub("www.","").downcase
-						p "domain: #{domain}" 
-						store = Store.where(domain: domain).first
-						if store
-							p '$' * 10
-							p store.id, store.name
-							store.network = 'shareasale' if store.network == nil or store.network == ''
-							store.network_id = shareasale_id if store.network_id == nil or store.network_id = ''
-							store.save
-							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
-						else
-							store = Store.create(name: store_name,network: 'shareasale', network_id: shareasale_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
-							p store.id, store.name
-							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+						p link destination
+						if link_destination
+							domain = URI.parse(link_destination).host.gsub("www.","").downcase
+							p "domain: #{domain}" 
+							store = Store.where(domain: domain).first
+							if store
+								p '$' * 10
+								p store.id, store.name
+								store.network = 'shareasale' if store.network == nil or store.network == ''
+								store.network_id = shareasale_id if store.network_id == nil or store.network_id = ''
+								store.save
+								p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+							else
+								store = Store.create(name: store_name,network: 'shareasale', network_id: shareasale_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
+								p store.id, store.name
+								p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+							end
 						end
 					end
 				rescue
