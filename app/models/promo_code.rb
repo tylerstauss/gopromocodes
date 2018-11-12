@@ -280,21 +280,51 @@ class PromoCode < ActiveRecord::Base
 		header = {'x-ShareASale-Date' => date ,'x-ShareASale-Authentication' => authentication_hash}
 		url = "https://shareasale.com/x.cfm?action=couponDeals&affiliateId=389818&token=#{Figaro.env.SHAREASALE_TOKEN}&current=1&modifiedSince=#{last_update}&version=2.3&XMLFormat=1"
 		response = HTTParty.get(url, :headers => header)
-		hash = Hash.from_xml(response.gsub("\n",""))
+		# p response
+		# hash = Hash.from_xml(response.gsub("\n",""))
 		# p hash
-		links = hash['dealcouponlistreport']['dealcouponlistreportrecord']
+		links = response['dealcouponlistreport']['dealcouponlistreportrecord']
 		# p links
 		links.each do |link|
 			p link
 			if link['enddate'] == '' || link['enddate'] == nil || link['enddate'] == 'ongoing' || link['enddate'] > Time.now 
+				network_deal_id = link['dealid']
 				network = 'shareasale'
+				shareasale_id = link['merchantid']
+				store_name = link['merchant']
 				affiliated_link = link['trackingurl']
 				start_date = link['startdate']
 				end_date = link['enddate'] unless link['enddate'] == nil
 				end_date = 'ongoing' if link['enddate'] == nil
 				description = link['description']
+				description = description  + link['restrictions'] unless link['restrictions'] == nil
+				title = link['title']
 				code = link['couponcode']
-
+				slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.','-').gsub('.co.uk','').downcase
+				if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
+					begin
+					Timeout.timeout(5) do
+						link_destination = FinalRedirectUrl.final_redirect_url(affiliated_link)
+						domain = URI.parse(link_destination).host.gsub("www.","").downcase
+						p "domain: #{domain}" 
+						store = Store.where(domain: domain).first
+						if store
+							p '$' * 10
+							p store.id, store.name
+							store.network = 'shareasale' if store.network == nil or store.network == ''
+							store.network_id = shareasale_id if store.network_id == nil or store.network_id = ''
+							store.save
+							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+						else
+							store = Store.create(name: store_name,network: 'shareasale', network_id: shareasale_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
+							p store.id, store.name
+							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+						end
+					end
+				rescue
+					next
+				end
+				end
 			end
 		end
 	end
@@ -383,7 +413,7 @@ class PromoCode < ActiveRecord::Base
 	end
 
 	def self.get_webgains_promotions
-		url = 'https://www.webgains.com/2.0/vouchers?key=d6e7edff59c9584fdaa4d7a35f430107&campaignId=129013'
+		url = "https://www.webgains.com/2.0/vouchers?key=#{Figaro.env.WEBGAINS_KEY}&campaignId=129013"
 		# url = 'http://api.webgains.com/2.0/offers?key=d6e7edff59c9584fdaa4d7a35f430107&campaignId=129013&filters={"showexpired":"false","orderby":"programName","order":"asc","filterby":"ALL_PROGRAMS"}'
 		response = HTTParty.get(url)
 		p response
