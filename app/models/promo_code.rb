@@ -303,13 +303,15 @@ class PromoCode < ActiveRecord::Base
 				title = link['title']
 				code = link['couponcode']
 				slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.','-').gsub('.co.uk','').downcase
-				if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
-					# begin
+				if title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
+					begin
 					Timeout.timeout(5) do
 						crawl_response = HTTParty.get(affiliated_link)
 						# p crawl_response
 						link_destination = /window.location.replace\((.*)\)/.match(crawl_response)
 						link_destination = link_destination[1].gsub("\\","").gsub("\'","")
+						p link_destination
+						link_destination = FinalRedirectUrl.final_redirect_url(link_destination)
 						p link_destination
 						if link_destination
 							domain = URI.parse(link_destination).host.gsub("www.","").downcase
@@ -329,9 +331,9 @@ class PromoCode < ActiveRecord::Base
 							end
 						end
 					end
-				# rescue
-				# 	next
-				# end
+				rescue
+					next
+				end
 				end
 			end
 		end
