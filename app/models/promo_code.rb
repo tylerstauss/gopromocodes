@@ -288,7 +288,7 @@ class PromoCode < ActiveRecord::Base
 		links = response['dealcouponlistreport']['dealcouponlistreportrecord']
 		# p links
 		links.each do |link|
-			# p link
+			p link
 			if link['enddate'] == '' || link['enddate'] == nil || link['enddate'] == 'ongoing' || link['enddate'] > Time.now 
 				network_deal_id = link['dealid']
 				network = 'shareasale'
@@ -306,12 +306,10 @@ class PromoCode < ActiveRecord::Base
 				if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
 					# begin
 					Timeout.timeout(5) do
-						link_destination = FinalRedirectUrl.final_redirect_url(affiliated_link)
-						p "link destination: #{link_destination}"
-						p link_destination.include?('https://www.shareasale-analytics.com')
-						if link_destination.include?('https://www.shareasale-analytics.com')
-							p link_destination = FinalRedirectUrl.final_redirect_url(link_destination)
-						end
+						crawl_response = HTTParty.get(affiliated_link)
+						# p crawl_response
+						link_destination = /window.location.replace\((.*)\)/.match(crawl_response)
+						link_destination = link_destination[1].gsub("\\","").gsub("\'","")
 						p link_destination
 						if link_destination
 							domain = URI.parse(link_destination).host.gsub("www.","").downcase
