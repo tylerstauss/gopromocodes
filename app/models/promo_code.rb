@@ -468,4 +468,49 @@ class PromoCode < ActiveRecord::Base
 		end
 	end
 
+	def self.get_impact_promotions
+		puts 'Updating impact radius Promotions'
+		url = "https://#{Figaro.env.IMPACT_SID}:#{Figaro.env.IMPACT_TOKEN}@api.impactradius.com/Mediapartners/#{Figaro.env.IMPACT_SID}/Ads?Type=COUPON"
+		response = HTTParty.get(url)
+		# p response
+		links = response['ImpactRadiusResponse']['Ads']['Ad']
+		links.each do |link|
+			p link
+			impact_id = link["CampaignId"]
+			title = link['Name']
+			description = link['Description']
+			store_name = link['CampaignName']
+			link_destination = link['LandingPageUrl']
+			code = link['CouponCode']
+			start_date = link['StartDate']
+			end_date = link['EndDate'] unless link['EndDate'] == nil
+			p 'ongoing' if link['EndDate'] == nil
+			slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.','-').gsub('.co.uk','').downcase
+			if title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
+				begin
+					Timeout.timeout(3) do
+						link_destination = FinalRedirectUrl.final_redirect_url(link_destination)
+						p domain = URI.parse(link_destination).host.gsub("www.","").downcase
+						store = Store.where(domain: domain).first
+						if store
+							p '$' * 10
+							p store.id, store.name
+							store.network = 'impact' if store.network == nil or store.network == ''
+							store.network_id = impact_id if store.network_id == nil or store.network_id = ''
+							store.save
+							PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+						else
+							store = Store.create(name: store_name,network: 'impact', network_id: impact_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
+							p store.id, store.name
+							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+						end
+					end
+				rescue
+					next
+				end
+			end
+		end
+
+	end
+
 end	
