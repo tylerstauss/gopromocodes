@@ -50,5 +50,8 @@ namespace :oneoff do
   end 
   task get_webgains_promotions: :environment do
     PromoCode.get_webgains_promotions
-  end 
+  end
+    task get_impact_promotions: :environment do
+    PromoCode.get_impact_promotions
+  end  
 end
