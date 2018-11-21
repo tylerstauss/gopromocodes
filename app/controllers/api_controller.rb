@@ -5,7 +5,7 @@ class ApiController < ApplicationController
 		today = Date.today
 		today = params[:starts] if params[:starts]
 		@promo_codes = []
-		@promo_codes = PromoCode.where(approved: true).where("promo_codes.created_at >= '#{today}'").joins(:store).select("promo_codes.id","stores.name","stores.domain","stores.id","promo_codes.title","promo_codes.description","promo_codes.starts","promo_codes.expires","promo_codes.code","promo_codes.link","promo_codes.free_shipping").where(approved: true).where("promo_codes.created_at >= '#{today}'").limit(10000)
+		@promo_codes = PromoCode.where(approved: true).where("promo_codes.created_at >= '#{today}'").joins(:store).select("promo_codes.id","stores.name","stores.domain","stores.id as store_id","promo_codes.title","promo_codes.description","promo_codes.starts","promo_codes.expires","promo_codes.code","promo_codes.link","promo_codes.free_shipping").where(approved: true).where("promo_codes.created_at >= '#{today}'").limit(10000)
 		@promo_codes.each do |code|
 			p "here"
 			p code.id,code.title,code.description,code.starts,code.expires,code.code,code.link,code.free_shipping
