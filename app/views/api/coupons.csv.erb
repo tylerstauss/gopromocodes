@@ -1,4 +1,4 @@
 <%= CSV.generate_line(["coupon id","title","description","starts","expires","code","link","free_shipping","store id","store_name","store_domain"]) -%>
 <%- @promo_codes.each do |code| -%>
-<%= CSV.generate_line([code.id,code.title,code.description,code.starts,code.expires,code.code,code.link,code.free_shipping,code.store_id,code.name,code.domain]) -%>
+<%= CSV.generate_line([code.id,code.title.gsub("\n", " ").gsub(",", " ").gsub("\r", " "),code.description.gsub("\n", " ").gsub(",", " ").gsub("\r", " "),code.starts,code.expires,code.code,code.link,code.free_shipping,code.store_id,code.name,code.domain]) -%>
 <%- end -%>
