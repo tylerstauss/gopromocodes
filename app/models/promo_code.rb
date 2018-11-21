@@ -53,11 +53,11 @@ class PromoCode < ActiveRecord::Base
 									store.network = 'pepperjam' if store.network == nil or store.network == ''
 									store.network_id = pepperjam_id if store.network_id == nil or store.network_id = ''
 									store.save
-									p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date) if store.active
+									p PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date) if store.active
 								else
 									store = Store.create(name: store_name,network: 'pepperjam', network_id: pepperjam_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
 									p store.id, store.name
-									p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+									p PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 								end
 							rescue
 							end
@@ -116,11 +116,11 @@ class PromoCode < ActiveRecord::Base
 									store.network = 'cj' if store.network == nil or store.network == ''
 									store.network_id = cj_id if store.network_id == nil or store.network_id = ''
 									store.save
-									PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+									PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 								else
 									store = Store.create(name: store_name,network: 'cj', network_id: cj_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
 									p store.id, store.name
-									p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+									p PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 								end
 							rescue
 							end
@@ -197,11 +197,11 @@ class PromoCode < ActiveRecord::Base
 										store.network = 'linkshare' if store.network == nil or store.network == ''
 										store.network_id = linkshare_id if store.network_id == nil or store.network_id = ''
 										store.save
-										p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+										p PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 									else
 										store = Store.create(name: store_name,network: 'linkshare', network_id: linkshare_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
 										p store.id, store.name
-										p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+										p PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 									end
 								rescue
 								end
@@ -253,11 +253,11 @@ class PromoCode < ActiveRecord::Base
 								store.network = 'avantlink' if store.network == nil or store.network == ''
 								store.network_id = avantlink_id if store.network_id == nil or store.network_id = ''
 								store.save
-								p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+								p PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 							else
 								store = Store.create(name: store_name,network: 'avantlink', network_id: avantlink_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
 								p store.id, store.name
-								p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+								p PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 							end
 						rescue
 						end
@@ -324,11 +324,11 @@ class PromoCode < ActiveRecord::Base
 								store.network = 'shareasale' if store.network == nil or store.network == ''
 								store.network_id = shareasale_id if store.network_id == nil or store.network_id = ''
 								store.save
-								PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+								PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 							else
 								store = Store.create(name: store_name,network: 'shareasale', network_id: shareasale_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
 								# store.id, store.name
-								PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+								PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 							end
 						end
 					end
@@ -364,11 +364,11 @@ class PromoCode < ActiveRecord::Base
 						store.network = 'awin' if store.network == nil or store.network == ''
 						store.network_id = awin_id if store.network_id == nil or store.network_id = ''
 						store.save
-						PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+						PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 					else
 						store = Store.create(name: store_name,network: 'awin', network_id: awin_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
 						p store.id, store.name
-						p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+						p PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 					end
 				rescue
 				end
@@ -409,11 +409,11 @@ class PromoCode < ActiveRecord::Base
 							store.network = 'commissionfactory' if store.network == nil or store.network == ''
 							store.network_id = commissionfactory_id if store.network_id == nil or store.network_id = ''
 							store.save
-							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+							p PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 						else
 							store = Store.create(name: store_name,network: 'commissionfactory', network_id: commissionfactory_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
 							p store.id, store.name
-							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+							p PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 						end
 					end
 				rescue
@@ -454,11 +454,11 @@ class PromoCode < ActiveRecord::Base
 							store.network = 'webgains' if store.network == nil or store.network == ''
 							store.network_id = webgains_id if store.network_id == nil or store.network_id = ''
 							store.save
-							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+							p PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 						else
 							store = Store.create(name: store_name,network: 'webgains', network_id: webgains_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
 							p store.id, store.name
-							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+							p PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 						end
 					end
 				rescue
@@ -498,11 +498,11 @@ class PromoCode < ActiveRecord::Base
 							store.network = 'impact' if store.network == nil or store.network == ''
 							store.network_id = impact_id if store.network_id == nil or store.network_id = ''
 							store.save
-							PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+							PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 						else
 							store = Store.create(name: store_name,network: 'impact', network_id: impact_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
 							p store.id, store.name
-							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+							p PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 						end
 					end
 				rescue
