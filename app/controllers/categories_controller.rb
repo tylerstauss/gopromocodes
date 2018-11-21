@@ -26,7 +26,7 @@ class CategoriesController < ApplicationController
 		@category = Category.find(params[:id])
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
-		@promo_codes = @category.promo_codes.where(approved: true).where("expires >= ?", today).order("created_at DESC")
+		@promo_codes = @category.promo_codes.where(approved: true).where("expires >= '#{today}' or expires is null").order("created_at DESC")
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
