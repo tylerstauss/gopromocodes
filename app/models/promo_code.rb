@@ -1,3 +1,5 @@
+require 'socket'
+
 class PromoCode < ActiveRecord::Base
 	belongs_to :store
 	has_many :category_promo_codes, :dependent => :destroy
@@ -275,26 +277,65 @@ class PromoCode < ActiveRecord::Base
 		date = date.strftime('%a, %d %b %Y')
 		date = date + time[1] + " GMT"
 		last_update = Time.now.strftime("%m/%d/%Y")
+		# last_update = Time.now.strftime("10/10/2018")
 		authentication = "#{Figaro.env.SHAREASALE_TOKEN}:#{date}:couponDeals:#{Figaro.env.SHAREASALE_SECRET}"
 		authentication_hash = Digest::SHA256.hexdigest(authentication)
 		header = {'x-ShareASale-Date' => date ,'x-ShareASale-Authentication' => authentication_hash}
 		url = "https://shareasale.com/x.cfm?action=couponDeals&affiliateId=389818&token=#{Figaro.env.SHAREASALE_TOKEN}&current=1&modifiedSince=#{last_update}&version=2.3&XMLFormat=1"
 		response = HTTParty.get(url, :headers => header)
-		hash = Hash.from_xml(response.gsub("\n",""))
+		# p response
+		# hash = Hash.from_xml(response.gsub("\n",""))
 		# p hash
-		links = hash['dealcouponlistreport']['dealcouponlistreportrecord']
+		links = response['dealcouponlistreport']['dealcouponlistreportrecord']
 		# p links
 		links.each do |link|
 			p link
 			if link['enddate'] == '' || link['enddate'] == nil || link['enddate'] == 'ongoing' || link['enddate'] > Time.now 
+				network_deal_id = link['dealid']
 				network = 'shareasale'
+				shareasale_id = link['merchantid']
+				store_name = link['merchant']
 				affiliated_link = link['trackingurl']
 				start_date = link['startdate']
 				end_date = link['enddate'] unless link['enddate'] == nil
 				end_date = 'ongoing' if link['enddate'] == nil
 				description = link['description']
+				description = description  + " " + link['restrictions'] unless link['restrictions'] == nil
+				title = link['title']
 				code = link['couponcode']
-
+				slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.','-').gsub('.co.uk','').downcase
+				if title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
+					begin
+					Timeout.timeout(5) do
+						crawl_response = HTTParty.get(affiliated_link)
+						# p crawl_response
+						link_destination = /window.location.replace\((.*)\)/.match(crawl_response)
+						link_destination = link_destination[1].gsub("\\","").gsub("\'","")
+						p link_destination
+						link_destination = FinalRedirectUrl.final_redirect_url(link_destination)
+						p link_destination
+						if link_destination
+							domain = URI.parse(link_destination).host.gsub("www.","").downcase
+							p "domain: #{domain}" 
+							store = Store.where(domain: domain).first
+							if store
+								# p '$' * 10
+								# store.id, store.name
+								store.network = 'shareasale' if store.network == nil or store.network == ''
+								store.network_id = shareasale_id if store.network_id == nil or store.network_id = ''
+								store.save
+								PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+							else
+								store = Store.create(name: store_name,network: 'shareasale', network_id: shareasale_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
+								# store.id, store.name
+								PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+							end
+						end
+					end
+				rescue
+					next
+				end
+				end
 			end
 		end
 	end
@@ -383,23 +424,23 @@ class PromoCode < ActiveRecord::Base
 	end
 
 	def self.get_webgains_promotions
-		url = 'https://www.webgains.com/2.0/vouchers?key=d6e7edff59c9584fdaa4d7a35f430107&campaignId=129013'
+		url = "http://api.webgains.com/2.0/vouchers?key=#{Figaro.env.WEBGAINS_KEY}"
 		# url = 'http://api.webgains.com/2.0/offers?key=d6e7edff59c9584fdaa4d7a35f430107&campaignId=129013&filters={"showexpired":"false","orderby":"programName","order":"asc","filterby":"ALL_PROGRAMS"}'
 		response = HTTParty.get(url)
 		p response
 		response.each do |coupon|
 			webgains_coupon_id = coupon['id']
-			webgains_id = coupon['program']['id']
-			store_name = coupon['program']['name']
+			webgains_id = coupon['programId']
+			store_name = coupon['program_name']
 			network_id = 'webgains'
-			title = coupon['title']
-			code = coupon['Code']
-			link_destination = coupon['destinationURL']['destination_url']
+			title = coupon['description']
+			code = coupon['code']
+			link_destination = coupon['destinationUrl']
+			p link_destination
 			description = title + " at #{store_name}."
-			description = title + " at #{store_name}. " + coupon['Description'] if coupon['Description']
-			start_date = coupon['startdate']
-			end_date = coupon['enddate'] unless coupon['enddate'] == nil
-			'ongoing' if coupon['enddate'] == nil
+			start_date = coupon['startDate']
+			end_date = coupon['expiryDate'] unless coupon['expiryDate'] == nil
+			'ongoing' if coupon['expiryDate'] == nil
 			slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.','-').gsub('.com.au','').downcase
 			if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
 				begin
@@ -425,6 +466,51 @@ class PromoCode < ActiveRecord::Base
 				end
 			end
 		end
+	end
+
+	def self.get_impact_promotions
+		puts 'Updating impact radius Promotions'
+		url = "https://#{Figaro.env.IMPACT_SID}:#{Figaro.env.IMPACT_TOKEN}@api.impactradius.com/Mediapartners/#{Figaro.env.IMPACT_SID}/Ads?Type=COUPON"
+		response = HTTParty.get(url)
+		# p response
+		links = response['ImpactRadiusResponse']['Ads']['Ad']
+		links.each do |link|
+			p link
+			impact_id = link["CampaignId"]
+			title = link['Name']
+			description = link['Description']
+			store_name = link['CampaignName']
+			link_destination = link['LandingPageUrl']
+			code = link['CouponCode']
+			start_date = link['StartDate']
+			end_date = link['EndDate'] unless link['EndDate'] == nil
+			p 'ongoing' if link['EndDate'] == nil
+			slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.','-').gsub('.co.uk','').downcase
+			if title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
+				begin
+					Timeout.timeout(3) do
+						link_destination = FinalRedirectUrl.final_redirect_url(link_destination)
+						p domain = URI.parse(link_destination).host.gsub("www.","").downcase
+						store = Store.where(domain: domain).first
+						if store
+							p '$' * 10
+							p store.id, store.name
+							store.network = 'impact' if store.network == nil or store.network == ''
+							store.network_id = impact_id if store.network_id == nil or store.network_id = ''
+							store.save
+							PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+						else
+							store = Store.create(name: store_name,network: 'impact', network_id: impact_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
+							p store.id, store.name
+							p PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+						end
+					end
+				rescue
+					next
+				end
+			end
+		end
+
 	end
 
 end	

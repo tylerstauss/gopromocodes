@@ -141,7 +141,20 @@ class StaticController < ApplicationController
 			url = bid['url']['value']
 			p url
 			epc = bid["estimatedCPC"]["value"]
-			p epc
+			p "first EPC #{epc}"
+			if epc == '$0.00'
+				i = 1
+				while epc == '$0.00' && i < 5
+					
+					p i
+					bid = response["offers"]["offer"][i]
+					url = bid['url']['value']
+					epc = bid["estimatedCPC"]["value"]
+					p "new EPC #{epc}"
+					i = i + 1
+				end
+				
+			end
 			@viglink_redirect = "http://redirect.viglink.com?key=76ca2df55a3062ee24f47c4456dc8a75"
 			@redirect_url = CGI::escape(url)
 			@cuid = "#{epc}-#{keyword}"
