@@ -1,3 +1,4 @@
+require 'csv'
 class StaticController < ApplicationController
 	
 	def index
@@ -11,16 +12,33 @@ class StaticController < ApplicationController
 		today = Date.today
 		@domain = params[:domain]
 		@store = Store.where(domain: @domain).first
+		@key = params[:key]
 		@promo_codes = []
-		if @store
-			@promo_codes = @store.promo_codes.select("title","description","starts","code","link","free_shipping").where(approved: true).order("created_at DESC")
+		if @store && @key
+			@promo_codes = @store.promo_codes.select("id","title","description","starts","expires","code","link","free_shipping").where(approved: true).where("expires >= '#{today}' or expires is null").order("created_at DESC").limit(100)
 			if @promo_codes.length > 0
 				@here = @promo_codes
 			else
 				@promo_codes = []
 			end
 		end
-		render json: @promo_codes
+		if params[:format] == 'json'
+			render json: @promo_codes
+		elsif params[:format] == 'csv'
+			headers['Content-Disposition'] = "attachment; filename=\"promo-codes\""
+		    headers['Content-Type'] ||= 'text/csv'
+		else
+			render json: @promo_codes
+		end
+		# respond_to do |format|
+		#     format.html {render json: @promo_codes} if params[:format] == 'json'
+		#     format.json {render json: @promo_codes} if params[:format] == 'json'
+		#     format.csv do
+		#       	headers['Content-Disposition'] = "attachment; filename=\"promo-codes\""
+		#     	headers['Content-Type'] ||= 'text/csv'
+		#     end
+  # 		end
+		
 	end
 
 	def laptops
