@@ -14,7 +14,7 @@ class StaticController < ApplicationController
 		@store = Store.where(domain: @domain).first
 		@key = params[:key]
 		@promo_codes = []
-		if @store && @key
+		if @store
 			@promo_codes = @store.promo_codes.select("id","title","description","starts","expires","code","link","free_shipping").where(approved: true).where("expires >= '#{today}' or expires is null").order("created_at DESC").limit(100)
 			if @promo_codes.length > 0
 				@here = @promo_codes
