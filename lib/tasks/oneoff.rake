@@ -10,6 +10,14 @@ namespace :oneoff do
   	end
   end
 
+  task reset_order: :environment do
+    codes = PromoCode.all
+    codes.each do |code|
+      code.order_id = code.id
+      code.save
+    end
+  end
+
   	task cleanup_promotions: :environment do 
   		codes = PromoCode.where(approved: true)
   		codes.each do |code|
