@@ -29,6 +29,8 @@ require 'uri'
 		respond_to do |format|
 			if is_admin?
 				if @promo_code.save && params["promo_code"]["category_ids"]
+					@promo_code.order_id = @promo_code.id
+					@promo_code.save
 					if params["promo_code"]["category_ids"]
 						params["promo_code"]["category_ids"].each do |category_id|
 			    	CategoryPromoCode.create(promo_code_id: @promo_code.id, category_id: category_id)
@@ -37,6 +39,8 @@ require 'uri'
 					format.html { redirect_to store_path(@promo_code.store) and return}
 					format.js { p 'code was successfully created.' }
 				elsif @promo_code.save
+					@promo_code.order_id = @promo_code.id
+					@promo_code.save
 					format.html { redirect_to store_path(@promo_code.store) and return}
 					format.js { p 'code was successfully created.' }
 				else
@@ -103,7 +107,7 @@ require 'uri'
 
 	private
   def promo_code_params
-    params.require(:promo_code).permit(:title,:description, :code, :store_id, { :category_ids => [] }, :starts, :expires, :link, :homepage, :free_shipping, :user_submit, :approved, :expiration_date)
+    params.require(:promo_code).permit(:title,:description, :code, :store_id, { :category_ids => [] }, :starts, :expires, :link, :homepage, :free_shipping, :user_submit, :approved, :expiration_date, :order_id)
   end
 
   def get_pepperjam_promotions
