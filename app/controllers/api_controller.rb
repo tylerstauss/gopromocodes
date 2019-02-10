@@ -7,7 +7,9 @@ class ApiController < ApplicationController
 		keyword = params[:keyword].downcase if params[:keyword]
 		@promo_codes = []
 		@promo_codes = PromoCode.where(approved: true).where("promo_codes.created_at >= '#{today}'").joins(:store).select("promo_codes.id","stores.name","stores.domain","stores.id as store_id","promo_codes.title","promo_codes.description","promo_codes.starts","promo_codes.expires","promo_codes.code","promo_codes.link","promo_codes.free_shipping").where(approved: true).where("promo_codes.created_at >= '#{today}'").limit(10000)
-		@promo_codes = PromoCode.where(approved: true).where("lower(promo_codes.title) like ? or lower(promo_codes.description) like ?", "%#{keyword}%", "%#{keyword}%").where("promo_codes.created_at >= '#{today}'").joins(:store).select("promo_codes.id","stores.name","stores.domain","stores.id as store_id","promo_codes.title","promo_codes.description","promo_codes.starts","promo_codes.expires","promo_codes.code","promo_codes.link","promo_codes.free_shipping").where(approved: true).where("promo_codes.created_at >= '#{today}'").limit(10000) if keyword
+		if keyword
+			@promo_codes = PromoCode.where(approved: true).where("lower(promo_codes.title) like ? or lower(promo_codes.description) like ?", "%#{keyword}%", "%#{keyword}%").where("promo_codes.created_at >= '#{today}'").joins(:store).select("promo_codes.id","stores.name","stores.domain","stores.id as store_id","promo_codes.title","promo_codes.description","promo_codes.starts","promo_codes.expires","promo_codes.code","promo_codes.link","promo_codes.free_shipping").where(approved: true).where("promo_codes.created_at >= '#{today}'").limit(10000)
+		end
 		if params[:format] == 'json'
 			render json: @promo_codes
 		elsif params[:format] == 'csv'
