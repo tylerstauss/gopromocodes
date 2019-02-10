@@ -11,7 +11,7 @@ namespace :oneoff do
   end
 
   task reset_order: :environment do
-    codes = PromoCode.all
+    codes = PromoCode.where(order_id: nil)
     codes.each do |code|
       code.order_id = code.id
       code.save
