@@ -11,7 +11,7 @@
 				<p><%= link_to "Edit Store", edit_store_path(@store) %> | <%= link_to "Add new code", new_promo_code_path(store: @store.id) %></p>
 			<% end %>
 			<h1><%= @store.name %> Promo Codes & Discounts</h1>
-			<h2>There are currently <%= @store.promo_codes.count %> <%= @store.name %> Promotion Codes and <%= @store.name %> Coupons for <%= Date.today.strftime('%a, %d %b %Y') %></h2>
+			<h2>There are currently <%= @promo_codes.count %> <%= @store.name %> Promotion Codes and <%= @store.name %> Coupons for <%= Date.today.strftime('%a, %d %b %Y') %></h2>
 			<p class="store-description"><%= @store.description %></p>
 		</div>
 	
