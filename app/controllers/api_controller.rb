@@ -27,7 +27,10 @@ class ApiController < ApplicationController
 		@key = params[:key]
 		@promo_codes = []
 		if @store
-			@promo_codes = @store.promo_codes.select("id","title","description","starts","expires","code","link","free_shipping").where(approved: true).where("expires >= '#{today}' or expires is null").order("created_at DESC").limit(100)
+			@featured_codes = @store.promo_codes.select("id","title","description","starts","expires","code","link","free_shipping").where(approved: true).where("expires >= '#{today}' or expires is null").where("order_id < 0").order("order_id ASC")
+			@non_featured_promo_codes = @store.promo_codes.select("id","title","description","starts","expires","code","link","free_shipping").where(approved: true).where("expires >= '#{today}' or expires is null").where("order_id > 0").order("order_id DESC")
+			# @promo_codes = @store.promo_codes.select("id","title","description","starts","expires","code","link","free_shipping").where(approved: true).where("expires >= '#{today}' or expires is null").order("created_at DESC").limit(100)
+			p @promo_codes = @featured_codes + @non_featured_promo_codes
 			if @promo_codes.length > 0
 				@here = @promo_codes
 			else
