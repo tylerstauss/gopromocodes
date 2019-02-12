@@ -68,84 +68,102 @@ namespace :oneoff do
     csv = CSV.parse(csv_text, :headers => true)
     csv.each do |row|
       if row['network_id'] == '2'
-        store = Store.where(network: 'cj', network_id: row["code"]).first
+        store = Store.where(network: 'cj', network_id: row["code"])
         if store
-          store.viglink_id = row['id']
-          store.viglink_group_id = row['group_id']
-          store.viglink_name = row['name']
-          store.save
+            store.each do |s|
+            s.viglink_id = row['id']
+            s.viglink_group_id = row['group_id']
+            s.viglink_name = row['name']
+            s.save
+          end
         end
       end
       if row['network_id'] == '9'
-        store = Store.where(network: 'webgains', network_id: row["code"]).first
+        store = Store.where(network: 'webgains', network_id: row["code"])
         if store
-          store.viglink_id = row['id']
-          store.viglink_group_id = row['group_id']
-          store.viglink_name = row['name']
-          store.save
+            store.each do |s|
+            s.viglink_id = row['id']
+            s.viglink_group_id = row['group_id']
+            s.viglink_name = row['name']
+            s.save
+          end
         end
       end
       if row['network_id'] == '6'
-        store = Store.where(network: 'awin', network_id: row["code"]).first
+        store = Store.where(network: 'awin', network_id: row["code"])
         if store
-          store.viglink_id = row['id']
-          store.viglink_group_id = row['group_id']
-          store.viglink_name = row['name']
-          store.save
+            store.each do |s|
+            s.viglink_id = row['id']
+            s.viglink_group_id = row['group_id']
+            s.viglink_name = row['name']
+            s.save
+          end
         end
       end
       if row['network_id'] == '57'
-        store = Store.where(network: 'impact', network_id: row["code"]).first
+        store = Store.where(network: 'impact', network_id: row["code"])
         if store
-          store.viglink_id = row['id']
-          store.viglink_group_id = row['group_id']
-          store.viglink_name = row['name']
-          store.save
+            store.each do |s|
+            s.viglink_id = row['id']
+            s.viglink_group_id = row['group_id']
+            s.viglink_name = row['name']
+            s.save
+          end
         end
       end
       if row['network_id'] == '28'
-        store = Store.where(network: 'avantlink', network_id: row["code"]).first
+        store = Store.where(network: 'avantlink', network_id: row["code"])
         if store
-          store.viglink_id = row['id']
-          store.viglink_group_id = row['group_id']
-          store.viglink_name = row['name']
-          store.save
+            store.each do |s|
+            s.viglink_id = row['id']
+            s.viglink_group_id = row['group_id']
+            s.viglink_name = row['name']
+            s.save
+          end
         end
       end
       if row['network_id'] == '10'
-        store = Store.where(network: 'shareasale', network_id: row["code"]).first
+        store = Store.where(network: 'shareasale', network_id: row["code"])
         if store
-          store.viglink_id = row['id']
-          store.viglink_group_id = row['group_id']
-          store.viglink_name = row['name']
-          store.save
+            store.each do |s|
+            s.viglink_id = row['id']
+            s.viglink_group_id = row['group_id']
+            s.viglink_name = row['name']
+            s.save
+          end
         end
       end
       if row['network_id'] == '132'
-        store = Store.where(network: 'admitad', network_id: row["code"]).first
+        store = Store.where(network: 'admitad', network_id: row["code"])
         if store
-          store.viglink_id = row['id']
-          store.viglink_group_id = row['group_id']
-          store.viglink_name = row['name']
-          store.save
+            store.each do |s|
+            s.viglink_id = row['id']
+            s.viglink_group_id = row['group_id']
+            s.viglink_name = row['name']
+            s.save
+          end
         end
       end
       if row['network_id'] == '8'
-        store = Store.where(network: 'pepperjam', network_id: row["code"]).first
+        store = Store.where(network: 'pepperjam', network_id: row["code"])
         if store
-          store.viglink_id = row['id']
-          store.viglink_group_id = row['group_id']
-          store.viglink_name = row['name']
-          store.save
+            store.each do |s|
+            s.viglink_id = row['id']
+            s.viglink_group_id = row['group_id']
+            s.viglink_name = row['name']
+            s.save
+          end
         end
       end
       if row['network_id'] == '3'
-        store = Store.where(network: 'linkshare', network_id: row["code"]).first
+        store = Store.where(network: 'linkshare', network_id: row["code"])
         if store
-          store.viglink_id = row['id']
-          store.viglink_group_id = row['group_id']
-          store.viglink_name = row['name']
-          store.save
+            store.each do |s|
+            s.viglink_id = row['id']
+            s.viglink_group_id = row['group_id']
+            s.viglink_name = row['name']
+            s.save
+          end
         end
       end
     end
