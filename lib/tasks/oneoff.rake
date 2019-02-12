@@ -62,4 +62,94 @@ namespace :oneoff do
     task get_impact_promotions: :environment do
     PromoCode.get_impact_promotions
   end  
+
+  task populate_viglink_data: :environment do 
+    csv_text = File.read('viglink.csv')
+    csv = CSV.parse(csv_text, :headers => true)
+    csv.each do |row|
+      if row['network_id'] == '2'
+        store = Store.where(network: 'cj', network_id: row["code"]).first
+        if store
+          store.viglink_id = row['id']
+          store.viglink_group_id = row['group_id']
+          store.viglink_name = row['name']
+          store.save
+        end
+      end
+      if row['network_id'] == '9'
+        store = Store.where(network: 'webgains', network_id: row["code"]).first
+        if store
+          store.viglink_id = row['id']
+          store.viglink_group_id = row['group_id']
+          store.viglink_name = row['name']
+          store.save
+        end
+      end
+      if row['network_id'] == '6'
+        store = Store.where(network: 'awin', network_id: row["code"]).first
+        if store
+          store.viglink_id = row['id']
+          store.viglink_group_id = row['group_id']
+          store.viglink_name = row['name']
+          store.save
+        end
+      end
+      if row['network_id'] == '57'
+        store = Store.where(network: 'impact', network_id: row["code"]).first
+        if store
+          store.viglink_id = row['id']
+          store.viglink_group_id = row['group_id']
+          store.viglink_name = row['name']
+          store.save
+        end
+      end
+      if row['network_id'] == '28'
+        store = Store.where(network: 'avantlink', network_id: row["code"]).first
+        if store
+          store.viglink_id = row['id']
+          store.viglink_group_id = row['group_id']
+          store.viglink_name = row['name']
+          store.save
+        end
+      end
+      if row['network_id'] == '10'
+        store = Store.where(network: 'shareasale', network_id: row["code"]).first
+        if store
+          store.viglink_id = row['id']
+          store.viglink_group_id = row['group_id']
+          store.viglink_name = row['name']
+          store.save
+        end
+      end
+      if row['network_id'] == '132'
+        store = Store.where(network: 'admitad', network_id: row["code"]).first
+        if store
+          store.viglink_id = row['id']
+          store.viglink_group_id = row['group_id']
+          store.viglink_name = row['name']
+          store.save
+        end
+      end
+      if row['network_id'] == '8'
+        store = Store.where(network: 'pepperjam', network_id: row["code"]).first
+        if store
+          store.viglink_id = row['id']
+          store.viglink_group_id = row['group_id']
+          store.viglink_name = row['name']
+          store.save
+        end
+      end
+      if row['network_id'] == '3'
+        store = Store.where(network: 'linkshare', network_id: row["code"]).first
+        if store
+          store.viglink_id = row['id']
+          store.viglink_group_id = row['group_id']
+          store.viglink_name = row['name']
+          store.save
+        end
+      end
+    end
+  end
+
+
 end
