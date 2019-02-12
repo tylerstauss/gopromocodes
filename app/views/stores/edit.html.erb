@@ -55,6 +55,18 @@
 		<%= f.label :top_store %>
 		<%= f.radio_button(:top_store, "Top Store?", checked: @store.top_store) %>
 	</p>
+	<p>
+		<%= f.label :viglink_id %>
+		<%= f.text_field :viglink_id %>
+	</p>
+	<p>
+		<%= f.label :viglink_name %>
+		<%= f.text_field :viglink_name %>
+	</p>
+	<p>
+		<%= f.label :viglink_group_id %>
+		<%= f.text_field :viglink_group_id %>
+	</p>
 
 
 	<%= f.submit %>
