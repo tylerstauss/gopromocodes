@@ -13,25 +13,27 @@ require 'uri'
 
 	def new
 		authenticate_admin!
+		@store_blog = StoreBlog.new
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
-		@promo_code = StoreBlog.new
 	end
 
 	def create
-		@promo_code = StoreBlog.new(promo_code_params)
-	  @promo_code.save
+		p params
+		p params["store_blog"]["store_id"]
+		@store_blog = StoreBlog.new(store_blog_params)
+	  	@store_blog.save
+	  	@store = Store.find_by_id(params["store_blog"]["store_id"])
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 
-	  redirect_to @promo_code
+	  redirect_to store_path(@store)
 	end
 
 	def show
 		@promo_code = StoreBlog.find(params[:id])
-		vl_api = '2629ea091f62c185fac384857620742c'
 		@link =  CGI.escape(@promo_code.link)
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
