@@ -13,7 +13,7 @@
 			<h1><span itemprop="name"><%= @store.name %></span> Promo Codes & Discounts</h1>
 			<h2>There are currently <%= @promo_codes.count %> <%= @store.name %> Promotion Codes and <%= @store.name %> Coupons for <%= Date.today.strftime('%a, %d %b %Y') %></h2>
 			<p class="store-description" itemprop='description'><%= @store.description %></p>
-			<p >Store located at: <span itemprop="url"><%= link_to( @store.url,@store.url) %></span></p>
+			<p >Store located at: <span itemprop="url"><%= link_to( @store.url,@store.url, :rel => 'nofollow',:target => "_blank") %></span></p>
 		</div>
 	
 		<div class="red-banner">
