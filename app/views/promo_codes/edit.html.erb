@@ -51,7 +51,12 @@
 		<%= f.check_box(:user_submit, checked: @promo_code.user_submit) %>
 	</p>
 
-			<p>
+
+	<p>
+		<%= f.label :free_shipping %>
+		<%= f.check_box(:free_shipping, checked: @promo_code.free_shipping) %>
+	</p>
+	<p>
 		<%= f.label :homepage %>
 		<%= f.check_box(:homepage, checked: @promo_code.homepage) %>
 	</p>
