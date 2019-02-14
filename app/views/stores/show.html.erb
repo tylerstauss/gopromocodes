@@ -6,7 +6,8 @@
 <% meta_tag('description', "Use #{@promo_codes.count} promo codes to save money at #{@store.name} today. Discounts work at #{@store.domain}") unless @store.meta_description %>
 <div class="row main-content">
 	<div class="eight columns coupon-list">
-		<div class="store-info">
+		<div class="store-info" itemscope itemtype="http://schema.org/Store">
+			<meta itemprop="name" content="<%= @store.name %>">
 			<% if is_admin? %>
 				<p><%= link_to "Edit Store", edit_store_path(@store) %> | <%= link_to "Add new code", new_promo_code_path(store: @store.id) %></p>
 			<% end %>
