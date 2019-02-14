@@ -12,8 +12,8 @@
 			<% end %>
 			<h1><span itemprop="name"><%= @store.name %></span> Promo Codes & Discounts</h1>
 			<h2>There are currently <%= @promo_codes.count %> <%= @store.name %> Promotion Codes and <%= @store.name %> Coupons for <%= Date.today.strftime('%a, %d %b %Y') %></h2>
-			<p class="store-description" itemprop='description'><%= @store.description %></p>
-			<p >Store located at: <span itemprop="url"><%= link_to( @store.url,@store.url, :rel => 'nofollow',:target => "_blank") %></span></p>
+			<p class="store-description" itemprop='description'><%= @store.description %>
+			Store located at: <span itemprop="url"><%= link_to( @store.url,@store.url, :rel => 'nofollow',:target => "_blank") %></span></p>
 		</div>
 	
 		<div class="red-banner">
@@ -43,6 +43,30 @@ Since this site allows users to submit content, we cannot guarantee the accuracy
 		</div>
 		
 		<div class="store-blogs store-info">
+			<div>
+				<table class="merchant-stats"> 
+					<tbody> 
+						<thead>
+							<th><%= @store.name %> Offer Data</th>
+						</thead>
+						<tr> 
+							<td>Total Valid Offers: <span class="merchant-offer-data"><%= @promo_codes.count %></span></td> 
+						</tr> 
+
+						<tr> 
+							<td>Free Shipping Offers: <span class="merchant-offer-data"><%= @freeshipping.count %></span></td>
+						<tr> 
+							<td>Last Offer Added: <span class="merchant-offer-data"><%= @promo_codes.first.created_at %></span>
+							</td> 
+						</tr> 	 
+						<tr> 
+							<td>Expired Deals: <span class="merchant-offer-data"><%= @expired.count %></span>
+							</td> 
+						</tr> 
+						</tr> 
+					</tbody>
+				</table>
+			</div>
 			<% @blogs.each do |blog| %>
 			<% if is_admin? %>
 				<p><%= link_to "Edit Blog", edit_store_blog_path(blog) %></p>

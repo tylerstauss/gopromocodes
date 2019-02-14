@@ -32,6 +32,8 @@ class StoresController < ApplicationController
 	def show
 		today = Date.today
 		@store = Store.find(params[:id])
+		@expired = @store.promo_codes.where("expires <= '#{today}'")
+		@freeshipping = @store.promo_codes.where(free_shipping: true)
 		@featured_codes = @store.promo_codes.where(approved: true).where("expires >= '#{today}' or expires is null").where("order_id < 0").order("order_id ASC")
 		@non_featured_promo_codes = @store.promo_codes.where(approved: true).where("expires >= '#{today}' or expires is null").where("order_id > 0").order("order_id DESC")
 		p @promo_codes = @featured_codes + @non_featured_promo_codes
