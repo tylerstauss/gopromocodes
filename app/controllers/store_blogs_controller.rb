@@ -58,8 +58,9 @@ require 'uri'
 	def destroy
 		authenticate_admin!
 		@blog = StoreBlog.find(params[:id])
-		store = @pblog.store
-		@pblog.destroy
+		p @blog
+		store = @blog.store
+		@blog.destroy
 		redirect_to store_path(store)
 	end
 
