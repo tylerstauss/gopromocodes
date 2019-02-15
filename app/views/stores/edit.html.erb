@@ -42,12 +42,12 @@
 
 	<p>
 		<%= f.label :active %>
-		<%= f.radio_button(:active, "active", checked: @store.active) %>
+		<%= f.check_box(:active, checked: @store.active) %>
 	</p>
 
 	<p>
 		<%= f.label :user_submit %>
-		<%= f.radio_button(:user_submit, "user submit", checked: @store.user_submit) %>
+		<%= f.check_box(:user_submit, checked: @store.user_submit) %>
 	</p>
 
 	<p>
@@ -57,7 +57,7 @@
 
 		<p>
 		<%= f.label :top_store %>
-		<%= f.radio_button(:top_store, "Top Store?", checked: @store.top_store) %>
+		<%= f.check_box(:top_store, checked: @store.top_store) %>
 	</p>
 	<p>
 		<%= f.label :viglink_id %>
