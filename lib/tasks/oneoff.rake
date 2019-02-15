@@ -71,7 +71,11 @@ namespace :oneoff do
   end
     task get_impact_promotions: :environment do
     PromoCode.get_impact_promotions
-  end  
+  end 
+
+  task get_admitad_promotions: :environment do
+    PromoCode.get_admitad_promotions
+  end   
 
   task populate_viglink_data: :environment do 
     csv_text = File.read('viglink.csv')
