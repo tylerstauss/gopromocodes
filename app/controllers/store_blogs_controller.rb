@@ -55,7 +55,12 @@ require 'uri'
     redirect_to store_path(store_blog.store)
 	end
 
-	def delete
+	def destroy
+		authenticate_admin!
+		@blog = StoreBlog.find(params[:id])
+		store = @pblog.store
+		@pblog.destroy
+		redirect_to store_path(store)
 	end
 
 	def newest
