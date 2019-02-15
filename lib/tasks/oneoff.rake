@@ -10,6 +10,16 @@ namespace :oneoff do
   	end
   end
 
+  task tag_free_shipping: :environment do
+    codes = PromoCode.all
+    codes.each do |code|
+      if code.description.downcase.include?('shipping')
+        code.free_shipping = true
+        code.save
+      end
+    end
+  end
+
   task reset_order: :environment do
     codes = PromoCode.where(order_id: nil)
     codes.each do |code|
