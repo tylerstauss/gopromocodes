@@ -11,7 +11,7 @@ namespace :oneoff do
   end
 
   task tag_free_shipping: :environment do
-    codes = PromoCode.all
+    codes = PromoCode.where(created_at >= Date.yesterday)
     codes.each do |code|
       if code.description.downcase.include?('shipping')
         code.free_shipping = true
