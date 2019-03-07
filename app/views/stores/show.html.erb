@@ -1,6 +1,6 @@
 
-<% title(@store.meta_title) if @store.title %>
-<% title("#{@promo_codes.count} #{@store.name} promo codes, coupons and discounts") if @store.title == '' %>
+<% title(@store.meta_title) if @store.meta_title %>
+<% title("#{@promo_codes.count} #{@store.name} promo codes, coupons and discounts") if @store.meta_title == '' %>
 <% canonical(store_path(@store)) %>
 <% meta_tag('keywords', @store.meta_keywords) if @store.meta_keywords %>
 <% meta_tag('keywords', "#{@store.name}, promo codes, coupon codes,discounts, promotion codes, savings codes, #{@store.domain}") if @store.meta_keywords == '' %>
