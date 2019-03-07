@@ -78,7 +78,7 @@ Since this site allows users to submit content, we cannot guarantee the accuracy
 			<% if is_admin? %>
 				<p><%= link_to "Edit Blog", edit_store_blog_path(blog) %> | <%= link_to "Delete Blog", store_blog_path(blog), :method => :delete %></p>
 			<% end %>
-			<strong><%= blog.publish_date %></strong>
+			<span><%= blog.publish_date %></span>
 			<%= raw(blog.post) %>
 			<br><br>
 			<% end %>
