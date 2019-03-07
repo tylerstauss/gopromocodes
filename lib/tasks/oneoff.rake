@@ -180,6 +180,17 @@ namespace :oneoff do
           end
         end
       end
+      if row['network_id'] == '77'
+        store = Store.where(network: 'commissionfactory', network_id: row["code"])
+        if store
+            store.each do |s|
+            s.viglink_id = row['id']
+            s.viglink_group_id = row['group_id']
+            s.viglink_name = row['name']
+            s.save
+          end
+        end
+      end
     end
   end
 

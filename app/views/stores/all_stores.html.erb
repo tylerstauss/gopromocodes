@@ -12,6 +12,9 @@
 			<thead>
 				<td>ID</td>
 				<td>Name</td>
+				<td>Network</td>
+				<td>Network ID</td>
+				<td>VL ID</td>
 				<td>URL</td>
 				<td>Domain</td>
 			</thead>
@@ -19,6 +22,9 @@
 			<tr>
 				<td><%= store.id %></td>
 				<td><%= link_to store.name, edit_store_path(store) %></td>
+				<td><%= store.network %></td>
+				<td><%= store.network_id %></td>
+				<td><%= store.viglink_id %></td>
 				<td><%= store.url %></td>
 				<td><%= store.domain %></td>
 			</tr>
