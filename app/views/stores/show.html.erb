@@ -1,8 +1,10 @@
 
 <% title(@store.meta_title) %>
 <% canonical(store_path(@store)) %>
-<% meta_tag('keywords', @store.meta_keywords) %>
+<% meta_tag('keywords', @store.meta_keywords) if @store.meta_keywords %>
+<% meta_tag('keywords', "#{@store.name}, promo codes, coupon codes,discounts, promotion codes, savings codes, #{store.domain}") unless @store.meta_keywords %>
 <% meta_tag('description', @store.meta_description) if @store.meta_description %>
+<% meta_tag('description', "#{@store.name} promo codes and coupons for discounts at #{@store.domain}") unless @store.meta_description %>
 <% meta_tag('description', "Use #{@promo_codes.count} #{@store.name} promo codes & coupons to save money at #{@store.domain}.") unless @store.meta_description %>
 <div class="row main-content">
 	<div class="eight columns coupon-list">
