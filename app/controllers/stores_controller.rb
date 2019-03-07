@@ -40,6 +40,7 @@ class StoresController < ApplicationController
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
+		p @store.meta_description
 		@blogs = @store.store_blogs.order('pub_date DESC')
 		@promo_code = PromoCode.new
 	end
