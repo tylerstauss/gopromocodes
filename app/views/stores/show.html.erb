@@ -60,7 +60,7 @@ Since this site allows users to submit content, we cannot guarantee the accuracy
 							<td>Free Shipping Offers: <span class="merchant-offer-data">
 								<%= @freeshipping.count if @promo_codes %></span></td>
 						<tr> 
-							<td>Last Offer Added: <span class="merchant-offer-data"><%= @store.promo_codes.last.created_at %></span>
+							<td>Last Offer Added: <span class="merchant-offer-data"><%= @store.promo_codes.last.created_at if @store.promo_codes %></span>
 							</td> 
 						</tr> 	 
 						<tr> 
