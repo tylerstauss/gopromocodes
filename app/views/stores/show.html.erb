@@ -22,8 +22,12 @@
 		<div class="red-banner">
 			<h2>Current Codes</h2>
 		</div>
-		<% @promo_codes.each do |promo_code| %>
-		<%= render partial: 'shared/single_coupon_stores', locals: {promo_code: promo_code} %>
+		<% if @promo_codes %>
+			<% @promo_codes.each do |promo_code| %>
+			<%= render partial: 'shared/single_coupon_stores', locals: {promo_code: promo_code} %>
+			<% end %>
+		<% else %>
+		
 		<% end %>
 		
 		<% if @store.user_submit %>

@@ -1,9 +1,11 @@
 class StoresController < ApplicationController
 
 	def index
-		p params["new"]
+		p params
 		@stores = Store.search(params[:term], params[:page])
-
+		if params["new"]
+			@stores = Store.search(params[:term], params[:page]).order(created_at: :desc)
+		end
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
@@ -11,12 +13,7 @@ class StoresController < ApplicationController
 
 	def all_stores
 		authenticate_admin!
-		p params["new"]
 		@stores = Store.search(params[:term], params[:page])
-		if params["new"]
-			p 'newest stores'
-			@stores = Store.all.order(created_at: :desc).search(params[:term], params[:page])
-		end
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
@@ -39,7 +36,7 @@ class StoresController < ApplicationController
 	def show
 		today = Date.today
 		@store = Store.find(params[:id])
-		@expired = @store.promo_codes.where("expires <= '#{today}' or approved = false")
+		@expired = @store.promo_codes.where("expires <= '#{today}'")
 		@freeshipping = @store.promo_codes.where(free_shipping: true).where(approved: true).where("expires >= '#{today}' or expires is null")
 		@featured_codes = @store.promo_codes.where(approved: true).where("expires >= '#{today}' or expires is null").where("order_id < 0").order("order_id ASC")
 		@non_featured_promo_codes = @store.promo_codes.where(approved: true).where("expires >= '#{today}' or expires is null").where("order_id > 0").order("order_id DESC")
@@ -51,7 +48,7 @@ class StoresController < ApplicationController
 		@blogs = @store.store_blogs.order('pub_date DESC')
 		@promo_code = PromoCode.new
 	end
- 
+
 	def edit
 		authenticate_admin!
 		@store = Store.find(params[:id])
