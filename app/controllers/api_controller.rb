@@ -1,6 +1,25 @@
 require 'csv'
 class ApiController < ApplicationController
 
+	def coupons_test
+		today = Date.today
+		today = params[:starts] if params[:starts]
+		keyword = params[:keyword].downcase if params[:keyword]
+		@promo_codes = []
+		@promo_codes = PromoCode.where(approved: true).where("promo_codes.created_at >= '#{today}'").joins(:store).select("promo_codes.title","promo_codes.description","promo_codes.link","promo_codes.starts","promo_codes.expires","stores.viglink_id","promo_codes.code").where(approved: true).where("promo_codes.created_at >= '#{today}'").limit(10000)
+		if keyword
+			@promo_codes = PromoCode.where(approved: true).where("lower(promo_codes.title) like ? or lower(promo_codes.description) like ?", "%#{keyword}%", "%#{keyword}%").where("promo_codes.created_at >= '#{today}'").joins(:store).select("stores.viglink_id, stores.viglink_name, stores.viglink_group_id, promo_codes.id","stores.name","stores.domain","stores.id as store_id","promo_codes.title","promo_codes.description","promo_codes.starts","promo_codes.expires","promo_codes.code","promo_codes.link","promo_codes.free_shipping").where(approved: true).where("promo_codes.created_at >= '#{today}'").limit(10000)
+		end
+		if params[:format] == 'json'
+			render json: @promo_codes
+		elsif params[:format] == 'csv'
+			headers['Content-Disposition'] = "attachment; filename=\"promo-codes\""
+		    headers['Content-Type'] ||= 'text/csv'
+		else
+			render json: @promo_codes
+		end
+	end
+
 	def coupons
 		today = Date.today
 		today = params[:starts] if params[:starts]
