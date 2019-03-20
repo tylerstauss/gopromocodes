@@ -19,9 +19,9 @@ class StoresController < ApplicationController
 			p 'newest stores'
 			@stores = Store.all.order(created_at: :desc).search(params[:term], params[:page])
 		end
-		# @subscriber = Subscriber.new
-		# @categories = Category.order('name ASC')
-		# @top_stores = Store.where(top_store: true).limit(12)
+		@subscriber = Subscriber.new
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
 	def new
