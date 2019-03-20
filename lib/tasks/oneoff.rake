@@ -18,8 +18,9 @@ namespace :oneoff do
     # p promo_codes
     HTTParty.post(
       "https://qa.viglink.io/coupons", 
-      :body => promo_codes,
-      :headers => {'Content-Type' => 'application/json', 'Authorization' => 'secret 344446ed9d19590b32df9f2721f222ade6fa8e03'})
+      body: promo_codes,
+      timeout: 60,
+      headers: {'Content-Type' => 'application/json', 'Authorization' => 'secret 344446ed9d19590b32df9f2721f222ade6fa8e03'})
   end
 
   task tag_free_shipping: :environment do
