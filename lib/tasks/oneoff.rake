@@ -20,7 +20,7 @@ namespace :oneoff do
       "https://qa.viglink.io/coupons", 
       body: promo_codes,
       timeout: 60,
-      verify:true,
+      verify: true,
       headers: {'Content-Type' => 'application/json', 'Authorization' => 'secret 344446ed9d19590b32df9f2721f222ade6fa8e03'})
   end
 
