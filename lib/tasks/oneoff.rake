@@ -14,11 +14,13 @@ namespace :oneoff do
 
   task send_codes_to_viglink: :environment do
     today = Date.today
-    promo_codes = PromoCode.where(approved: true).where("promo_codes.expires >= '#{today}' or expires is null").joins(:store).select("promo_codes.title","promo_codes.description","promo_codes.link as url","promo_codes.starts as startDate","promo_codes.expires as endDate","stores.viglink_id as merchantId","promo_codes.code as promocode").where("viglink_id is not null").order(created_at: desc).limit(300).to_json
+    promo_codes = PromoCode.where(approved: true).where("promo_codes.expires >= '#{today}' or expires is null").joins(:store).select("promo_codes.title","promo_codes.description","promo_codes.link as url","promo_codes.starts as startDate","promo_codes.expires as endDate","stores.viglink_id as merchantId","promo_codes.code as promocode").where("viglink_id is not null").order(created_at: :desc).limit(300).to_json
     # p promo_codes
     HTTParty.post(
       "https://qa.viglink.io/coupons", 
       body: promo_codes,
+      timeout: 60,
+      verify: true,
       headers: {'Content-Type' => 'application/json', 'Authorization' => 'secret 344446ed9d19590b32df9f2721f222ade6fa8e03'})
   end
 
