@@ -13,10 +13,11 @@ class StoresController < ApplicationController
 
 	def all_stores
 		authenticate_admin!
-		@stores = Store.search(params[:term], params[:page])
-		if params["new"]
+		if params["new"] == true
 			p 'params new'
 			@stores = Store.search(params[:term], params[:page]).order(created_at: :desc)
+		else
+			@stores = Store.search(params[:term], params[:page])
 		end
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
