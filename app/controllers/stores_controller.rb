@@ -14,6 +14,9 @@ class StoresController < ApplicationController
 	def all_stores
 		authenticate_admin!
 		@stores = Store.search(params[:term], params[:page])
+		if params["new"]
+			@stores = Store.search(params[:term], params[:page]).order(created_at: :desc)
+		end
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
