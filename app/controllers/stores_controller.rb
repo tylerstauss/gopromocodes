@@ -14,7 +14,7 @@ class StoresController < ApplicationController
 	def all_stores
 		authenticate_admin!
 		p params["new"]
- 		@stores = Store.search(params[:term], params[:page])
+		@stores = Store.all.order(name: :asc).search(params[:term], params[:page])
 		if params["new"]
 			p 'newest stores'
 			@stores = Store.all.order(created_at: :desc).search(params[:term], params[:page])
