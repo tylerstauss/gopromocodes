@@ -1,3 +1,5 @@
+require 'resolv-replace'
+
 namespace :oneoff do
   
   desc "TODO"
