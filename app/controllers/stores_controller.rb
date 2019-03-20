@@ -15,6 +15,7 @@ class StoresController < ApplicationController
 		authenticate_admin!
 		@stores = Store.search(params[:term], params[:page])
 		if params["new"]
+			p 'params new'
 			@stores = Store.search(params[:term], params[:page]).order(created_at: :desc)
 		end
 		@subscriber = Subscriber.new
