@@ -1,4 +1,6 @@
 require 'resolv-replace'
+require 'net/http'
+require 'uri'
 
 namespace :oneoff do
   
@@ -16,12 +18,13 @@ namespace :oneoff do
     today = Date.today
     promo_codes = PromoCode.where(approved: true).where("promo_codes.expires >= '#{today}' or expires is null").joins(:store).select("promo_codes.title","promo_codes.description","promo_codes.link as url","promo_codes.starts as startDate","promo_codes.expires as endDate","stores.viglink_id as merchantId","promo_codes.code as promocode").where("viglink_id is not null").order(created_at: :desc).limit(300).to_json
     # p promo_codes
-    HTTParty.post(
-      "https://qa.viglink.io/coupons", 
-      body: promo_codes,
-      timeout: 60,
-      verify: true,
-      headers: {'Content-Type' => 'application/json', 'Authorization' => 'secret 344446ed9d19590b32df9f2721f222ade6fa8e03'})
+    Net::HTTP.post_form("https://qa.viglink.io/coupons", body: promo_codes)
+    # HTTParty.post(
+    #   "https://qa.viglink.io/coupons", 
+    #   body: promo_codes,
+    #   timeout: 60,
+    #   verify: true,
+    #   headers: {'Content-Type' => 'application/json', 'Authorization' => 'secret 344446ed9d19590b32df9f2721f222ade6fa8e03'})
   end
 
   task tag_free_shipping: :environment do
@@ -90,6 +93,9 @@ namespace :oneoff do
   task get_admitad_promotions: :environment do
     PromoCode.get_admitad_promotions
   end   
+    task get_linkconnector_promotions: :environment do
+    PromoCode.get_linkconnector_promotions
+  end
 
   task populate_viglink_data: :environment do 
     csv_text = File.read('viglink.csv')
