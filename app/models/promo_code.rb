@@ -454,7 +454,6 @@ class PromoCode < ActiveRecord::Base
 
 	def self.get_admitad_promotions
 		url = "http://export.admitad.com/en/webmaster/websites/302341/coupons/export/?website=302341&region=99&code=3b2ff36880&user=viglink&keyword=&format=xml&v=1"
-		# url = 'http://api.webgains.com/2.0/offers?key=d6e7edff59c9584fdaa4d7a35f430107&campaignId=129013&filters={"showexpired":"false","orderby":"programName","order":"asc","filterby":"ALL_PROGRAMS"}'
 		response = HTTParty.get(url)
 		response = response['admitad_coupons']['coupons']
 		response.each do |coupons|
@@ -515,7 +514,6 @@ class PromoCode < ActiveRecord::Base
 
 	def self.get_webgains_promotions
 		url = "http://api.webgains.com/2.0/vouchers?key=#{Figaro.env.WEBGAINS_KEY}"
-		# url = 'http://api.webgains.com/2.0/offers?key=d6e7edff59c9584fdaa4d7a35f430107&campaignId=129013&filters={"showexpired":"false","orderby":"programName","order":"asc","filterby":"ALL_PROGRAMS"}'
 		response = HTTParty.get(url)
 		p response
 		response.each do |coupon|
@@ -559,6 +557,61 @@ class PromoCode < ActiveRecord::Base
 					next
 				end
 			end
+		end
+	end
+
+	def self.get_linkconnector_promotions
+
+		key = Figaro.env.LINKCONNECTOR_KEY
+        function = "getFeedPromotion"
+        format = "XML"
+        url = 'http://www.linkconnector.com/api/'
+        response = HTTParty.post(url, :body => {"Key" => key, "Function" => function, "Format" => format})
+		coupons = response["xml"]["Promotion"]
+		coupons.each do |coupon|
+			linkconnector_coupon_id = coupon['PromoID']
+			linkconnector_id = coupon['MerchantID']
+			store_name = coupon['Merchant']
+			network_id = 'linkconnector'
+			title = coupon['HeadLineTitle']
+			code = coupon['CouponCode']
+			link_destination = coupon['TrackingURL']
+			p link_destination
+			description = title + " at #{store_name}."
+			start_date = coupon['EntryDate']
+			end_date = coupon['Expires'] unless coupon['Expires'] == nil
+			'ongoing' if coupon['Expires'] == nil
+			slug = store_name.gsub(' ', '-').gsub('.com','').gsub('.net','').gsub('.','-').gsub('.com.au','').downcase
+			if description.downcase.include?("off") || description.downcase.include?('free') || description.downcase.include?('%') || description.downcase.include?('$') || title.downcase.include?("off") || title.downcase.include?('free') || title.downcase.include?('%') || title.downcase.include?('$')
+					begin
+						Timeout.timeout(5) do
+							link_destination = FinalRedirectUrl.final_redirect_url(link_destination)
+							domain = URI.parse(link_destination).host.gsub("www.","").downcase
+							store_name = domain
+							p "domain: #{domain}" 
+							store = Store.where(domain: domain).first
+							if store
+								p '$' * 10
+								p store.id, store.name
+								store.network = 'linkconnector' if store.network == nil
+								store.network_id = linkconnector_id if store.network_id == nil
+								store.save
+								new_created_code = PromoCode.create(store_id: store.id, title: title, code: code, description: description, link: link_destination, starts: start_date, expires: end_date)
+								new_created_code.order_id = new_created_code.id
+								new_created_code.save
+							else
+								slug = store_name.gsub(' ', '-').gsub('.','-').downcase
+								store = Store.create(name: store_name,network: 'linkconnector', network_id: linkconnector_id, domain: domain, url: "http://#{domain}", slug: slug, top_store: false)
+								p store.id, store.name
+								new_created_code = PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
+								new_created_code.order_id = new_created_code.id
+								new_created_code.save
+							end
+						end
+					rescue
+						next
+					end
+				end
 		end
 	end
 
