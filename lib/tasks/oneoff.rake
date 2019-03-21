@@ -112,6 +112,17 @@ namespace :oneoff do
           end
         end
       end
+      if row['network_id'] == '42'
+        store = Store.where(network: 'linkconnector', network_id: row["code"])
+        if store
+            store.each do |s|
+            s.viglink_id = row['id']
+            s.viglink_group_id = row['group_id']
+            s.viglink_name = row['name']
+            s.save
+          end
+        end
+      end
       if row['network_id'] == '9'
         store = Store.where(network: 'webgains', network_id: row["code"])
         if store
