@@ -18,17 +18,15 @@ namespace :oneoff do
     today = Date.today
     promo_codes = PromoCode.where(approved: true).where("promo_codes.expires >= '#{today}' or expires is null").joins(:store).select("promo_codes.title","promo_codes.description","promo_codes.link as url","promo_codes.starts as startDate","promo_codes.expires as endDate","stores.viglink_id as merchantId","promo_codes.code as promocode").where("viglink_id is not null").order(created_at: :desc).limit(300).to_json
     # p promo_codes
-    Net::HTTP.post_form("https://qa.viglink.io/coupons", body: promo_codes)
-    # HTTParty.post(
-    #   "https://qa.viglink.io/coupons", 
-    #   body: promo_codes,
-    #   timeout: 60,
-    #   verify: true,
-    #   headers: {'Content-Type' => 'application/json', 'Authorization' => 'secret 344446ed9d19590b32df9f2721f222ade6fa8e03'})
+    # Net::HTTP.post_form("https://qa.viglink.io/coupons", body: promo_codes)
+    HTTParty.post(
+      "https://qa.viglink.io/coupons", 
+      body: promo_codes,
+      headers: {'Content-Type' => 'application/json', 'Authorization' => 'secret e7dd4cc96ef8b07b67d47e4d6a9b334d367e92f4'})
   end
 
   task tag_free_shipping: :environment do
-    codes = PromoCode.where(created_at >= Date.yesterday)
+    codes = PromoCode.where("created_at >= '#{Date.yesterday}'")
     codes.each do |code|
       if code.description.downcase.include?('shipping')
         code.free_shipping = true
