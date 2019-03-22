@@ -22,6 +22,7 @@ namespace :oneoff do
     HTTParty.post(
       "https://qa.viglink.io/coupons", 
       body: promo_codes,
+      timeout: 90,
       headers: {'Content-Type' => 'application/json', 'Authorization' => 'secret e7dd4cc96ef8b07b67d47e4d6a9b334d367e92f4'})
   end
 
