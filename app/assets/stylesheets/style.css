@@ -204,7 +204,7 @@ header {
 	margin: 20px;
 }
 
-form#search-bar {
+form#search-bar, #header-login {
 	float: right;
 }
 
