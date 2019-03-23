@@ -62,6 +62,9 @@ Rails.application.routes.draw do
   get '/p/author-biography-zoe-stauss.html', to: redirect("/author-biography-zoe-stauss", status: 301) 
 
 
+# new redirects
+get '/stores/tracfone-wireless,-inc-', to: redirect('/stores/tracfone', 301)
+
   # @stores = Store.all
 
   # @stores.each do |store|
