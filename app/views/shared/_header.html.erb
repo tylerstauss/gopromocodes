@@ -6,10 +6,25 @@
 			</div>
 				
 			<div class="eight columns">
+				<span id="header-login">
+					<% if current_user %>
+						<p>Welcome back <%= link_to current_user.username, user_path(current_user) %>!<br><%= link_to "Sign Out", signout_path %>
+						<% if current_user.admin %>
+							| <%= link_to "Admin", admin_path %>
+						<% end %>
+						</p>
+					<% else %>
+						<p>
+							<%= link_to "Register", new_user_path %> /
+							<%= link_to "Login", signin_path %>
+						</p>
+					<% end %>
+				</span>
 				<form id="search-bar" action="<%= search_path %>" method="get">
 					<input type="text" placeholder="Search by store: Walmart" name="search_term">
 					<input class="button-primary" type="submit" value="Search">
 				</form>
+				
 			</div>
 		</div>
 
