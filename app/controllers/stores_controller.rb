@@ -2,9 +2,9 @@ class StoresController < ApplicationController
 
 	def index
 		p params
-		@stores = Store.search(params[:term], params[:page])
+		@stores = Store.where(active: true).search(params[:term], params[:page])
 		if params["new"]
-			@stores = Store.search(params[:term], params[:page]).order(created_at: :desc)
+			@stores = Store.where(active: true).search(params[:term], params[:page]).order(created_at: :desc)
 		end
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
@@ -14,10 +14,10 @@ class StoresController < ApplicationController
 	def all_stores
 		authenticate_admin!
 		p params["new"]
-		@stores = Store.all.order(name: :asc).search(params[:term], params[:page])
+		@stores = Store.where(active: true).order(name: :asc).search(params[:term], params[:page])
 		if params["new"]
 			p 'newest stores'
-			@stores = Store.all.order(created_at: :desc).search(params[:term], params[:page])
+			@stores = Store.where(active: true).order(created_at: :desc).search(params[:term], params[:page])
 		end
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
