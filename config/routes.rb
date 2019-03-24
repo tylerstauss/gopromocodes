@@ -63,6 +63,7 @@ Rails.application.routes.draw do
 
 
 # new redirects
+get '/store/tracfone-wireless-inc', to: redirect('/stores/tracfone', 301)
 get '/stores/tracfone-wireless-inc', to: redirect('/stores/tracfone', 301)
 
   # @stores = Store.all
@@ -74,7 +75,7 @@ get '/stores/tracfone-wireless-inc', to: redirect('/stores/tracfone', 301)
   # end
 
   # Old Store Page Redirects
-  get '/store/BikersDen.html', to: redirect('/stores/bikersden', 301)
+get '/store/BikersDen.html', to: redirect('/stores/bikersden', 301)
 get '/store/bikersden.html', to: redirect('/stores/bikersden', 301)
 get '/store/BizCard.html', to: redirect('/stores/bizcard', 301)
 get '/store/bizcard.html', to: redirect('/stores/bizcard', 301)
