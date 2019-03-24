@@ -63,7 +63,7 @@ Rails.application.routes.draw do
 
 
 # new redirects
-get '/stores/tracfone-wireless,-inc-', to: redirect('/stores/tracfone', 301)
+get '/stores/tracfone-wireless-inc', to: redirect('/stores/tracfone', 301)
 
   # @stores = Store.all
 
