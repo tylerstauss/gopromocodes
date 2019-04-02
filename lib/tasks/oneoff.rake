@@ -16,14 +16,13 @@ namespace :oneoff do
 
   task send_codes_to_viglink: :environment do
     today = Date.today
-    promo_codes = PromoCode.where(approved: true).where("promo_codes.expires >= '#{today}' or expires is null").joins(:store).select("promo_codes.title","promo_codes.description","promo_codes.link as url","promo_codes.starts as startDate","promo_codes.expires as endDate","stores.viglink_id as merchantId","promo_codes.code as promocode").where("viglink_id is not null").order(created_at: :desc).limit(300).to_json
-    # p promo_codes
-    # Net::HTTP.post_form("https://qa.viglink.io/coupons", body: promo_codes)
+    promo_codes = PromoCode.where(approved: true).where("promo_codes.expires >= '#{today}' or expires is null").joins(:store).select("promo_codes.title","promo_codes.description as desc","promo_codes.link as url","promo_codes.starts as startdate","promo_codes.expires as enddate","stores.viglink_id as merchantid","promo_codes.code as promocode").where("viglink_id is not null").order(created_at: :desc).limit(300).to_json
+    p promo_codes
     HTTParty.post(
-      "https://qa.viglink.io/coupons", 
+      "https://viglink.io/coupons", 
       body: promo_codes,
       timeout: 90,
-      headers: {'Content-Type' => 'application/json', 'Authorization' => 'secret e7dd4cc96ef8b07b67d47e4d6a9b334d367e92f4'})
+      headers: {'Content-Type' => 'application/json', 'Authorization' => "secret #{Figaro.env.SECRET_KEY}"})
   end
 
   task tag_free_shipping: :environment do
