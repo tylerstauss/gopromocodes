@@ -71,7 +71,13 @@ namespace :oneoff do
 	end
   task get_avantlink_promotions: :environment do
     PromoCode.get_avantlink_promotions
-  end 	
+  end
+  task get_avantlink_ca_promotions: :environment do
+    PromoCode.get_avantlink_ca_promotions
+  end 
+  task get_avantlink_au_promotions: :environment do
+    PromoCode.get_avantlink_au_promotions
+  end    	
   task get_shareasale_promotions: :environment do
     PromoCode.get_shareasale_promotions
   end
