@@ -16,30 +16,13 @@ namespace :oneoff do
 
   task send_codes_to_viglink: :environment do
     today = Date.today
-    count = PromoCode.count
-    number = count / 3000
-    start = 0
-    final = 1
-    i = 0
-    while i < number + 1
-      p i
-      
-      start = i * 3000
-      p start
-      final = (i + 1) * 3000
-      p final
-      promo_codes = PromoCode.where("promo_codes.id >= #{start} and promo_codes.id < #{final}").where(approved: true).where("promo_codes.expires >= '#{today}' or expires is null").joins(:store).select("promo_codes.title","promo_codes.description as desc","promo_codes.link as url","promo_codes.starts as startdate","promo_codes.expires as enddate","stores.viglink_id as merchantid","promo_codes.code as promocode").where("viglink_id is not null").order(created_at: :desc).to_json
-      p promo_codes
-          HTTParty.post(
+    promo_codes = PromoCode.where(approved: true).where("promo_codes.expires >= '#{today}' or expires is null").joins(:store).select("promo_codes.title","promo_codes.description as desc","promo_codes.link as url","promo_codes.starts as startdate","promo_codes.expires as enddate","stores.viglink_id as merchantid","promo_codes.code as promocode").where("viglink_id is not null").order(created_at: :desc).limit(3000).to_json
+    p promo_codes
+    HTTParty.post(
       "https://viglink.io/coupons", 
       body: promo_codes,
       timeout: 90,
       headers: {'Content-Type' => 'application/json', 'Authorization' => "secret #{Figaro.env.SECRET_KEY}"})
-      i = i + 1
-    end
-
-   
-
   end
 
   task tag_free_shipping: :environment do
