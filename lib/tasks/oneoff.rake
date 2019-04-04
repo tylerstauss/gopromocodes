@@ -24,7 +24,7 @@ namespace :oneoff do
     while i < number + 1
       p i
       
-      start = i * start
+      start = i * 3000
       p start
       final = (i + 1) * 3000
       p final
