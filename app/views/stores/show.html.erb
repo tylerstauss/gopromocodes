@@ -9,14 +9,16 @@
 <% meta_tag('description', "Use #{@promo_codes.count} #{@store.name} promo codes & coupons to save money at #{@store.domain}.") unless @store.meta_description %>
 <div class="row main-content">
 	<div class="eight columns coupon-list">
+
 		<div class="store-info" itemscope itemtype="http://schema.org/Store">
 			<% if is_admin? %>
-				<p><%= link_to "Edit Store", edit_store_path(@store) %> | <%= link_to "Add new code", new_promo_code_path(store: @store.id) %></p>
+				<p><%= link_to "Edit Store", edit_store_path(@store) %> | <%= link_to "Add new code", new_promo_code_path(store: @store.id) %> <%= render_breadcrumbs %></p>
 			<% end %>
 			<h1><span itemprop="name"><%= @store.name %></span> Promo Codes & Discounts</h1>
 			<h2>There are currently <%= @promo_codes.count %> <%= @store.name %> Promotion Codes and <%= @store.name %> Coupons.</h2>
 			<p class="store-description" itemprop='description'><%= @store.description %>
-			Store located at: <span itemprop="url"><%= link_to( @store.url,@store.url, :rel => 'nofollow',:target => "_blank") %></span></p>
+			Store located at: <span itemprop="url"><%= link_to( @store.url,@store.url, :rel => 'nofollow',:target => "_blank") %></span>  
+</p>
 		</div>
 	
 		<div class="red-banner">
