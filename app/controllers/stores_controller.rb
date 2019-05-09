@@ -39,6 +39,7 @@ class StoresController < ApplicationController
 	end
 
 	def show
+		@amp = request.format.amp?
 		today = Date.today
 		@store = Store.find(params[:id])
 		if @store.promo_codes
@@ -51,7 +52,7 @@ class StoresController < ApplicationController
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
-		p @store.meta_description
+		# p @store.meta_description
 		@blogs = @store.store_blogs.order('pub_date DESC')
 		@promo_code = PromoCode.new
 	end
