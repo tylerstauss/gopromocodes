@@ -11,12 +11,12 @@
 	<div class="eight columns coupon-list">
 
 		<div class="store-info" itemscope itemtype="http://schema.org/Store">
-			<p>
+			<span>
 				<% if is_admin? %>
 				<%= link_to "Edit Store", edit_store_path(@store) %> | <%= link_to "Add new code", new_promo_code_path(store: @store.id) %> 
 				<% end %>
 				<%= render_breadcrumbs %>
-			</p>
+			</span>
 			<h1><span itemprop="name"><%= @store.name %></span> Promo Codes & Discounts</h1>
 			<h2>There are currently <%= @promo_codes.count %> <%= @store.name %> Promotion Codes and <%= @store.name %> Coupons.</h2>
 			<p class="store-description" itemprop='description'><%= @store.description %>
