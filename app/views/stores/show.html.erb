@@ -89,6 +89,6 @@ Since this site allows users to submit content, we cannot guarantee the accuracy
 		</div>
 	</div>
 	<div class="four columns right-side-bar">
-		<%= render partial: 'shared/sidebar' %>
+		<%= render partial: 'shared/sidebar', locals: {is_amp: @amp} %>
 	</div>
 </div>
