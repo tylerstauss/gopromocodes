@@ -1,5 +1,5 @@
 class StoresController < ApplicationController
-
+	add_breadcrumb "stores", :stores_path
 	def index
 		p params
 		@stores = Store.where(active: true).search(params[:term], params[:page])
@@ -40,6 +40,7 @@ class StoresController < ApplicationController
 
 	def show
 		@amp = request.format.amp?
+		p "amp #{@amp}"
 		today = Date.today
 		@store = Store.find(params[:id])
 		if @store.promo_codes
@@ -55,6 +56,7 @@ class StoresController < ApplicationController
 		# p @store.meta_description
 		@blogs = @store.store_blogs.order('pub_date DESC')
 		@promo_code = PromoCode.new
+		add_breadcrumb @store, store_path(@store)
 	end
 
 	def edit
