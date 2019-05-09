@@ -1,5 +1,4 @@
 class StoresController < ApplicationController
-	# add_breadcrumb "stores", :stores_path
 	def index
 		p params
 		@stores = Store.where(active: true).search(params[:term], params[:page])
