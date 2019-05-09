@@ -56,7 +56,7 @@ class StoresController < ApplicationController
 		# p @store.meta_description
 		@blogs = @store.store_blogs.order('pub_date DESC')
 		@promo_code = PromoCode.new
-		add_breadcrumb @store, store_path(@store)
+		add_breadcrumb @store.name, store_path(@store)
 	end
 
 	def edit
