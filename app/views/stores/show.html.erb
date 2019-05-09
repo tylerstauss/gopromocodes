@@ -89,6 +89,10 @@ Since this site allows users to submit content, we cannot guarantee the accuracy
 		</div>
 	</div>
 	<div class="four columns right-side-bar">
-		<%= render partial: 'shared/sidebar', locals: {is_amp: @amp} %>
+		<% if @amp %>
+			<%= render partial: 'shared/amp_sidebar', locals: {is_amp: @amp} %>
+		<% else %>
+		<%= render partial: 'shared/amp_sidebar', locals: { is_amp: false} %>
+		<% end %>
 	</div>
 </div>

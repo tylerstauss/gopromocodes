@@ -1,10 +1,10 @@
-		<%= render partial: 'shared/chrome_extension' unless is_amp == true %>
+		<%= render partial: 'shared/chrome_extension'  %>
 		<%= render partial: 'shared/top_stores', locals: {
 			top_stores: @top_stores 
 		} %>	
 		<div>
 		</div>
-		<%= render partial: 'shared/email_signup' unless is_amp == true%>
+		<%= render partial: 'shared/email_signup' %>
 		<%= render partial: 'shared/categories', locals: {
 			categories: @categories 
 		} %>
