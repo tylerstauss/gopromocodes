@@ -41,7 +41,6 @@ GEM
     arel (7.1.4)
     bcrypt (3.1.12)
     bindex (0.6.0)
-    breadcrumbs_on_rails (3.0.1)
     builder (3.2.3)
     byebug (11.0.1)
     coffee-rails (4.2.2)
@@ -184,7 +183,6 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt (~> 3.1.7)
-  breadcrumbs_on_rails
   byebug
   coffee-rails (~> 4.2)
   figaro

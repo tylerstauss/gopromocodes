@@ -33,6 +33,10 @@ div.coupon-list {
 	border: -10px solid #ededed;
 }
 
+.breadcrumbs, .breadcrumbs li {
+	display: inline;
+}
+
 
 .single-coupon {
 	border: 10px solid #ECECEC;
