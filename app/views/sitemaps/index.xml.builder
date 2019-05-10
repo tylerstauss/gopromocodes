@@ -29,19 +29,19 @@ xml.tag! 'sitemapindex', 'xmlns' => "http://www.sitemaps.org/schemas/sitemap/0.9
     xml.tag! 'loc', new_codes_url
   end 
 
-  # @stores.each do |store|
-  #   xml.tag! 'url' do
-  #     xml.tag! 'loc', store_url(store)
-  #     xml.lastmod store.updated_at.strftime("%F")
-  #   end
-  # end
+  @stores.each do |store|
+    xml.tag! 'url' do
+      xml.tag! 'loc', store_url(store)
+      xml.lastmod store.updated_at.strftime("%F")
+    end
+  end
 
-  #   @categories.each do |category|
-  #   xml.tag! 'url' do
-  #     xml.tag! 'loc', category_url(category)
-  #     xml.lastmod category.updated_at.strftime("%F")
-  #   end
-  # end
+    @categories.each do |category|
+    xml.tag! 'url' do
+      xml.tag! 'loc', category_url(category)
+      xml.lastmod category.updated_at.strftime("%F")
+    end
+  end
 
   xml.tag! 'url' do
     xml.tag! 'loc', articles_url
