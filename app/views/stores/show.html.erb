@@ -51,7 +51,7 @@
 		
 		<% end %>
 		
-		<% if @store.user_submit %>
+		<% if @store.user_submit && @amp != true %>
 			<div class="store-info">
 				<p>
 Do you have a promotion code for <%= @store.name %>?
