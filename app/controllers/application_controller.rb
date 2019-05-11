@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  before_filter :redirect_subdomain
+  before_action :redirect_subdomain
   protect_from_forgery with: :exception
 
   def redirect_subdomain
