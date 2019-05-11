@@ -5,7 +5,8 @@ class StoreBlogsController < ApplicationController
 require 'uri'
 	
 	def index
-		@promo_codes = StoreBlog.all
+		authenticate_admin!
+		@store_blogs = StoreBlog.where("post like '%target=%'").where("post not like '%_blank%' or post not like '%_self%'")
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
