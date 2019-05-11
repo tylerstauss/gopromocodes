@@ -9,6 +9,7 @@
 
 	<ul class="single-coupon">
 		<% @store_blogs.each do |blog| %>
+		<% p blog.id %>
 		<li><%= link_to(blog.store.name, store_path(blog.store))  %> | <%= link_to('edit', edit_store_blog_path(blog)) %></li>
 		<li><%= raw(blog.post) %></li>
 		<% end %>
