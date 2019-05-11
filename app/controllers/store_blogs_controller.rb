@@ -6,7 +6,7 @@ require 'uri'
 	
 	def index
 		authenticate_admin!
-		@store_blogs = StoreBlog.where("post like '%target=%'").where("post not like '%_blank%' or post not like '%_self%'")
+		@store_blogs = StoreBlog.all
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
