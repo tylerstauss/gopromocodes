@@ -31,6 +31,11 @@
 		<%= f.text_area :description %>
 	</p>
 
+	<p>
+		<%= f.label :logo %>
+		<%= f.file_field :logo, multiple: false, direct_upload: true %>
+	</p>
+
 		<p>
 		<%= f.label :slug %>
 		<%= f.text_field :slug %>

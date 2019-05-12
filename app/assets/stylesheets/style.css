@@ -263,6 +263,12 @@ div.main-content {
 }
 
 /* STORE PAGE */
+
+img.store_logo {
+	max-height: 75px;
+	max-width: 75px;
+	float: right;
+}
 div.store-info {
 	border: 10px solid #ECECEC;
 	-webkit-border-radius-bottom: 10px;

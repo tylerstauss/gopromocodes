@@ -14,6 +14,7 @@ gem 'rails', '~> 5.2'
 # gem 'sqlite3'
 gem 'pg'
 gem 'httparty'
+gem 'mini_magick'
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
 # Use SCSS for stylesheets
