@@ -18,7 +18,7 @@
 				<% if @amp %>
 				<% else  %>
 					<% if @store.logo.attached? %>
-						<%= image_tag @store.logo, :class => "store_logo", alt: "#{@store.name} logo for promo codes page" %>
+						<%= image_tag @store.logo, :class => "store_logo", alt: "#{@store.name} logo for promo codes page", :itemprop => "logo" %>
 					<% end %>
 				<% end %>
 
