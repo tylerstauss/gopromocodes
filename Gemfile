@@ -15,6 +15,7 @@ gem 'rails', '~> 5.2'
 gem 'pg'
 gem 'httparty'
 gem 'mini_magick'
+gem "aws-sdk-s3", require: false
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
 # Use SCSS for stylesheets
