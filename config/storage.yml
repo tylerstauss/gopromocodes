@@ -9,4 +9,4 @@ amazon:
   access_key_id: <%= ENV["AWS_ACCESS_KEY"] %>
   secret_access_key: <%= ENV["AWS_SECRET_KEY"] %>
   bucket: "gopromocodes"
-  region: "us-west-2" # e.g. 'us-east-1'
+  region: <%= ENV["AWS_BUCKET"] %> # e.g. 'us-east-1'
