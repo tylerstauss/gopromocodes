@@ -1,6 +1,7 @@
 class Store < ActiveRecord::Base
 	has_many :promo_codes
   has_many :store_blogs
+  has_one_attached :logo
   validates_presence_of :name, :url, :slug
   validates_uniqueness_of :name
 

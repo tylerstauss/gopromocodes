@@ -15,6 +15,13 @@
 				<% if is_admin? %>
 				<%= link_to "Edit Store", edit_store_path(@store) %> | <%= link_to "Add new code", new_promo_code_path(store: @store.id) %> 
 				<% end %>
+				<% if @amp %>
+				<% else  %>
+					<% if @store.logo.attached? %>
+						<%= image_tag @store.logo, :class => "store_logo", alt: "#{@store.name} logo for promo codes page" %>
+					<% end %>
+				<% end %>
+
 				<ol class='breadcrumbs' itemscope itemtype="http://schema.org/BreadcrumbList">
 					<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
 						<a itemprop="item" href="/">
