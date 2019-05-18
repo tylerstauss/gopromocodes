@@ -7,9 +7,8 @@
 <% meta_tag('description', @store.meta_description) if @store.meta_description  %>
 <% meta_tag('description', "#{@store.name} promo codes and coupons for discounts at #{@store.domain}") if @store.meta_description == "" %>
 <% meta_tag('description', "Use #{@promo_codes.count} #{@store.name} promo codes & coupons to save money at #{@store.domain}.") unless @store.meta_description %>
-<% if @store.description == nil %>
-	<meta name="robots" content="noindex,nofollow">
-<% end %>
+<% meta_tag('robots', "noindex,nofollow") if @store.description == nil %>
+
 <div class="row main-content">
 	<div class="eight columns coupon-list">
 
