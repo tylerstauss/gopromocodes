@@ -53,6 +53,7 @@ class StoresController < ApplicationController
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
 		# p @store.meta_description
+		p @store.description
 		@blogs = @store.store_blogs.order('created_at DESC')
 		@promo_code = PromoCode.new
 		# add_breadcrumb @store.name, store_path(@store)
