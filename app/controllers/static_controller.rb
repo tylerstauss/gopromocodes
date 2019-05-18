@@ -2,7 +2,12 @@ require 'csv'
 class StaticController < ApplicationController
 	
 	def index
+		today = Date.today
 		@subscriber = Subscriber.new
+		p @total_discounts = PromoCode.where(approved: true).where("expires >= '#{today}' or expires is null").count
+		p @total_stores = Store.count
+		p @total_codes = PromoCode.where(approved: true).where("expires >= '#{today}' or expires is null").where("code is not null").count
+		p @total_free_shipping = PromoCode.where(approved: true).where("expires >= '#{today}' or expires is null").where(free_shipping: true).count
 		@promo_codes = PromoCode.where(homepage: true, approved: true).where("expires >= '#{today}' or expires is null")
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
