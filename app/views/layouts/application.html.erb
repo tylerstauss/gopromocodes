@@ -6,7 +6,8 @@
       <%= if content_for?(:title) then yield(:title) end %>
       
     </title>
-
+    <meta name='robots'
+      content='<%= yield_meta_tag(:robots, 'index,follow') %>' />
     <meta name='description'
       content='<%= yield_meta_tag(:description, 'Save on online shopping with free promo codes and coupon codes from GoPromoCodes.com') %>' />
     <meta name='keywords'

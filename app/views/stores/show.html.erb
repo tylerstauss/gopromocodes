@@ -7,7 +7,7 @@
 <% meta_tag('description', @store.meta_description) if @store.meta_description  %>
 <% meta_tag('description', "#{@store.name} promo codes and coupons for discounts at #{@store.domain}") if @store.meta_description == "" %>
 <% meta_tag('description', "Use #{@promo_codes.count} #{@store.name} promo codes & coupons to save money at #{@store.domain}.") unless @store.meta_description %>
-<% meta_tag('robots', "noindex,nofollow") if @store.description == "" %>
+<% meta_tag('robots', "noindex,follow") if @store.description == '' %>
 
 <div class="row main-content">
 	<div class="eight columns coupon-list">
@@ -45,6 +45,7 @@
 			<h1><span itemprop="name"><%= @store.name %></span> Promo Codes & Discounts</h1>
 			<h2>There are currently <%= @promo_codes.count %> <%= @store.name %> Promotion Codes and <%= @store.name %> Coupons.</h2>
 			<p class="store-description" itemprop='description'><%= @store.description %>
+				<%= 'robots' if @store.description == '' %>
 			Store located at: <span itemprop="url"><%= link_to( @store.url,@store.url, :rel => 'nofollow',:target => "_blank") %></span>  
 </p>
 		</div>
