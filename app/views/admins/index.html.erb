@@ -15,26 +15,25 @@
 
 		<div class="site-info">
 			<table class="merchant-stats"> 
-				<tbody> 
-					<tr> 
-						<td>Total Stores: <span class="merchant-offer-data"><%= number_with_delimiter(@total_stores, :delimiter => ',') if @total_stores %></span>
-						</td> 
-						
-						<td>Total Valid Offers: <span class="merchant-offer-data"><%= number_with_delimiter(@total_discounts, :delimiter => ',') if @total_discounts %></span>
-						</td> 
-					</tr> 
-					<tr> 
-						
-					</tr> 
-					<tr> 
-						<td>Total Promo Codes: <span class="merchant-offer-data"><%= number_with_delimiter(@total_codes, :delimiter => ',') if @total_codes %></span>
-						</td> 
-						<td>Free Shipping Offers: <span class="merchant-offer-data">
-							<%= number_with_delimiter(@total_free_shipping, :delimiter => ',') if @total_free_shipping %></span>
-						</td>
-					</tr> 
-				</tbody>
-			</table>
+					<tbody> 
+						<tr> 
+							<td>Total Stores: <span class="merchant-offer-data"><%= number_with_delimiter(@total_stores, :delimiter => ',') if @total_stores %></span>
+							</td> 
+							<td>Total Valid Offers: <span class="merchant-offer-data"><%= number_with_delimiter(@total_discounts, :delimiter => ',') if @total_discounts %></span>
+							</td> 
+						</tr> 
+						<tr> 
+							
+						</tr> 
+						<tr> 
+							<td>Total Promo Codes: <span class="merchant-offer-data"><%= number_with_delimiter(@total_codes, :delimiter => ',') if @total_codes %></span>
+							</td> 
+							<td>Free Shipping Offers: <span class="merchant-offer-data">
+								<%= number_with_delimiter(@total_free_shipping, :delimiter => ',') if @total_free_shipping %></span>
+							</td>
+						</tr> 
+					</tbody>
+				</table>
 		</div>
 
 	</div>
