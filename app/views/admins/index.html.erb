@@ -19,9 +19,7 @@
 					<tr> 
 						<td>Total Stores: <span class="merchant-offer-data"><%= number_with_delimiter(@total_stores, :delimiter => ',') if @total_stores %></span>
 						</td> 
-						<td>Stores without description: <span class="merchant-offer-data">
-							<%= number_with_delimiter(@stores_no_description, :delimiter => ',') if @stores_no_description %></span>
-						</td>
+						
 						<td>Total Valid Offers: <span class="merchant-offer-data"><%= number_with_delimiter(@total_discounts, :delimiter => ',') if @total_discounts %></span>
 						</td> 
 					</tr> 
