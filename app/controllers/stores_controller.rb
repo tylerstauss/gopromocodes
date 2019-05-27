@@ -44,6 +44,7 @@ class StoresController < ApplicationController
 		p @store.logo.attached?
 		if @store.promo_codes
 			@expired = @store.promo_codes.where("expires <= '#{today}' or approved != true")
+			@display_expired = @expired.order(created_at: :desc).limit(10)
 			@freeshipping = @store.promo_codes.where(free_shipping: true).where(approved: true).where("expires >= '#{today}' or expires is null")
 			@featured_codes = @store.promo_codes.where(approved: true).where("expires >= '#{today}' or expires is null").where("order_id < 0").order("order_id ASC")
 			@non_featured_promo_codes = @store.promo_codes.where(approved: true).where("expires >= '#{today}' or expires is null").where("order_id > 0").order("order_id DESC")
