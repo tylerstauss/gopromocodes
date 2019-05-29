@@ -571,10 +571,21 @@
         padding: 0;
       }
     </style>
+    <script async custom-element="amp-link-rewriter" src="https://cdn.ampproject.org/v0/amp-link-rewriter-latest.js"></script>
     <%= rails_amp_google_analytics_head %>
     <%= rails_amp_html_header %>
   </head>
   <body>
+    <amp-link-rewriter layout="nodisplay">
+      <script type="application/json">
+        {
+          "output": "https://redirect.viglink.com?key=${apiKey}&u=${href}",
+          "vars": {
+            "apiKey": "76ca2df55a3062ee24f47c4456dc8a75"
+          }
+        }
+      </script>
+    </amp-link-rewriter>
     <%= rails_amp_google_analytics_page_tracking %>
     <%= yield %>
   </body>
