@@ -12,6 +12,13 @@ require 'uri'
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
+	def blog
+		@store_blogs = StoreBlog.all.order(created_at: :desc)
+		@subscriber = Subscriber.new
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+	end
+
 	def new
 		authenticate_admin!
 		@store_blog = StoreBlog.new
