@@ -61,7 +61,7 @@ require 'uri'
 
 	def show
 		@promo_code = PromoCode.find(params[:id])
-		vl_api = '2629ea091f62c185fac384857620742c'
+		vl_api = '4313102406607fd73ededb923cc8e1e5'
 		@link =  CGI.escape(@promo_code.link)
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
