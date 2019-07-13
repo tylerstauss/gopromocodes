@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   get 'admin/all-stores', to: 'stores#all_stores'
 
   # Static
+  get 'blog', to: 'storeblogs#blog'
   get 'sitemap.xml' => 'sitemaps#index', defaults: { format: 'xml' }
   get 'about', to: 'static#about'
   get 'contact', to: 'static#contact'	
@@ -4627,7 +4628,13 @@ get '/store/asianfoodgrocer.html', to: redirect('/stores/asianfoodgrocer', 301)
   match "/404", :to => "errors#not_found", :via => :all
   match "/500", :to => "errors#internal_server_error", :via => :all
 
+  # old category page redirects
 
+get '/category/airline', to: redirect('/categories/travel', 301)
+get '/category/BlackFriday-Coupons.html', to: redirect('/categories/-holidays-', 301)
+get '/category/carrental', to: redirect('/categories/travel', 301)
+get '/category/ExclusivePromotions.html', to: redirect('/categories/exclusivepromotions', 301)
+get '/category/music', to: redirect('/categories/music', 301)
 
   root :to => 'static#index'
 end
