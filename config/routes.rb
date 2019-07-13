@@ -4636,5 +4636,15 @@ get '/category/carrental', to: redirect('/categories/travel', 301)
 get '/category/ExclusivePromotions.html', to: redirect('/categories/exclusivepromotions', 301)
 get '/category/music', to: redirect('/categories/music', 301)
 
+# blog page redirects
+
+get '/blog/2013/03/twin-z-pillow-giveaway/', to: redirect('/blog', 301)
+get '/blog/2013/05/announcing-a-free-ipad-mini-giveaway/', to: redirect('/blog', 301)
+get '/blog/2013/05/win-an-ipad-mini-16gb/', to: redirect('/blog', 301)
+get '/blog/2013/07/win-pantina-earrings/', to: redirect('/blog', 301)
+get '/blog/wp-content/uploads/2013/05/iPadMini.jpg', to: redirect('/blog', 301)
+get '/blog/wp-content/uploads/2013/07/pantina-earrings.jpg', to: redirect('/blog', 301)
+get '/blog/wp-content/uploads/2013/08/nexus7.jpg', to: redirect('/blog', 301)
+
   root :to => 'static#index'
 end
