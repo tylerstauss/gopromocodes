@@ -9,7 +9,7 @@
 
 	<ul class="single-coupon">
 		<% @store_blogs.each do |blog| %>
-		<li><%= blog.publish_date %> - <%= link_to(blog.store.name, store_path(blog.store))%> -  Written by: <%= blog.author %></li>
+		<li><h6><%= blog.publish_date %> - <%= link_to(blog.store.name, store_path(blog.store))%> -  Written by: <%= blog.author %></h6></li>
 		<li><%= blog.post.html_safe %>... <%= link_to("Read More", store_path(blog.store))  %></li>
 		<% end %>
 	</ul>
