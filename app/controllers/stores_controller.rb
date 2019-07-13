@@ -30,11 +30,11 @@ class StoresController < ApplicationController
 
 	def create
 		@store = Store.new(store_params)
-	  @store.save
+	  	@store.save
 		@subscriber = Subscriber.new
-	  @categories = Category.order('name ASC')
+	  	@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
-	  redirect_to @store
+	  	redirect_to @store
 	end
 
 	def show

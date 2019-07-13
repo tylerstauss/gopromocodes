@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   get 'admin/all-stores', to: 'stores#all_stores'
 
   # Static
-  get 'blog', to: 'storeblogs#blog'
+  get 'blog', to: 'store_blogs#blog'
   get 'sitemap.xml' => 'sitemaps#index', defaults: { format: 'xml' }
   get 'about', to: 'static#about'
   get 'contact', to: 'static#contact'	

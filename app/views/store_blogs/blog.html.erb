@@ -1,0 +1,17 @@
+<% title("GoPromoCodes Blog - blurbs on savings, deals and promo codes") %>
+<% meta_tag('keywords', "store, blog, coupons, discounts, Promotional Codes, Promo Codes, Coupon Codes, Online Coupons") %>
+<% meta_tag('description', "Read a quick blurb on how to save at thousands of stores with GoPromoCodes") %>
+<% canonical(blog_path) %>
+<div class="row main-content">
+	<div class="red-banner"> 
+		<h1>Blogs by Stores</h1>
+	</div>
+
+	<ul class="single-coupon">
+		<% @store_blogs.each do |blog| %>
+		<li><%= blog.publish_date %> - <%= link_to(blog.store.name, store_path(blog.store))%> -  Written by: <%= blog.author %></li>
+		<li><%= raw(blog.post)[0..250] %>... <%= link_to("Read More", store_path(blog.store))  %></li>
+		<% end %>
+	</ul>
+	<%= will_paginate @store_blogs %>
+</div>
