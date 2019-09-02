@@ -8,36 +8,42 @@ class PromoCode < ActiveRecord::Base
 	validates_presence_of :title, :description, :link, :store_id
 
 	def self.get_honey_promotions
-		domain = 'sears.com'
-		store = Store.find_by_domain(domain)
-		p store_id = store.id
-		store_url = "https://d.joinhoney.com/v2/stores/partials/find?domain=#{domain}"
-		response = HTTParty.get(store_url)
-		store_id = response[domain]
-		coupons_url = "https://d.joinhoney.com/stores/#{store_id}?coupons=1&stats=1&ugc=1&gold=1&max_ugcs=3"
-		response = HTTParty.get(coupons_url)
-		response["coupons"].each do |coupon|
-			p coupon
-			expires = coupon['expires']
-			# p expires
-			if expires != 0
-				end_date = DateTime.strptime(coupon['expires'].to_s,'%s')
-			else
-				end_date = 'unknown'
+		stores = Store.all
+		stores.each do |store|
+			begin
+				domain = store.domain
+				store_url = "https://d.joinhoney.com/v2/stores/partials/find?domain=#{domain}"
+				response = HTTParty.get(store_url)
+				store_id = response[domain]
+				coupons_url = "https://d.joinhoney.com/stores/#{store_id}?coupons=1&stats=1&ugc=1&gold=1&max_ugcs=3"
+				response = HTTParty.get(coupons_url)
+				response["coupons"].each do |coupon|
+					p coupon
+					expires = coupon['expires']
+					# p expires
+					if expires != 0
+						end_date = DateTime.strptime(coupon['expires'].to_s,'%s')
+					else
+						end_date = 'unknown'
+					end
+					start_date = DateTime.strptime(coupon['created'].to_s,'%s')
+					# p expires
+					p "end_date #{end_date}"
+					p link_destination = store.url
+					p code = coupon['code']
+					p title = coupon['description']
+					end_date = nil if end_date == 'unknown'
+					p description = title + " at #{domain}."
+					if coupon['exclusive'] == false
+						new_created_code = PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
+						new_created_code.order_id = new_created_code.id
+						new_created_code.save
+					end
+				end
+			rescue
+				"error with #{store.name} coupons"
 			end
-			start_date = DateTime.strptime(coupon['created'].to_s,'%s')
-			# p expires
-			p "end_date #{end_date}"
-			p link_destination = store.url
-			p code = coupon['code']
-			p title = coupon['description']
-			end_date = nil if end_date == 'unknown'
-			p description = title + " at #{domain}."
-			new_created_code = PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
-			new_created_code.order_id = new_created_code.id
-			new_created_code.save
 		end
-
 	end
 
 	def self.get_pepperjam_promotions
