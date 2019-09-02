@@ -97,8 +97,11 @@ namespace :oneoff do
   task get_admitad_promotions: :environment do
     PromoCode.get_admitad_promotions
   end   
-    task get_linkconnector_promotions: :environment do
+  task get_linkconnector_promotions: :environment do
     PromoCode.get_linkconnector_promotions
+  end
+  task get_honey_promotions: :environment do
+    PromoCode.get_honey_promotions
   end
 
   task populate_viglink_data: :environment do 

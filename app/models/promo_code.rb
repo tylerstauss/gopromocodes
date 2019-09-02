@@ -7,6 +7,39 @@ class PromoCode < ActiveRecord::Base
 	validates_uniqueness_of :title, scope: [:code, :description, :store_id]
 	validates_presence_of :title, :description, :link, :store_id
 
+	def self.get_honey_promotions
+		domain = 'sears.com'
+		store = Store.find_by_domain(domain)
+		p store_id = store.id
+		store_url = "https://d.joinhoney.com/v2/stores/partials/find?domain=#{domain}"
+		response = HTTParty.get(store_url)
+		store_id = response[domain]
+		coupons_url = "https://d.joinhoney.com/stores/#{store_id}?coupons=1&stats=1&ugc=1&gold=1&max_ugcs=3"
+		response = HTTParty.get(coupons_url)
+		response["coupons"].each do |coupon|
+			p coupon
+			expires = coupon['expires']
+			# p expires
+			if expires != 0
+				end_date = DateTime.strptime(coupon['expires'].to_s,'%s')
+			else
+				end_date = 'unknown'
+			end
+			start_date = DateTime.strptime(coupon['created'].to_s,'%s')
+			# p expires
+			p "end_date #{end_date}"
+			p link_destination = store.url
+			p code = coupon['code']
+			p title = coupon['description']
+			end_date = nil if end_date == 'unknown'
+			p description = title + " at #{domain}."
+			new_created_code = PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
+			new_created_code.order_id = new_created_code.id
+			new_created_code.save
+		end
+
+	end
+
 	def self.get_pepperjam_promotions
 		today = Date.today
 		puts 'Updating pepperjam Promotions'
@@ -339,7 +372,7 @@ class PromoCode < ActiveRecord::Base
 		end
 	end
 
-		def self.get_avantlink_au_promotions
+	def self.get_avantlink_au_promotions
 		puts 'Updating Avantlink AU Promotions'
 		url = "http://classic.avantlink.com/api.php?affiliate_id=138677&module=AdSearch&output=xml&website_id=170213&ad_type=text&coupons_only=1"
 		response = HTTParty.get(url)
@@ -561,7 +594,6 @@ class PromoCode < ActiveRecord::Base
 		end
 	end
 
-
 	def self.get_admitad_promotions
 		url = "http://export.admitad.com/en/webmaster/websites/302341/coupons/export/?website=302341&region=99&code=3b2ff36880&user=viglink&keyword=&format=xml&v=1"
 		response = HTTParty.get(url)
@@ -619,8 +651,6 @@ class PromoCode < ActiveRecord::Base
 			end
 		end
 	end
-
-
 
 	def self.get_webgains_promotions
 		url = "http://api.webgains.com/2.0/vouchers?key=#{Figaro.env.WEBGAINS_KEY}"
