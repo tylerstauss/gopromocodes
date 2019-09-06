@@ -1,4 +1,3 @@
-
 <% title(@store.meta_title) if @store.meta_title %>
 <% title("#{@store.name} promo codes, coupons and discounts. #{@promo_codes.count} available") if @store.meta_title == '' %>
 <% canonical("https://www.gopromocodes.com" + store_path(@store)) %>
@@ -19,7 +18,7 @@
 		<div class="store-info" itemscope itemtype="http://schema.org/Store">
 			<span>
 				<% if is_admin? %>
-				<%= link_to "Edit Store", edit_store_path(@store) %> | <%= link_to "Add new code", new_promo_code_path(store: @store.id) %> 
+				<%= link_to "Edit Store", edit_store_path(@store) %> | <%= link_to "Add new code", new_promo_code_path(store: @store.id)  %>  | <%= @store.id %>
 				<% end %>
 				<% if @amp %>
 				<% else  %>

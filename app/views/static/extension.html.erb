@@ -1,0 +1,24 @@
+<div class="row main-content">
+	<div class="eight columns coupon-list">
+		<div class="red-banner"> 
+			<h1>Online Coupon Extension for Google Chrome Browser by GoPromoCodes</h1>
+		</div>
+		<br>
+		<h2>Why Install the GoPromoCodes Extension?</h2>
+		<br>
+		<p>With the GoPromoCodes.com chrome extensin you can get access to <%= @promo_code_count %> promo codes, coupons, promotions, sales and deals from <%= @store_count %> online retailers. It is the easiest way to save money online. You no longer have to do a Google search to find the discounts you are looking for, just use our browser extension for coupons and start saving money immediately.<br><br>
+			<button class="button-primary" type="submit" onclick="window.location.href = 'https://chrome.google.com/webstore/detail/immfhcnfbbkmalfgmdhgmfgfmffbegbf';" target="_blank" rel="nofollow">Install!</button></p>
+		<h2>How does it work?</h2>
+		<br>
+		<p>Click the install button above and go to the Chrome Webstore. Then just browse online like you normally do. When you go to a store that GoPromoCodes has coupons for, the extension will notify you with a little $ sign. You need to then click the extension to view all of the available coupons that we have for the store where you are shopping. Its that simple! It saves you the steps of using online search engines to find the best promo codes and coupons.</p>
+	</div>
+		<div class="four columns right-side-bar">
+		<%= render partial: 'shared/top_stores', locals: {
+			top_stores: @top_stores 
+		} %>	
+		<%= render partial: 'shared/email_signup' %>
+		<%= render partial: 'shared/categories', locals: {
+			categories: @categories 
+		} %>
+	</div>
+</div>
