@@ -44,6 +44,7 @@ Rails.application.routes.draw do
   get 'author-biography-zoe-stauss', to: 'static#zoe_stauss', as: :zoestauss
   get 'author-biography-tyler-stauss', to: 'static#tyler_stauss', as: :tylerstauss
   get 'laptops', to: 'static#laptops'
+  get 'coupon-extension', to: 'static#extension', as: :extension
   get 'deals', to: 'static#deals'
   # Sessions
   match 'sign-out', to: 'sessions#destroy', via: [ :get, :post], as: :signout

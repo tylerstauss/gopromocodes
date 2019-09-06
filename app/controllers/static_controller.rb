@@ -13,6 +13,15 @@ class StaticController < ApplicationController
 		@top_stores = Store.where(top_store: true).limit(12)
 	end
 
+	def extension
+		today = Date.today
+		@promo_code_count = PromoCode.where(approved: true).where("expires >= '#{today}' or expires is null").where("code is not null").count
+		@store_count = Store.count
+		@subscriber = Subscriber.new
+		@categories = Category.order('name ASC')
+		@top_stores = Store.where(top_store: true).limit(12)
+	end
+
 	def coupons_by_domain
 		today = Date.today
 		@domain = params[:domain]
