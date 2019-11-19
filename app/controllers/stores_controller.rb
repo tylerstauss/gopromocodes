@@ -41,23 +41,27 @@ class StoresController < ApplicationController
 		@amp = request.format.amp?
 		today = Date.today
 		@store = Store.find(params[:id])
-		p @store.logo.attached?
-		if @store.promo_codes
-			@expired = @store.promo_codes.where("expires <= '#{today}' or approved != true")
-			@display_expired = @expired.where(approved: true).order(created_at: :desc).limit(10)
-			@freeshipping = @store.promo_codes.where(free_shipping: true).where(approved: true).where("expires >= '#{today}' or expires is null")
-			@featured_codes = @store.promo_codes.where(approved: true).where("expires >= '#{today}' or expires is null").where("order_id < 0").order("order_id ASC")
-			@non_featured_promo_codes = @store.promo_codes.where(approved: true).where("expires >= '#{today}' or expires is null").where("order_id > 0").order("order_id DESC")
-		end
-		@promo_codes = @featured_codes + @non_featured_promo_codes
-		@subscriber = Subscriber.new
-		@categories = Category.order('name ASC')
-		@top_stores = Store.where(top_store: true).limit(12)
-		# p @store.meta_description
-		p @store.description
-		@blogs = @store.store_blogs.order('created_at DESC')
-		@promo_code = PromoCode.new
+		if @store.active != true
+			redirect_to root_path
+		else
+			p @store.logo.attached?
+			if @store.promo_codes
+				@expired = @store.promo_codes.where("expires <= '#{today}' or approved != true")
+				@display_expired = @expired.where(approved: true).order(created_at: :desc).limit(10)
+				@freeshipping = @store.promo_codes.where(free_shipping: true).where(approved: true).where("expires >= '#{today}' or expires is null")
+				@featured_codes = @store.promo_codes.where(approved: true).where("expires >= '#{today}' or expires is null").where("order_id < 0").order("order_id ASC")
+				@non_featured_promo_codes = @store.promo_codes.where(approved: true).where("expires >= '#{today}' or expires is null").where("order_id > 0").order("order_id DESC")
+			end
+			@promo_codes = @featured_codes + @non_featured_promo_codes
+			@subscriber = Subscriber.new
+			@categories = Category.order('name ASC')
+			@top_stores = Store.where(top_store: true).limit(12)
+			# p @store.meta_description
+			p @store.description
+			@blogs = @store.store_blogs.order('created_at DESC')
+			@promo_code = PromoCode.new
 		# add_breadcrumb @store.name, store_path(@store)
+		end
 	end
 
 	def edit
