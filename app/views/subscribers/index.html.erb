@@ -4,7 +4,7 @@
 			<h1>Email Subscribers</h1>
 		</div>
 		<% @subscribers.each do |subscriber| %>
-			<%= subscriber.email %>
+			<%= subscriber.email %> - <%= subscriber.created_at %>
 		<% end %>
 	</div>
 	<div class="four columns right-side-bar">
