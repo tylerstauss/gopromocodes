@@ -66,7 +66,7 @@ require 'uri'
 		@subscriber = Subscriber.new
 		@categories = Category.order('name ASC')
 		@top_stores = Store.where(top_store: true).limit(12)
-		redirect_to "http://redirect.viglink.com/?u=#{@link}&key=#{vl_api}"
+		redirect_to "http://redirect.viglink.com/?u=#{@link}&key=#{vl_api}&cuid=com_#{@promo_code.id}"
 	end
 
 	def edit
