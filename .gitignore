@@ -25,3 +25,6 @@
 
 /sitemap.xml
 /sitemap.xml.gz
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key

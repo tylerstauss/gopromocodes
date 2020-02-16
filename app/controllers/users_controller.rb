@@ -16,14 +16,26 @@ class UsersController < ApplicationController
 	end
 
 	def create
+		p user_params
+		p "%" * 50
 		@user = User.new(user_params)
 		if verify_recaptcha && @user.save
 	  	redirect_to(user_path(@user))
 	  else
 	  	redirect_to(new_user_path)
 	  end
+	end
 
-	  
+	def create_from_google(user_params)
+		p user_params
+		p "%" * 50
+		@user = User.new(user_params)
+		if @user.save
+			session[:user_id] = @user.id
+	  		redirect_to(user_path(@user))
+	  	else
+	  		redirect_to(new_user_path)
+	  	end
 	end
 
 	def show
@@ -52,7 +64,7 @@ class UsersController < ApplicationController
 
 private
   def user_params
-    params.require(:user).permit(:username, :email, :admin, :password)
+    params.require(:user).permit(:username, :email, :admin, :password, :google_id)
   end
 	
 end

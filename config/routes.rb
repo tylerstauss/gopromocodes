@@ -51,6 +51,9 @@ Rails.application.routes.draw do
   get '/sign-in', :to => 'sessions#new', as: :signin
   get '/sign-up', :to => 'users#new', as: :signup
   post '/sessions', :to => 'sessions#create'
+  get 'login', to: 'logins#new'
+  get 'login/create', to: 'logins#create', as: :create_login
+  
 
   # Redirects
   get '/p/printable-grocery-coupons.html', to: redirect("/grocery-coupons", status: 301)

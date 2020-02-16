@@ -1,10 +1,10 @@
 class User < ActiveRecord::Base
   validates_presence_of :email, :username
-  validates_uniqueness_of :email, :username
+  validates_uniqueness_of :email
   # validates_format_of :username, :without => /\A\d/
-  validates :username, format: { with: /\A\w+\z/,
+  validates :username, format: { with: /[\A\w\z\s\.\-\_]+/,
     message: "username can only have letters and numbers" }
-  has_secure_password
+  has_secure_password validations: false
 
   include BCrypt
 
@@ -25,6 +25,18 @@ class User < ActiveRecord::Base
       return false
     end
   end 
+
+  def self.create_from_google(user_params)
+    p user_params
+    p "%" * 50
+    @user = User.new(user_params)
+    p @user
+    if @user.save!
+        redirect_to(user_path(@user))
+      else
+        redirect_to(new_user_path)
+      end
+  end
 
    def self.search(term, page)
     if term
