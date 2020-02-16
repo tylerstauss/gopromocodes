@@ -1,5 +1,10 @@
 <div class="row main-content">
 	<div class="eight columns coupon-list">
+		<h1>Create a new GoPromoCodes.com.</h1>
+		<p>If you already have an account <%= link_to "Login Here", signin_path %></p>
+		<%= google_sign_in_button 'Sign in with my Google account', proceed_to: create_login_url %>
+
+		<p>Or sign in with your non Google account below.</p>
 			  <%= form_for @user do |f| %> 
 		      <table>
 		        <tr>
