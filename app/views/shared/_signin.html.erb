@@ -1,6 +1,7 @@
+<p>Use your Google account to sign in if you registered with it originally.</p>
 <%= google_sign_in_button 'Sign in with my Google account', proceed_to: create_login_url %>
 
-
+<p>Or sign in with your email address</p>
 <%= form_for(:session, url: sessions_path(@user)) do |f| %>
 <table>
 <tr>
