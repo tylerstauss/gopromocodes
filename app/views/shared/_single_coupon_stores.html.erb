@@ -3,7 +3,7 @@
 		<p><%= link_to 'Edit', edit_promo_code_path(promo_code) %> | <%= link_to 'Delete', promo_code_path(promo_code),
             data: {:confirm => 'Are you sure?'}, :method => :delete %> | <%= promo_code.link %> Order: <%= promo_code.order_id %></p>
 	<% end %>
-	<p class="coupon-title"><span class="coupon-store-name"><%= promo_code.store.name %>: </span><%= link_to promo_code.title, promo_code_path(promo_code), target: :_blank, rel: 'nofollow', onclick: "ga('send', 'event', 'Coupon', 'Click', '#{promo_code.store.name} #{promo_code.id}');" %></p>
+	<p class="coupon-title"><span class="coupon-store-name"><%= promo_code.store.name %>: </span><%= link_to promo_code.title, promo_code_path(promo_code), target: :_blank, rel: 'nofollow', onclick: "getOutboundLink('#{promo_code.store.name} #{promo_code.id}');" %></p>
 	<p class="coupon-description">
 		<% unless promo_code.description == 'NULL' %>
 			<%= promo_code.description %>
@@ -16,7 +16,7 @@
 		<% if promo_code.code == "NULL" || promo_code.code == '' || promo_code.code  == nil || promo_code.code == 'n/a' %>
 			<p>No Code Needed</p>
 		<% else %>
-			Use code: <%= link_to promo_code.code, promo_code_path(promo_code), target: :_blank, rel: 'nofollow' %>
+			Use code: <%= link_to promo_code.code, promo_code_path(promo_code), target: :_blank, rel: 'nofollow', onclick: "getOutboundLink('#{promo_code.store.name} #{promo_code.id}');" %>
 		<% end %>
 	</p>
 <p class="coupon-expiration">Expires: 
