@@ -121,6 +121,10 @@ Since this site allows users to submit content, we cannot guarantee the accuracy
 			<% end %>
 			<span><%= blog.publish_date %></span>
 			<%= raw(blog.post) %>
+			<br>
+			<% if blog.image.attached? %>
+						<%= image_tag blog.image, :class => "store_logo", alt: "#{@store.name} logo for promo codes page", :itemprop => "logo" %>
+					<% end %>
 			<br><br>
 			<% end %>
 		</div>

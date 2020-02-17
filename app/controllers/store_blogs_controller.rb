@@ -81,7 +81,7 @@ require 'uri'
 
 	private
   def store_blog_params
-    params.require(:store_blog).permit(:store_id,:publish_date, :post, :author)
+    params.require(:store_blog).permit(:store_id,:publish_date, :post, :author, :image)
   end
 	
 	
