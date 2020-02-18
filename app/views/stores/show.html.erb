@@ -116,17 +116,20 @@ Since this site allows users to submit content, we cannot guarantee the accuracy
 				<p><%= link_to "Add new blog", new_store_blog_path(store: @store.id) %></p>
 			<% end %>
 			<% @blogs.each do |blog| %>
-			<% if is_admin? %>
-				<p><%= link_to "Edit Blog", edit_store_blog_path(blog) %> | <%= link_to "Delete Blog", store_blog_path(blog), :method => :delete %></p>
-			<% end %>
-			<span><%= blog.publish_date %></span>
-			<%= raw(blog.post) %>
-			<br>
-			<% if blog.image.attached? %>
-						<%= image_tag blog.image, :class => "store_logo", alt: "#{@store.name} logo for promo codes page", :itemprop => "logo" %>
-					<% end %>
-			<br><br>
-			<% end %>
+			<div class='single-store-blog'>
+
+				<% if is_admin? %>
+					<p><%= link_to "Edit Blog", edit_store_blog_path(blog) %> | <%= link_to "Delete Blog", store_blog_path(blog), :method => :delete %></p>
+				<% end %>
+				<span><%= blog.publish_date %></span>
+				<%= raw(blog.post) %>
+
+				<% if blog.image.attached? %>
+							<%= image_tag blog.image, :class => "store-blog-image" %>
+						<% end %>
+				<br><br>
+				<% end %>
+			</div>
 		</div>
 
 		<% if @display_expired && @display_expired.count > 0 %>
