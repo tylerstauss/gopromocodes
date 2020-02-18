@@ -1,0 +1,23 @@
+<div class="side-bar-element">
+	<h2><%= @store.name %> Offer Data</h2>
+				<table class="merchant-stats"> 
+					<tbody> 
+						<tr> 
+							<td>Total Valid Offers: <span class="merchant-offer-data"><%= @promo_codes.count if @promo_codes %></span></td> 
+						</tr> 
+
+						<tr> 
+							<td>Free Shipping Offers: <span class="merchant-offer-data">
+								<%= @freeshipping.count if @promo_codes %></span></td>
+						<tr> 
+							<td>Last Offer Added: <span class="merchant-offer-data"><%= @store.promo_codes.last.created_at if @store.promo_codes.count > 0 %></span>
+							</td> 
+						</tr> 	 
+						<tr> 
+							<td>Expired Deals: <span class="merchant-offer-data"><%= @expired.count if @expired %></span>
+							</td> 
+						</tr> 
+						</tr> 
+					</tbody>
+				</table>
+</div>

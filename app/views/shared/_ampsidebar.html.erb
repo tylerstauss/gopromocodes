@@ -7,8 +7,14 @@
 		<%= render partial: 'shared/categories', locals: {
 			categories: @categories 
 		} %>
-<% else %>	
+<% else %>
+	<% if @store %>	
+		<%= render partial: 'shared/store_stats', locals: {
+			store: @store, promo_codes: @promo_codes, free_shipping: @freeshipping, expired: @expired 
+		}  %>
+		<% end %>
 		<%= render partial: 'shared/chrome_extension'  %>
+
 		<%= render partial: 'shared/top_stores', locals: {
 			top_stores: @top_stores 
 		} %>	
