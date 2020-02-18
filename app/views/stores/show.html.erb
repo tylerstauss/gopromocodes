@@ -58,7 +58,7 @@
 		</div>
 		<% if @promo_codes %>
 			<% @promo_codes.each do |promo_code| %>
-			<%= render partial: 'shared/single_coupon_stores', locals: {promo_code: promo_code} %>
+			<%= render partial: 'shared/single_coupon_stores', locals: {promo_code: promo_code, is_amp: @amp} %>
 			<% end %>
 		<% else %>
 		
@@ -141,7 +141,7 @@ Since this site allows users to submit content, we cannot guarantee the accuracy
 		</div>
 			<% if @display_expired %>
 				<% @display_expired.each do |promo_code| %>
-				<%= render partial: 'shared/single_coupon_stores', locals: {promo_code: promo_code} %>
+				<%= render partial: 'shared/single_coupon_stores', locals: {promo_code: promo_code, is_amp: @amp} %>
 			<% end %>
 			<% else %>
 		
