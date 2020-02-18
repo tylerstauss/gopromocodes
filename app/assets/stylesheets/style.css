@@ -304,12 +304,9 @@ p.store-description {
 	padding: 0 10px;
 }
 
-div.single-store-blog img {
-	max-width: 95%;
-}
-img.store-blog-image {
+img.store_blog_image {
+	max-width: 90%;
 	border: none;
-	margin: 0 auto;
 }
 
 /*  FOOTER  */
