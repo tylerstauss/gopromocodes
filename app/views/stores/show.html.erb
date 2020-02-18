@@ -84,6 +84,8 @@ Since this site allows users to submit content, we cannot guarantee the accuracy
 		</div>
 		
 		<div class="store-blogs store-info">
+			<% unless @amp %>
+			<% else %>
 			<div>
 				<table class="merchant-stats"> 
 					<tbody> 
@@ -109,7 +111,7 @@ Since this site allows users to submit content, we cannot guarantee the accuracy
 					</tbody>
 				</table>
 			</div>
-
+			<% end %>
 			
 
 			<% if is_admin? %>
@@ -121,11 +123,14 @@ Since this site allows users to submit content, we cannot guarantee the accuracy
 			<% end %>
 			<span><%= blog.publish_date %></span>
 			<%= raw(blog.post) %>
-			
+
 			<br>
-			<% if blog.image.attached? %>
-						<%= image_tag blog.image, :class => "store_blog_image", alt: "#{@store.name} logo for promo codes page", :itemprop => "logo" %>
-					<% end %>
+			<% if @amp %>
+			<% else  %>
+				<% if blog.image.attached? %>
+							<%= image_tag blog.image, :class => "store_blog_image", alt: "#{@store.name} logo for promo codes page", :itemprop => "logo" %>
+				<% end %>
+			<% end %>
 			<br><br>
 			<% end %>
 		</div>
@@ -148,7 +153,7 @@ Since this site allows users to submit content, we cannot guarantee the accuracy
 		<% if @amp %>
 			<%= render partial: 'shared/ampsidebar', locals: {is_amp: @amp} %>
 		<% else %>
-		<%= render partial: 'shared/ampsidebar', locals: { is_amp: false} %>
+		<%= render partial: 'shared/ampsidebar', locals: { is_amp: false, store: @store, promo_codes: @promo_codes, free_shipping: @freeshipping, expired: @expired } %>
 		<% end %>
 	</div>
 </div>
