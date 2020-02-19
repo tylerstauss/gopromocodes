@@ -4,7 +4,7 @@
             data: {:confirm => 'Are you sure?'}, :method => :delete %> | <%= promo_code.link %> Order: <%= promo_code.order_id %></p>
 	<% end %>
 	<% if is_amp %>
-			<p class="coupon-title"><span class="coupon-store-name"><%= promo_code.store.name %>: </span><%= link_to promo_code.title, promo_code_path(promo_code), target: :_blank, rel: 'nofollow' %></p>
+			<p class="coupon-title"><span class="coupon-store-name"><%= promo_code.store.name %>: </span><%= link_to promo_code.title, promo_code_path(promo_code), target: :_blank, rel: 'nofollow',  :class => "coupon-link", :data => { :vars_event_label => "#{promo_code.store.name} #{promo_code.id}" }%></p>
 	<% else %>
 	<p class="coupon-title"><span class="coupon-store-name"><%= promo_code.store.name %>: </span><%= link_to promo_code.title, promo_code_path(promo_code), target: :_blank, rel: 'nofollow', onclick: "getOutboundLink('#{promo_code.store.name} #{promo_code.id}');" %></p>
 	<% end %>
@@ -21,7 +21,7 @@
 		<% if promo_code.code == "NULL" || promo_code.code == '' || promo_code.code  == nil || promo_code.code == 'n/a' %>
 			<p>No Code Needed</p>
 		<% else %>
-			Use code: <%= link_to promo_code.code, promo_code_path(promo_code), target: :_blank, rel: 'nofollow' %>
+			Use code: <%= link_to promo_code.code, promo_code_path(promo_code), target: :_blank, rel: 'nofollow',  :class => "coupon-link", :data => { :vars_event_label => "#{promo_code.store.name} #{promo_code.id}" } %>
 		<% end %>
 	</p>
 	<% else %>

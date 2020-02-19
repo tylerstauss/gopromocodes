@@ -572,8 +572,10 @@
       }
     </style>
     <script async custom-element="amp-link-rewriter" src="https://cdn.ampproject.org/v0/amp-link-rewriter-0.1.js"></script>
-    <%= rails_amp_google_analytics_head %>
+    <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
+
     <%= rails_amp_html_header %>
+
   </head>
   <body>
     <amp-link-rewriter layout="nodisplay">
@@ -586,7 +588,29 @@
     }
   </script>
 </amp-link-rewriter>
-    <%= rails_amp_google_analytics_page_tracking %>
+   <amp-analytics type="gtag" data-credentials="include">
+  <script type="application/json">
+    {
+      "vars": {
+        "gtag_id": "UA-10819268-1",
+        "config": {
+         "UA-10819268-1": { "groups": "default" }
+        }
+      },
+      "triggers": {
+        "ampcouponclick": {
+          "selector": ".coupon-link",
+          "on": "click",
+          "vars": {
+            "event_category": "coupon",
+            "event_label": "${eventLabel}",
+            "event_name": "amp-click"
+          }
+        }
+      }
+    }
+  </script>
+</amp-analytics>
     <%= yield %>
   </body>
 </html>
