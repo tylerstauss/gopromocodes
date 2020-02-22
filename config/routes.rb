@@ -4654,6 +4654,7 @@ get '/blog/wp-content/uploads/2013/08/nexus7.jpg', to: redirect('/blog', 301)
 
 # seo redirects 
 get '/stores/jcpenney-affiliate', to: redirect('/stores/jcpenney', 301)
+get "/stores/bj's-wholesale-club", to: redirect('/stores/bjs-wholesale-club', 301)
 
   root :to => 'static#index'
 end

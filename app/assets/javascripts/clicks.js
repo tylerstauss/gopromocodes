@@ -1,4 +1,4 @@
-var Extension = {
+var Clicks = {
 	init: function(){
 		console.log('extension initialized')
 		$('button.extension-download').on('click', this.extensionClick);
