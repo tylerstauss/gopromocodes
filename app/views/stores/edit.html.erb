@@ -69,7 +69,7 @@
 
 	<p>
 		<%= f.label :category %>
-		<%= f.collection_select(:category_id, Category.all, :id, :name) %>
+		<%= f.collection_select(:category_id, @categories, :id, :name) %>
 	</p>
 
 		<p>
