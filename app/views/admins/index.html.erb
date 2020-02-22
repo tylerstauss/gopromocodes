@@ -34,6 +34,9 @@
 						<td>Free Shipping Offers: <span class="merchant-offer-data">
 							<%= number_with_delimiter(@total_free_shipping, :delimiter => ',') if @total_free_shipping %></span>
 						</td>
+						<td>Users: <span class="merchant-offer-data">
+							<%= number_with_delimiter(@users, :delimiter => ',') if @users %></span>
+						</td>
 					</tr> 
 				</tbody>
 			</table>
