@@ -117,11 +117,11 @@ div.side-bar-element li a{
 	text-decoration: none;
 	font: normal 14px "Trebuchet MS", Arial, Helvetica, sans-serif;
 	color: #0B3C57;
-	padding: 10px 150px 10px 15px;
+	padding: 10px 15px 10px 15px;
 }
 
 div.side-bar-element li a:before {
-	content: '< ';
+	/*content: '< ';*/
 }
 
 div.side-bar-element li a:hover{
