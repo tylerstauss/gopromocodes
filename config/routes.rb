@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   get 'contact', to: 'static#contact'	
   get 'search', to: 'static#search'
   get 'coupons-by-domain', to: 'static#coupons_by_domain'
+  get 'coupons-by-domain-two', to: 'static#coupons_by_domain_two'
   get '/api/coupons', to: 'api#coupons' 
   get '/api/coupons-test', to: 'api#coupons_test' 
   get '/api/coupons-by-domain', to: 'api#coupons_by_domain'	
