@@ -74,6 +74,7 @@ class StoresController < ApplicationController
 
 	def update
 		store = Store.find(params[:id])
+		p store_params
     store.update!(store_params)
     redirect_to store
 	end
