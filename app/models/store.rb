@@ -13,7 +13,6 @@ class Store < ActiveRecord::Base
 
   def to_param
    slug
-   p slug
   end
 
   def self.search(term, page)
