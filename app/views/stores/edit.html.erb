@@ -1,98 +1,122 @@
+<div class="row main-content">
+	<div class="twelve columns coupon-list">
 <h1>Edit Store</h1>
 
-<%= form_for(@store) do |f| %>
-	<p>
-		<%= f.label :id %>
-		<%= f.text_field :id %>
-	</p>
-	<p>
-		<%= f.label :name %>
-		<%= f.text_field :name %>
-	</p>
-			<p>
-		<p>Network</p>
-		<%= f.text_field :network %>
-	</p>
-		<p>
-		<p>Network ID</p>
-		<%= f.text_field :network_id %>
-	</p>
-	<p>
-		<%= f.label :url %>
-		<%= f.text_field :url %>
-	</p>
-		<p>
-		<%= f.label :domain %>
-		<%= f.text_field :domain %>
-	</p>
 
-	<p style="width:500px">
-		<%= f.label :description %>
-		<%= f.text_area :description %>
-	</p>
-
-	<p>
-		<%= f.label :logo %>
-		<%= f.file_field :logo, multiple: false %>
-	</p>
-
-	<p>
-		<%= f.label :slug %>
-		<%= f.text_field :slug %>
-	</p>
-	<p>
-		<%= f.label :search_terms %>
-		<%= f.text_field :search_terms %>
-	</p>
-	<p>
-		<%= f.label :meta_keywords %>
-		<%= f.text_field :meta_keywords %>
-	</p>
-	<p>
-		<%= f.label :meta_title %>
-		<%= f.text_field :meta_title %>
-	</p>
-	<p>
-		<%= f.label :meta_description %>
-		<%= f.text_field :meta_description %>
-	</p>
-	<p>
-		<%= f.label :paths %>
-		<%= f.text_field :paths %>
-	</p>
-
-	<p>
+<table style="width:100%;">
+	<%= form_for(@store) do |f| %>
+	<tr>
+		<td>
 		<%= f.label :active %>
 		<%= f.check_box(:active, checked: @store.active) %>
-	</p>
+		</td>
+		<td>
+			<%= f.label :id %>
+			<%= f.text_field :id %>
+		</td>
+		<td>
+			<%= f.label :name %>
+			<%= f.text_field :name %>
+		</td>
+		<td>
+						<%= f.label :url %>
+			<%= f.text_field :url %>
 
-	<p>
-		<%= f.label :user_submit %>
-		<%= f.check_box(:user_submit, checked: @store.user_submit) %>
-	</p>
+		</td>
+	</tr>
+		<tr>
+		<td>
+			<%= f.label "Network ID" %>
+			<%= f.text_field :network_id %>
+		</td>
+		<td>
+			<%= f.label :network %>
+			<%= f.text_field :network %>
+		</td>
+		<td>
+			<%= f.label :domain %>
+			<%= f.text_field :domain %>
+		</td>
+				<td>
+			<%= f.label :slug %>
+			<%= f.text_field :slug %>
+		</td>
+	</tr>
+		<tr>
+		<td colspan="3">
+			<%= f.label :description %>
+			<%= f.text_area :description, size: "80x30" %>
+		</td>
+		<td>
+			<%= f.label :logo %>
+			<%= f.file_field :logo, multiple: false %>
+		</td>
 
-	<p>
+	</tr>
+	</tr>
+		<tr>
+		<td>
+		<%= f.label :search_terms %>
+		<%= f.text_field :search_terms %>
+		</td>
+		<td>
+		<%= f.label :meta_keywords %>
+		<%= f.text_field :meta_keywords %>
+		</td>
+		<td>
+		<%= f.label :meta_title %>
+		<%= f.text_field :meta_title %>
+		</td>
+		<td>
+		<%= f.label :meta_description %>
+		<%= f.text_field :meta_description %>
+		</td>
+	</tr>
+	<tr>
+		<td>
 		<%= f.label :category %>
 		<%= f.collection_select(:category_id, @categories, :id, :name) %>
-	</p>
-
-		<p>
+		</td>
+		<td>
+		<%= f.label :user_submit %>
+		<%= f.check_box(:user_submit, checked: @store.user_submit) %>
+		</td>
+		<td>
+		<%= f.label :paths %>
+		<%= f.text_field :paths %>
+		</td>
+				<td>
 		<%= f.label :top_store %>
 		<%= f.check_box(:top_store, checked: @store.top_store) %>
-	</p>
-	<p>
+		</td>
+	</tr>	
+	<tr>
+
+
+
+	</tr>
+	<tr>
+	<td>
 		<%= f.label :viglink_id %>
 		<%= f.text_field :viglink_id %>
-	</p>
-	<p>
+	</td>
+	<td>
 		<%= f.label :viglink_name %>
 		<%= f.text_field :viglink_name %>
-	</p>
-	<p>
+	</td>
+	<td>
 		<%= f.label :viglink_group_id %>
 		<%= f.text_field :viglink_group_id %>
-	</p>
-
-
-	<%= f.submit %>
-<% end %>
+	</td>
+</tr>
+<tr>
+	<td>
+		<%= f.submit %>
+	</td>
+	
+</tr>
+	
+	<% end %>
+	</table>
+</div>
+</div>
