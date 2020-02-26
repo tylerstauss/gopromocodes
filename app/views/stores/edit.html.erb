@@ -2,9 +2,9 @@
 	<div class="twelve columns coupon-list">
 <h1>Edit Store</h1>
 
-
-<table style="width:100%;">
 	<%= form_for(@store) do |f| %>
+<table style="width:100%;">
+
 	<tr>
 		<td>
 		<%= f.label :active %>
@@ -91,9 +91,6 @@
 		</td>
 	</tr>	
 	<tr>
-
-
-
 	</tr>
 	<tr>
 	<td>
@@ -111,12 +108,13 @@
 </tr>
 <tr>
 	<td>
-		<%= f.submit %>
+		
 	</td>
-	
 </tr>
 	
-	<% end %>
+	
 	</table>
+	<%= f.submit %>
+	<% end %>
 </div>
 </div>
