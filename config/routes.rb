@@ -69,12 +69,6 @@ Rails.application.routes.draw do
   get '/p/author-biography-zoe-stauss.html', to: redirect("/author-biography-zoe-stauss", status: 301) 
   
   # new redirects
-  get '/store/tracfone-wireless-inc', to: redirect('/stores/tracfone', 301)
-  get '/stores/tracfone-wireless-inc', to: redirect('/stores/tracfone', 301)
-  get '/stores/legalzoom', to: redirect('/', 301)
-  get '/stores/jcpenney-affiliate', to: redirect('/stores/jcpenney', 301)
-  get "/stores/bj's-wholesale-club", to: redirect('/stores/bjs-wholesale-club', 301)
-  get "/stores/hellofresh---us", to: redirect('/stores/hellofresh-us', 301)
 
 
   # @stores = Store.all
@@ -4657,6 +4651,13 @@ get '/blog/wp-content/uploads/2013/08/nexus7.jpg', to: redirect('/blog', 301)
 
 
 # seo redirects 
+  get '/store/tracfone-wireless-inc', to: redirect('/stores/tracfone', 301)
+  get '/stores/tracfone-wireless-inc', to: redirect('/stores/tracfone', 301)
+  get '/stores/legalzoom', to: redirect('/', 301)
+  get '/stores/jcpenney-affiliate', to: redirect('/stores/jcpenney', 301)
+  get "/stores/bj's-wholesale-club", to: redirect('/stores/bjs-wholesale-club', 301)
+  get "/stores/hellofresh---us", to: redirect('/stores/hellofresh-us', 301)
+
 
   root :to => 'static#index'
 end
