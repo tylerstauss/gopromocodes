@@ -1,12 +1,7 @@
 Rails.application.routes.draw do
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  resources :categories
-  resources :stores
-  resources :promo_codes
-  resources :users
-  resources :subscribers
-  resources :store_blogs
+
 
 
   # Coupons
@@ -4658,6 +4653,12 @@ get '/blog/wp-content/uploads/2013/08/nexus7.jpg', to: redirect('/blog', 301)
   get "/stores/bj's-wholesale-club", to: redirect('/stores/bjs-wholesale-club', 301)
   get "/stores/hellofresh---us", to: redirect('/stores/hellofresh-us', 301)
 
+  resources :categories
+  resources :stores
+  resources :promo_codes
+  resources :users
+  resources :subscribers
+  resources :store_blogs
 
   root :to => 'static#index'
 end
