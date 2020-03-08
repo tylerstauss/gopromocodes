@@ -52,7 +52,7 @@ class StaticController < ApplicationController
 	def coupons_by_domain_two
 		today = Date.today
 		@domain = params[:domain]
-		@store = Store.select("name", "id", "domain", "paths").where(domain: @domain).first
+		@store = Store.select("name", "id", "domain", "paths", "slug").where(domain: @domain).first
 		@key = params[:key]
 		@data = {}
 		@promo_codes = []
