@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_23_231924) do
+ActiveRecord::Schema.define(version: 2020_03_18_033956) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,18 @@ ActiveRecord::Schema.define(version: 2020_02_23_231924) do
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_category_promo_codes_on_category_id"
     t.index ["promo_code_id"], name: "index_category_promo_codes_on_promo_code_id"
+  end
+
+  create_table "network_merchants", force: :cascade do |t|
+    t.string "network"
+    t.string "website_id"
+    t.string "name"
+    t.string "network_id"
+    t.string "url"
+    t.string "domain"
+    t.boolean "active"
+    t.boolean "joined"
+    t.string "link_id"
   end
 
   create_table "promo_codes", id: :serial, force: :cascade do |t|

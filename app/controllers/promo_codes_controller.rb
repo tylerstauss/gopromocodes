@@ -61,12 +61,29 @@ require 'uri'
 
 	def show
 		@promo_code = PromoCode.find(params[:id])
-		vl_api = '4313102406607fd73ededb923cc8e1e5'
-		@link =  CGI.escape(@promo_code.link)
-		@subscriber = Subscriber.new
-		@categories = Category.order('name ASC')
-		@top_stores = Store.where(top_store: true).limit(12)
-		redirect_to "http://redirect.viglink.com/?u=#{@link}&key=#{vl_api}&cuid=com_#{@promo_code.id}"
+		p domain = @promo_code.store.domain
+		p network_merchant = NetworkMerchant.where(domain: domain, active: true, joined: true).first
+		if network_merchant && network_merchant.network
+			case network_merchant.network
+			when 'cj'
+				p link = "https://www.tkqlhce.com/click-6065984-#{network_merchant.link_id}?sid=#{@promo_code.id}"
+				redirect_to link
+			else
+				vl_api = '4313102406607fd73ededb923cc8e1e5'
+				@link =  CGI.escape(@promo_code.link)
+				@subscriber = Subscriber.new
+				@categories = Category.order('name ASC')
+				@top_stores = Store.where(top_store: true).limit(12)
+				redirect_to "http://redirect.viglink.com/?u=#{@link}&key=#{vl_api}&cuid=com_#{@promo_code.id}"
+			end
+		else
+			vl_api = '4313102406607fd73ededb923cc8e1e5'
+			@link =  CGI.escape(@promo_code.link)
+			@subscriber = Subscriber.new
+			@categories = Category.order('name ASC')
+			@top_stores = Store.where(top_store: true).limit(12)
+			redirect_to "http://redirect.viglink.com/?u=#{@link}&key=#{vl_api}&cuid=com_#{@promo_code.id}"
+		end
 	end
 
 	def edit

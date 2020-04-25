@@ -118,11 +118,11 @@ class PromoCode < ActiveRecord::Base
 		today = Time.now.strftime("%m/%d/%Y")
 		p today
 		puts 'Updating cj Promotions'
-		headers = {'authorization' => "#{Figaro.env.CJ_KEY}"}
+		headers = {'Authorization' => "Bearer #{Figaro.env.CJ_KEY}"}
 		url = "https://linksearch.api.cj.com/v2/link-search?website-id=5329581&advertiser-ids=joined&promotion-type=coupon&link-type=Text+Link&records-per-page=100&page-number=1&promotion-start-date=#{today}" 
 		p url 
 		response = HTTParty.get(url, :headers => headers)
-		# p response
+		p response
 		total = response['cj_api']['links']['total_matched'].to_i
 		# p total
 		pages = (total /100.to_f).ceil
@@ -159,7 +159,7 @@ class PromoCode < ActiveRecord::Base
 									store.network = 'cj' if store.network == nil or store.network == ''
 									store.network_id = cj_id if store.network_id == nil or store.network_id = ''
 									store.save
-									new_created_code =romoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
+									new_created_code = PromoCode.create(store_id: store.id, title: title.gsub("\n", " ").gsub("\r", " "), code: code, description: description.gsub("\n", " ").gsub("\r", " "), link: link_destination, starts: start_date, expires: end_date)
 									new_created_code.order_id = new_created_code.id
 									new_created_code.save
 								else
