@@ -104,6 +104,13 @@ namespace :oneoff do
     PromoCode.get_honey_promotions
   end
 
+  task get_cj_merchants: :environment do
+    NetworkMerchant.get_cj_merchants
+  end
+    task get_cj_link_ids: :environment do
+    NetworkMerchant.get_cj_link_ids
+  end
+
   task populate_viglink_data: :environment do 
     csv_text = File.read('viglink.csv')
     csv = CSV.parse(csv_text, :headers => true)
