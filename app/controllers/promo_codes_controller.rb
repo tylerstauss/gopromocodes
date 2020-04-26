@@ -63,10 +63,10 @@ require 'uri'
 		@promo_code = PromoCode.find(params[:id])
 		p domain = @promo_code.store.domain
 		p network_merchant = NetworkMerchant.where(domain: domain, active: true, joined: true).first
-		if network_merchant && network_merchant.network
+		if network_merchant && network_merchant.network && network_merchant.link_id.length > 5
 			case network_merchant.network
 			when 'cj'
-				p link = "https://www.tkqlhce.com/click-6065984-#{network_merchant.link_id}?sid=#{@promo_code.id}"
+				p link = "https://www.tkqlhce.com/click-3509648-#{network_merchant.link_id}?sid=#{@promo_code.id}"
 				redirect_to link
 			else
 				vl_api = '4313102406607fd73ededb923cc8e1e5'
