@@ -118,7 +118,7 @@ class PromoCode < ActiveRecord::Base
 		today = Time.now.strftime("%m/%d/%Y")
 		p today
 		puts 'Updating cj Promotions'
-		headers = {'Authorization' => "Bearer #{Figaro.env.CJ_KEY}"}
+		headers = {'Authorization' => "Bearer #{Figaro.env.GPC_CJ_KEY}"}
 		url = "https://linksearch.api.cj.com/v2/link-search?website-id=5329581&advertiser-ids=joined&promotion-type=coupon&link-type=Text+Link&records-per-page=100&page-number=1&promotion-start-date=#{today}" 
 		p url 
 		response = HTTParty.get(url, :headers => headers)
