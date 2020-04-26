@@ -119,20 +119,20 @@ class PromoCode < ActiveRecord::Base
 		p today
 		puts 'Updating cj Promotions'
 		headers = {'Authorization' => "Bearer #{Figaro.env.GPC_CJ_KEY}"}
-		url = "https://linksearch.api.cj.com/v2/link-search?website-id=5329581&advertiser-ids=joined&promotion-type=coupon&link-type=Text+Link&records-per-page=100&page-number=1&promotion-start-date=#{today}" 
+		url = "https://linksearch.api.cj.com/v2/link-search?website-id=3509648&advertiser-ids=joined&promotion-type=coupon&link-type=Text+Link&records-per-page=100&page-number=1&promotion-start-date=#{today}" 
 		p url 
 		response = HTTParty.get(url, :headers => headers)
-		p response
+		# p response
 		total = response['cj_api']['links']['total_matched'].to_i
 		# p total
 		pages = (total /100.to_f).ceil
 		p pages
 
 		while pages > 0
-			url = "https://linksearch.api.cj.com/v2/link-search?website-id=5329581&advertiser-ids=joined&promotion-type=coupon&link-type=Text+Link&records-per-page=100&page-number=#{pages}&promotion-start-date=#{today}"
+			url = "https://linksearch.api.cj.com/v2/link-search?website-id=3509648&advertiser-ids=joined&promotion-type=coupon&link-type=Text+Link&records-per-page=100&page-number=#{pages}&promotion-start-date=#{today}"
 			p url
 			response = HTTParty.get(url, :headers => headers)
-			# p response
+			p response
 			links = response['cj_api']['links']['link']
 			if links.is_a?(Array)
 				links.each do |link|
