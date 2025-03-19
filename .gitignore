@@ -67,3 +67,9 @@ next-env.d.ts
 # IDE
 .idea/
 .vscode/
+
+# Ruby/Rails
+/config/initializers/recaptcha.rb
+/config/secrets.yml
+/config/master.key
+/config/credentials.yml.enc
