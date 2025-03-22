@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
 import { useSession, signIn, signOut } from "next-auth/react";
-import EnhancedSearchBar from '@/components/EnhancedSearchBar';
+import EnhancedSearchBar from '../components/EnhancedSearchBar';
 
 export default function Header() {
   const { data: session } = useSession()
