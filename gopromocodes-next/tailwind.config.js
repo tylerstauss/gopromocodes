@@ -8,6 +8,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        brand: {
+          red: '#d9172c',
+          blue: {
+            DEFAULT: '#25475a',
+            dark: '#1a3748',
+            light: '#34637f'
+          },
+          gray: '#ECECEC',
+          highlight: '#abe1fa'
+        },
         primary: {
           50: '#f0f9ff',
           100: '#e0f2fe',
@@ -20,6 +30,10 @@ module.exports = {
           800: '#075985',
           900: '#0c4a6e',
         },
+      },
+      fontFamily: {
+        myriad: ['MyriadProRegular', 'Arial', 'sans-serif'],
+        trebuchet: ['"Trebuchet MS"', 'Arial', 'Helvetica', 'sans-serif']
       },
     },
   },

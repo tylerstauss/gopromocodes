@@ -1,24 +1,28 @@
-# README
+# GoPromoCodes
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This repository contains both the original Ruby on Rails application and the newer Next.js implementation.
 
-Things you may want to cover:
+## Project Structure
 
-* Ruby version
+- **gopromocodes-ruby/** - Contains the original Ruby on Rails application
+- **gopromocodes-next/** - Contains the new Next.js implementation
 
-* System dependencies
+## Development
 
-* Configuration
+### Ruby Application
 
-* Database creation
+```bash
+cd gopromocodes-ruby
+# Run Ruby application commands here
+```
 
-* Database initialization
+### Next.js Application
 
-* How to run the test suite
+```bash
+cd gopromocodes-next
+npm run dev
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+## Migration
 
-* Deployment instructions
-
-* ...
+The migration tools and scripts for moving data from the Ruby application to the Next.js application can be found in the `gopromocodes-next/scripts` directory.

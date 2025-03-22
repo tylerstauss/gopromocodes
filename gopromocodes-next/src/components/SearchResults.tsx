@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Store, PromoCode, Category, CategoryPromoCode } from '@prisma/client'
 
@@ -25,33 +24,8 @@ type Props = {
 }
 
 export default function SearchResults({ query, type, stores, promoCodes }: Props) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-
-  function handleTypeChange(newType: string) {
-    const params = new URLSearchParams(searchParams.toString())
-    params.set('type', newType)
-    router.push(`/search?${params.toString()}`)
-  }
-
   return (
     <div>
-      <div className="mb-6">
-        <label htmlFor="type" className="block text-sm font-medium text-gray-700">
-          Filter Results
-        </label>
-        <select
-          id="type"
-          value={type}
-          onChange={(e) => handleTypeChange(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        >
-          <option value="all">All Results</option>
-          <option value="stores">Stores Only</option>
-          <option value="codes">Promo Codes Only</option>
-        </select>
-      </div>
-
       {(type === 'all' || type === 'stores') && stores.length > 0 && (
         <div className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">Stores</h2>

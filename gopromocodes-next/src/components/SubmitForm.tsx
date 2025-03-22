@@ -3,9 +3,10 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Store, Category } from '@prisma/client'
+import StoreSearch from '@/components/StoreSearch'
 
 type Props = {
-  stores: Store[]
+  stores: Store[] // We'll keep this for type compatibility but won't use it directly
   categories: Category[]
 }
 
@@ -13,15 +14,22 @@ export default function SubmitForm({ stores, categories }: Props) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [selectedStore, setSelectedStore] = useState<Store | null>(null)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setIsSubmitting(true)
     setError('')
 
+    if (!selectedStore) {
+      setError('Please select a store')
+      setIsSubmitting(false)
+      return
+    }
+
     const formData = new FormData(e.currentTarget)
     const data = {
-      storeId: parseInt(formData.get('storeId') as string),
+      storeId: selectedStore.id,
       categoryId: parseInt(formData.get('categoryId') as string),
       title: formData.get('title') as string,
       description: formData.get('description') as string,
@@ -62,22 +70,17 @@ export default function SubmitForm({ stores, categories }: Props) {
       )}
 
       <div>
-        <label htmlFor="storeId" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="store-search" className="block text-sm font-medium text-gray-700">
           Store
         </label>
-        <select
-          id="storeId"
-          name="storeId"
-          required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        >
-          <option value="">Select a store</option>
-          {stores.map((store) => (
-            <option key={store.id} value={store.id}>
-              {store.name}
-            </option>
-          ))}
-        </select>
+        <div className="mt-1">
+          <StoreSearch onStoreSelect={(store) => setSelectedStore(store)} />
+          <input 
+            type="hidden" 
+            name="storeId" 
+            value={selectedStore?.id || ''} 
+          />
+        </div>
       </div>
 
       <div>
