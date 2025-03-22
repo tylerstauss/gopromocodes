@@ -51,7 +51,7 @@ model Store {
   paths           String?
   promoCodes      PromoCode[]
   blogs           StoreBlog[]
-  categories      CategoryPromoCode[]
+  categoryPromoCodes CategoryPromoCode[]
 }
 
 model Category {
@@ -92,10 +92,12 @@ model CategoryPromoCode {
   id          Int        @id @default(autoincrement())
   promoCodeId Int
   categoryId  Int
+  storeId     Int
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   promoCode   PromoCode  @relation(fields: [promoCodeId], references: [id])
   category    Category   @relation(fields: [categoryId], references: [id])
+  store       Store      @relation(fields: [storeId], references: [id])
 
   @@unique([promoCodeId, categoryId])
 }
