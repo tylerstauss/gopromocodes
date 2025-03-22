@@ -73,3 +73,48 @@ next-env.d.ts
 /config/secrets.yml
 /config/master.key
 /config/credentials.yml.enc
+
+# Ruby app
+gopromocodes-ruby/
+*.rb
+*.rake
+Gemfile
+Gemfile.lock
+config.ru
+config/*.yml
+config/*.rb
+db/migrate/
+db/schema.rb
+db/seeds.rb
+app/
+bin/
+lib/
+log/
+tmp/
+vendor/
+public/assets/
+storage/
+
+# Node.js
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
