@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { prisma } from '@/lib'
+import prisma from '../lib/prisma-client'
 import Link from 'next/link'
 import Image from 'next/image'
 import NewsletterSignup from '@/components/NewsletterSignup'

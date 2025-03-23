@@ -2,7 +2,8 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
-import { prisma, authOptions } from '@/lib'
+import prisma from '../../../lib/prisma-client'
+import { authOptions } from '../../../lib/auth'
 
 export const metadata: Metadata = {
   title: 'Blog Management | Admin | GoPromoCodes',
