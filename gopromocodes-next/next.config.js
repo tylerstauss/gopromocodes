@@ -12,6 +12,7 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['@prisma/client', 'bcrypt']
   },
+  transpilePackages: ['@prisma/client'],
   // Enable static exports if needed
   // output: 'export',
   // Configure redirects if needed
@@ -32,7 +33,9 @@ const nextConfig = {
       ...config.resolve.alias,
       '@': path.resolve(__dirname),
       '@/lib': path.resolve(__dirname, 'lib'),
-      '@/components': path.resolve(__dirname, 'components')
+      '@/components': path.resolve(__dirname, 'components'),
+      'lib': path.resolve(__dirname, 'lib'),
+      'components': path.resolve(__dirname, 'components')
     }
     return config
   }
