@@ -1,9 +1,9 @@
 import { Metadata } from 'next'
 import { getServerSession } from 'next-auth'
 import { redirect, notFound } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
-import { authOptions } from '@/lib/auth'
-import BlogPostForm from '@/components/admin/BlogPostForm'
+import { prisma } from '../../../../lib/prisma'
+import { authOptions } from '../../../../lib/auth'
+import BlogPostForm from '../../../../components/admin/BlogPostForm'
 
 type Props = {
   params: { id: string }
