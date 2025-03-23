@@ -8,7 +8,6 @@ const nextConfig = {
   },
   distDir: '.next',
   experimental: {
-    appDir: true,
     serverComponentsExternalPackages: ['@prisma/client', 'bcrypt']
   },
   // Enable static exports if needed
