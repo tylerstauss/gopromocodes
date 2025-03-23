@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
-import { authOptions } from '@/lib/auth'
+import { authOptions } from '@/lib'
 import dynamic from 'next/dynamic'
 
 const DataMigration = dynamic(() => import('@/components/admin/DataMigration'), {

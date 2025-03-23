@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const path = require('path')
+
 const nextConfig = {
   // Environment variables are loaded from .env automatically
   reactStrictMode: true,
@@ -28,9 +30,9 @@ const nextConfig = {
     }
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@': '.',
-      '@/lib': './lib',
-      '@/components': './components'
+      '@': path.resolve(__dirname),
+      '@/lib': path.resolve(__dirname, 'lib'),
+      '@/components': path.resolve(__dirname, 'components')
     }
     return config
   }
