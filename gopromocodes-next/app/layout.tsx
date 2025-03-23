@@ -3,8 +3,8 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import './custom-styles.css'
 import { Providers } from './providers'
-import HeaderWrapper from '../../components/HeaderWrapper'
-import Footer from '../../components/Footer'
+import HeaderWrapper from '../components/HeaderWrapper'
+import Footer from '../components/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
