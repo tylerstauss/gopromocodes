@@ -33,7 +33,9 @@ const nextConfig = {
       ...config.resolve.alias,
       '@': path.resolve(__dirname),
       '@/lib': path.resolve(__dirname, 'lib'),
+      '@/lib/': path.resolve(__dirname, 'lib'),
       '@/components': path.resolve(__dirname, 'components'),
+      '@/components/': path.resolve(__dirname, 'components'),
       'lib': path.resolve(__dirname, 'lib'),
       'components': path.resolve(__dirname, 'components')
     }

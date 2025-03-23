@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { prisma } from '@/lib'
+import prisma from '../../lib/prisma-client'
 
 export const metadata: Metadata = {
   title: 'About Us | GoPromoCodes',
