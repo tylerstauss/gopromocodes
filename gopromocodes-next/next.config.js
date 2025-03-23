@@ -7,6 +7,10 @@ const nextConfig = {
     domains: ['images.unsplash.com'], // Add any image domains you're using
   },
   distDir: '.next',
+  experimental: {
+    appDir: true,
+    serverComponentsExternalPackages: ['@prisma/client', 'bcrypt']
+  },
   // Enable static exports if needed
   // output: 'export',
   // Configure redirects if needed
@@ -19,7 +23,10 @@ const nextConfig = {
   //     },
   //   ]
   // },
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals = [...(config.externals || []), '@prisma/client']
+    }
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': '.',
