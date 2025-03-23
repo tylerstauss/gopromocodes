@@ -19,12 +19,12 @@ export default async function AdminBlogPage() {
 
   const posts = await prisma.blog.findMany({
     include: {
-      author: {
+      User: {
         select: {
-          name: true
+          username: true
         }
       },
-      store: {
+      Store: {
         select: {
           name: true
         }
@@ -88,10 +88,10 @@ export default async function AdminBlogPage() {
                         {post.title}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {post.author.name}
+                        {post.User.username}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {post.store?.name || '-'}
+                        {post.Store?.name || '-'}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         <span className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${

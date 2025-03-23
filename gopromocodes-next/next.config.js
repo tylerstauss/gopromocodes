@@ -6,10 +6,6 @@ const nextConfig = {
   images: {
     domains: ['images.unsplash.com'], // Add any image domains you're using
   },
-  // Specify the source directory
-  experimental: {
-    appDir: true
-  },
   distDir: '.next',
   // Enable static exports if needed
   // output: 'export',
@@ -23,6 +19,15 @@ const nextConfig = {
   //     },
   //   ]
   // },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': '.',
+      '@/lib': './lib',
+      '@/components': './components'
+    }
+    return config
+  }
 }
 
 module.exports = nextConfig 

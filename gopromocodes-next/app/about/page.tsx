@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib'
 
 export const metadata: Metadata = {
   title: 'About Us | GoPromoCodes',
@@ -23,7 +23,7 @@ export default async function AboutPage() {
     prisma.promoCode.count({
       where: {
         approved: true,
-        code: { not: null },
+        code: { not: undefined },
         OR: [
           { expires: { gt: new Date() } },
           { expires: null }

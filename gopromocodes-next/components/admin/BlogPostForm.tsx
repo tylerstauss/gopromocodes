@@ -2,21 +2,21 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Blog, Store, User } from '@prisma/client'
+import { Blog } from '@prisma/client'
 
 type Props = {
   post: (Blog & {
-    store: {
-      id: string
+    Store: {
+      id: number
       name: string
     } | null
-    author: {
-      id: string
+    User: {
+      id: number
       username: string
     }
   }) | null
   stores: {
-    id: string
+    id: number
     name: string
   }[]
 }
@@ -29,7 +29,7 @@ export default function BlogPostForm({ post, stores }: Props) {
     content: post?.content || '',
     excerpt: post?.excerpt || '',
     published: post?.published || false,
-    storeId: post?.storeId || '',
+    storeId: post?.storeId?.toString() || '',
     publishedAt: post?.publishedAt
       ? new Date(post.publishedAt).toISOString().split('T')[0]
       : ''

@@ -7,7 +7,7 @@ import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(prisma) as any, // Type assertion to avoid adapter type mismatch
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -46,6 +46,16 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      profile(profile) {
+        return {
+          id: profile.sub,
+          email: profile.email,
+          name: profile.name,
+          username: profile.name,
+          isAdmin: false,
+          googleId: profile.sub
+        }
+      }
     })
   ],
   session: {
@@ -63,7 +73,7 @@ export const authOptions: NextAuthOptions = {
       }
       return session
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
         token.sub = user.id
         token.isAdmin = user.isAdmin

@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { PrismaClient } from '@prisma/client';
-import { PrismaClient as SourcePrismaClient } from '../../../../../prisma/generated/client-source';
 import { migrationStatus, addMigrationLog } from '../migration-status/route';
 import { exec } from 'child_process';
 import { promisify } from 'util';
@@ -11,7 +10,7 @@ import { promisify } from 'util';
 const execAsync = promisify(exec);
 
 // Create Prisma clients for source and destination
-let sourceDb: SourcePrismaClient | null = null;
+let sourceDb: PrismaClient | null = null;
 let destDb: PrismaClient | null = null;
 
 export async function POST(request: Request) {
@@ -46,14 +45,7 @@ export async function POST(request: Request) {
     migrationStatus.success = false;
 
     // Create Prisma clients
-    sourceDb = new SourcePrismaClient({
-      datasources: {
-        db: {
-          url: process.env.HEROKU_DATABASE_URL
-        }
-      }
-    });
-
+    sourceDb = new PrismaClient();
     destDb = new PrismaClient();
 
     // Start migration in a non-blocking way

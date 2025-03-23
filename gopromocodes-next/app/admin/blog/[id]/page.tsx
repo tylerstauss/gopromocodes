@@ -1,9 +1,9 @@
 import { Metadata } from 'next'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
-import { authOptions } from '@/lib/auth'
+import { prisma, authOptions } from '@/lib'
 import BlogPostForm from '@/components/admin/BlogPostForm'
+import { notFound } from 'next/navigation'
 
 type Props = {
   params: { id: string }
@@ -11,7 +11,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await prisma.blog.findUnique({
-    where: { id: params.id },
+    where: { id: parseInt(params.id) },
     select: { title: true }
   })
 
@@ -29,19 +29,28 @@ export default async function BlogPostEditorPage({ params }: Props) {
   }
 
   const post = params.id === 'new' ? null : await prisma.blog.findUnique({
-    where: { id: params.id },
+    where: { id: parseInt(params.id) },
     include: {
-      store: {
+      Store: {
         select: {
           id: true,
           name: true
+        }
+      },
+      User: {
+        select: {
+          id: true,
+          username: true
         }
       }
     }
   })
 
+  if (params.id !== 'new' && !post) {
+    notFound()
+  }
+
   const stores = await prisma.store.findMany({
-    where: { active: true },
     select: {
       id: true,
       name: true
@@ -51,23 +60,30 @@ export default async function BlogPostEditorPage({ params }: Props) {
     }
   })
 
+  const formattedStores = stores.map(store => ({
+    id: store.id,
+    name: store.name
+  }))
+
+  const formattedPost = post ? {
+    ...post,
+    Store: post.Store ? {
+      id: post.Store.id,
+      name: post.Store.name
+    } : null,
+    User: {
+      id: post.User.id,
+      username: post.User.username
+    }
+  } : null
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="sm:flex sm:items-center">
-        <div className="sm:flex-auto">
-          <h1 className="text-2xl font-semibold text-gray-900">
-            {post ? 'Edit Blog Post' : 'New Blog Post'}
-          </h1>
-          <p className="mt-2 text-sm text-gray-700">
-            {post
-              ? 'Edit the blog post details below.'
-              : 'Fill in the details to create a new blog post.'}
-          </p>
-        </div>
-      </div>
-
+      <h1 className="text-3xl font-bold text-gray-900">
+        {params.id === 'new' ? 'Create New Blog Post' : 'Edit Blog Post'}
+      </h1>
       <div className="mt-8">
-        <BlogPostForm post={post} stores={stores} />
+        <BlogPostForm post={formattedPost} stores={formattedStores} />
       </div>
     </div>
   )

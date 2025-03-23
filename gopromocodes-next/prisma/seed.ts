@@ -1,8 +1,8 @@
-const { PrismaClient } = require('@prisma/client')
-const { parse } = require('csv-parse/sync')
-const { readFileSync } = require('fs')
-const path = require('path')
-const bcrypt = require('bcryptjs')
+import { PrismaClient } from '@prisma/client'
+import { parse } from 'csv-parse/sync'
+import { readFileSync } from 'fs'
+import * as pathModule from 'path'
+import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
@@ -39,7 +39,7 @@ async function main() {
 
   // Seed categories
   console.log('Seeding categories...')
-  const categoriesPath = path.join(__dirname, '../../lib/seeds/dc_categories.csv')
+  const categoriesPath = pathModule.join(__dirname, '../../lib/seeds/dc_categories.csv')
   try {
     const categoriesCsv = readFileSync(categoriesPath, 'utf-8')
     const categories = parse(categoriesCsv, {
@@ -75,7 +75,7 @@ async function main() {
 
   // Seed stores
   console.log('Seeding stores...')
-  const storesPath = path.join(__dirname, '../../lib/seeds/dc_stores.csv')
+  const storesPath = pathModule.join(__dirname, '../../lib/seeds/dc_stores.csv')
   try {
     const storesCsv = readFileSync(storesPath, 'utf-8')
     const stores = parse(storesCsv, {
@@ -127,7 +127,7 @@ async function main() {
 
   // Seed store blogs
   console.log('Seeding store blogs...')
-  const blogsPath = path.join(__dirname, '../../lib/seeds/store_blogs.csv')
+  const blogsPath = pathModule.join(__dirname, '../../lib/seeds/store_blogs.csv')
   try {
     const blogsCsv = readFileSync(blogsPath, 'utf-8')
     const blogs = parse(blogsCsv, {

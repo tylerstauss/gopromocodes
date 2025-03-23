@@ -33,6 +33,8 @@ export async function POST(request: Request) {
       )
     }
 
+    const now = new Date()
+
     // Create the blog post
     const post = await prisma.blog.create({
       data: {
@@ -42,26 +44,51 @@ export async function POST(request: Request) {
         excerpt,
         published,
         publishedAt: publishedAt ? new Date(publishedAt) : null,
-        authorId: session.user.id,
-        storeId: storeId || null,
-      },
-      include: {
-        store: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        author: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
-      },
+        authorId: parseInt(session.user.id),
+        storeId: storeId ? parseInt(storeId) : null,
+        createdAt: now,
+        updatedAt: now
+      }
     })
 
-    return NextResponse.json(post)
+    // Fetch the post with relations
+    const postWithRelations = await prisma.blog.findUnique({
+      where: { id: post.id },
+      include: {
+        Store: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        User: {
+          select: {
+            id: true,
+            username: true
+          }
+        }
+      }
+    })
+
+    if (!postWithRelations) {
+      throw new Error('Failed to fetch created post')
+    }
+
+    // Convert IDs to strings for the response
+    return NextResponse.json({
+      ...postWithRelations,
+      id: postWithRelations.id.toString(),
+      authorId: postWithRelations.authorId.toString(),
+      storeId: postWithRelations.storeId?.toString(),
+      Store: postWithRelations.Store ? {
+        id: postWithRelations.Store.id.toString(),
+        name: postWithRelations.Store.name
+      } : null,
+      User: {
+        id: postWithRelations.User.id.toString(),
+        username: postWithRelations.User.username
+      }
+    })
   } catch (error) {
     console.error('Error creating blog post:', error)
     return NextResponse.json(

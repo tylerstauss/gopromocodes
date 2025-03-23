@@ -31,7 +31,7 @@ async function checkTables() {
     `);
 
     console.log('Tables in Heroku database:');
-    result.rows.forEach(row => {
+    result.rows.forEach((row: { tablename: string }) => {
       console.log(`- ${row.tablename}`);
     });
 

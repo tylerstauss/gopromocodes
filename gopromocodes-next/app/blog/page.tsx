@@ -16,13 +16,13 @@ export default async function BlogPage() {
       }
     },
     include: {
-      author: {
+      User: {
         select: {
-          name: true,
-          image: true
+          username: true,
+          email: true
         }
       },
-      store: {
+      Store: {
         select: {
           name: true,
           slug: true
@@ -53,16 +53,9 @@ export default async function BlogPage() {
           >
             <div className="p-6">
               <div className="flex items-center space-x-4">
-                {post.author.image && (
-                  <img
-                    src={post.author.image}
-                    alt={post.author.name || 'Author'}
-                    className="h-10 w-10 rounded-full"
-                  />
-                )}
                 <div>
                   <p className="text-sm font-medium text-gray-900">
-                    {post.author.name}
+                    {post.User.username}
                   </p>
                   <p className="text-sm text-gray-500">
                     {new Date(post.publishedAt!).toLocaleDateString()}
@@ -82,13 +75,13 @@ export default async function BlogPage() {
                 </p>
               )}
 
-              {post.store && (
+              {post.Store && (
                 <div className="mt-4">
                   <Link
-                    href={`/stores/${post.store.slug}`}
+                    href={`/stores/${post.Store.slug}`}
                     className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
                   >
-                    {post.store.name}
+                    {post.Store.name}
                   </Link>
                 </div>
               )}

@@ -29,7 +29,7 @@ export async function PUT(
       where: {
         slug,
         NOT: {
-          id: params.id,
+          id: parseInt(params.id),
         },
       },
     })
@@ -43,7 +43,7 @@ export async function PUT(
 
     // Update the blog post
     const post = await prisma.blog.update({
-      where: { id: params.id },
+      where: { id: parseInt(params.id) },
       data: {
         title,
         slug,
@@ -51,16 +51,16 @@ export async function PUT(
         excerpt,
         published,
         publishedAt: publishedAt ? new Date(publishedAt) : null,
-        storeId: storeId || null,
+        storeId: storeId ? parseInt(storeId) : null,
       },
       include: {
-        store: {
+        Store: {
           select: {
             id: true,
             name: true,
           },
         },
-        author: {
+        User: {
           select: {
             id: true,
             username: true,
@@ -69,7 +69,20 @@ export async function PUT(
       },
     })
 
-    return NextResponse.json(post)
+    // Convert IDs to strings for the response
+    return NextResponse.json({
+      ...post,
+      id: post.id.toString(),
+      storeId: post.storeId?.toString(),
+      Store: post.Store ? {
+        id: post.Store.id.toString(),
+        name: post.Store.name
+      } : null,
+      User: {
+        id: post.User.id.toString(),
+        username: post.User.username
+      }
+    })
   } catch (error) {
     console.error('Error updating blog post:', error)
     return NextResponse.json(
@@ -91,7 +104,7 @@ export async function DELETE(
 
     // Delete the blog post
     await prisma.blog.delete({
-      where: { id: params.id },
+      where: { id: parseInt(params.id) },
     })
 
     return NextResponse.json({ success: true })
@@ -102,4 +115,4 @@ export async function DELETE(
       { status: 500 }
     )
   }
-} 
+}
