@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import EnhancedSearchBar from '@/components/EnhancedSearchBar';
 
 export default function Header() {
@@ -12,6 +12,13 @@ export default function Header() {
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Debug session data
+  useEffect(() => {
+    if (session?.user) {
+      console.log('Session user:', session.user);
+    }
+  }, [session]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -85,12 +92,21 @@ export default function Header() {
                 </button>
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                    <Link
-                      href="/admin"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Admin Panel
-                    </Link>
+                    {/* Debug output */}
+                    {process.env.NODE_ENV === 'development' && (
+                      <div className="px-4 py-2 text-xs text-gray-500">
+                        isAdmin: {String(session.user?.isAdmin)}
+                      </div>
+                    )}
+                    {/* Show admin link if user is admin */}
+                    {session.user?.isAdmin === true && (
+                      <Link
+                        href="/admin"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Admin Panel
+                      </Link>
+                    )}
                     <Link
                       href="/settings"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -108,12 +124,12 @@ export default function Header() {
               </div>
             ) : (
               <div className="space-x-2 flex items-center">
-                <button
-                  onClick={() => signIn()}
+                <Link
+                  href="/auth/signin"
                   className="text-brand-blue hover:text-brand-blue-dark px-3 py-2 text-sm"
                 >
                   Sign in
-                </button>
+                </Link>
                 <span className="text-gray-300">|</span>
                 <button
                   onClick={toggleSignUp}
