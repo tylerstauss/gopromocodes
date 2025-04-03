@@ -9,6 +9,5 @@
       "use": "@vercel/next"
     }
   ],
-  "outputDirectory": ".next",
-  "rootDirectory": "."
+  "outputDirectory": ".next"
 } 
