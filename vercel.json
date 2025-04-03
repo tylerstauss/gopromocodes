@@ -1,5 +1,7 @@
 {
+  // Configuration for Vercel deployment
   "version": 2,
+  "description": "GoPromoCodes Next.js deployment configuration",
   "buildCommand": "npm run build",
   "installCommand": "npm install",
   "framework": "nextjs",
