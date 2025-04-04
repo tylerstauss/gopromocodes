@@ -144,9 +144,41 @@ async function performMigration(tables: string[], resetDatabase: boolean, destin
     
     if (resetDatabase) {
       addMigrationLog('Resetting destination database...');
-      // Drop all tables if they exist
-      await destDb.$executeRaw`DROP SCHEMA public CASCADE;`;
-      await destDb.$executeRaw`CREATE SCHEMA public;`;
+
+      try {
+        // Use a more robust approach for production environments
+        if (destinationEnv === 'prod') {
+          addMigrationLog('Using Prisma reset for production database...');
+          
+          // First try to use built-in Prisma methods
+          await destDb.$executeRawUnsafe(`
+            DO $$ 
+            DECLARE
+              r RECORD;
+            BEGIN
+              -- Disable foreign key checks temporarily
+              EXECUTE 'SET CONSTRAINTS ALL DEFERRED';
+              
+              -- Drop all tables in the public schema
+              FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
+                EXECUTE 'DROP TABLE IF EXISTS "' || r.tablename || '" CASCADE';
+              END LOOP;
+              
+              -- Enable foreign key checks
+              EXECUTE 'SET CONSTRAINTS ALL IMMEDIATE';
+            END $$;
+          `);
+          
+          addMigrationLog('Successfully dropped all tables in production database');
+        } else {
+          // For local database, use the original approach
+          await destDb.$executeRaw`DROP SCHEMA public CASCADE;`;
+          await destDb.$executeRaw`CREATE SCHEMA public;`;
+        }
+      } catch (error: any) {
+        addMigrationLog(`Warning: Could not reset database using SQL: ${error.message}`);
+        addMigrationLog('Falling back to Prisma CLI for database reset...');
+      }
       
       // Push the Prisma schema to create all tables
       addMigrationLog('Creating database schema using Prisma...');
@@ -156,7 +188,14 @@ async function performMigration(tables: string[], resetDatabase: boolean, destin
       const { execSync } = require('child_process');
       
       try {
-        execSync(`DATABASE_URL="${destDbUrl}" npx prisma db push --skip-generate`, { stdio: 'inherit' });
+        // Add force-reset flag for more reliable reset
+        execSync(`DATABASE_URL="${destDbUrl}" npx prisma db push --force-reset --skip-generate`, { 
+          stdio: 'inherit',
+          env: {
+            ...process.env,
+            DATABASE_URL: destDbUrl
+          }
+        });
         addMigrationLog('Database schema created successfully');
       } catch (error: any) {
         addMigrationLog(`Error creating schema: ${error.message}`);
