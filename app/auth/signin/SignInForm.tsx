@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 
 export default function SignInForm({ providers }: { providers: any }) {
   const router = useRouter()
@@ -133,6 +134,14 @@ export default function SignInForm({ providers }: { providers: any }) {
               className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Enter your password"
             />
+          </div>
+          <div className="flex items-center justify-end">
+            <Link
+              href="/auth/forgot-password"
+              className="text-sm text-indigo-600 hover:text-indigo-500"
+            >
+              Forgot your password?
+            </Link>
           </div>
         </div>
 

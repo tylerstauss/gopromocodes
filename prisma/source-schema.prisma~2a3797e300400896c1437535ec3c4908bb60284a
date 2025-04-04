@@ -1,12 +1,16 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "./generated/client-source"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("HEROKU_DATABASE_URL")
+  directUrl = env("HEROKU_DATABASE_URL")
+  relationMode = "prisma"
 }
 
+// Copy all models from the main schema
 model User {
   id        Int      @id @default(autoincrement())
   username  String   @unique
@@ -14,14 +18,42 @@ model User {
   password  String
   googleId  String?  @unique
   isAdmin   Boolean  @default(false)
-  resetToken        String?
-  resetTokenExpiry  DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Blog      Blog[]
 }
 
 model Store {
+<<<<<<< HEAD:prisma/source-schema.prisma:prisma/source-schema.prisma
+  id              Int            @id @default(autoincrement())
+  name            String
+  url             String
+  description     String?
+  active          Boolean        @default(true)
+  userSubmit      Boolean        @default(true)
+  metaKeywords    String?
+  metaTitle       String?
+  metaDescription String?
+  categoryId      Int?
+  category        Category?      @relation(fields: [categoryId], references: [id])
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  slug            String         @unique
+  topStore        Boolean        @default(false)
+  oldSlug         String?
+  searchTerms     String?
+  networkId       String?
+  network         String?
+  domain          String?
+  viglinkId       Int?
+  viglinkGroupId  Int?
+  viglinkName     String?
+  paths           String?
+  promoCodes      PromoCode[]
+  blogs           StoreBlog[]
+  categoryPromoCodes CategoryPromoCode[]
+  blogPosts       Blog[]
+=======
   id                 Int                 @id @default(autoincrement())
   name               String
   url                String
@@ -51,6 +83,7 @@ model Store {
   category           Category?           @relation(fields: [categoryId], references: [id])
   blogs              StoreBlog[]
   clicks             ClickLog[]
+>>>>>>> 2a3797e300400896c1437535ec3c4908bb60284a:gopromocodes-next/prisma/schema.prisma:gopromocodes-next/prisma/schema.prisma
 }
 
 model Category {
@@ -89,6 +122,17 @@ model PromoCode {
 }
 
 model CategoryPromoCode {
+<<<<<<< HEAD:prisma/source-schema.prisma:prisma/source-schema.prisma
+  id          Int        @id @default(autoincrement())
+  promoCodeId Int
+  categoryId  Int
+  storeId     Int
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  promoCode   PromoCode  @relation(fields: [promoCodeId], references: [id])
+  category    Category   @relation(fields: [categoryId], references: [id])
+  store       Store      @relation(fields: [storeId], references: [id])
+=======
   id          Int       @id @default(autoincrement())
   categoryId  Int
   promoCodeId Int
@@ -98,9 +142,9 @@ model CategoryPromoCode {
   category    Category  @relation(fields: [categoryId], references: [id])
   promoCode   PromoCode @relation(fields: [promoCodeId], references: [id])
   store       Store     @relation(fields: [storeId], references: [id])
+>>>>>>> 2a3797e300400896c1437535ec3c4908bb60284a:gopromocodes-next/prisma/schema.prisma:gopromocodes-next/prisma/schema.prisma
 
-  @@unique([categoryId, promoCodeId])
-  @@index([storeId])
+  @@unique([promoCodeId, categoryId])
 }
 
 model StoreBlog {
@@ -116,9 +160,12 @@ model StoreBlog {
 }
 
 model Subscriber {
+<<<<<<< HEAD:prisma/source-schema.prisma:prisma/source-schema.prisma
+  id        Int      @id @default(autoincrement())
+=======
   id        String   @id
+>>>>>>> 2a3797e300400896c1437535ec3c4908bb60284a:gopromocodes-next/prisma/schema.prisma:gopromocodes-next/prisma/schema.prisma
   email     String   @unique
-  name      String?
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -146,6 +193,14 @@ model Blog {
   published   Boolean   @default(false)
   publishedAt DateTime?
   authorId    Int
+<<<<<<< HEAD:prisma/source-schema.prisma:prisma/source-schema.prisma
+  author      User      @relation(fields: [authorId], references: [id])
+  storeId     Int?
+  store       Store?    @relation(fields: [storeId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+} 
+=======
   storeId     Int?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime
@@ -166,3 +221,4 @@ model ClickLog {
   @@index([promoCodeId])
   @@index([date])
 }
+>>>>>>> 2a3797e300400896c1437535ec3c4908bb60284a:gopromocodes-next/prisma/schema.prisma:gopromocodes-next/prisma/schema.prisma
