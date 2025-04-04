@@ -85,12 +85,14 @@ export default function Header() {
                 </button>
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                    <Link
-                      href="/admin"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Admin Panel
-                    </Link>
+                    {session.user?.isAdmin && (
+                      <Link
+                        href="/admin"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Admin Panel
+                      </Link>
+                    )}
                     <Link
                       href="/settings"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -115,12 +117,12 @@ export default function Header() {
                   Sign in
                 </button>
                 <span className="text-gray-300">|</span>
-                <button
-                  onClick={toggleSignUp}
+                <Link
+                  href="/auth/signup"
                   className="text-brand-blue hover:text-brand-blue-dark px-3 py-2 text-sm"
                 >
                   Sign up
-                </button>
+                </Link>
               </div>
             )}
           </div>
