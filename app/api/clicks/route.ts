@@ -12,12 +12,15 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create click log entry using raw SQL to ensure correct case
-    const clickLog = await prisma.$executeRaw`
-      INSERT INTO "ClickLog" ("promoCodeId", "storeId", "timestamp", "date")
-      VALUES (${promoCodeId}, ${storeId}, CURRENT_TIMESTAMP, CURRENT_DATE)
-      RETURNING *
-    `;
+    // Create click log entry using Prisma's model API
+    const clickLog = await prisma.clickLog.create({
+      data: {
+        promoCodeId,
+        storeId,
+        timestamp: new Date(),
+        date: new Date()
+      }
+    });
 
     return NextResponse.json(clickLog);
   } catch (error: any) {
