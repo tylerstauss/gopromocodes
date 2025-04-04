@@ -16,6 +16,9 @@ const sourceDb = new PrismaClient({
 // We'll create the destination client in performMigration based on the environment
 let destDb: PrismaClient;
 
+// Store ID mapping to maintain relationships between tables
+let storeIdMapping: Record<number, number> = {};
+
 export async function POST(request: Request) {
   try {
     // Verify the user is authenticated and is an admin
@@ -50,6 +53,9 @@ export async function POST(request: Request) {
     migrationStatus.logs = [];
     migrationStatus.error = null;
     migrationStatus.success = false;
+
+    // Reset mapping for each migration
+    storeIdMapping = {};
 
     // Start migration in a non-blocking way
     performMigration(tables, resetDatabase, destinationEnv).catch(error => {
@@ -365,7 +371,10 @@ async function migrateStores() {
     let firstError = null;
     for (const store of (Array.isArray(stores) ? stores : [])) {
       try {
-        await destDb.store.create({
+        const sourceStoreId = Number(store.id);
+        
+        // Create the store in the destination database
+        const createdStore = await destDb.store.create({
           data: {
             name: store.name,
             url: store.url,
@@ -391,6 +400,11 @@ async function migrateStores() {
             paths: store.paths || ''
           }
         });
+        
+        // Store the mapping between source ID and destination ID
+        storeIdMapping[sourceStoreId] = createdStore.id;
+        addMigrationLog(`Mapped store ${store.name} from ID ${sourceStoreId} to ${createdStore.id}`);
+        
         successCount++;
       } catch (error: any) {
         if (!firstError) {
@@ -404,6 +418,7 @@ async function migrateStores() {
       }
     }
     addMigrationLog(`Successfully migrated ${successCount}/${count} stores`);
+    addMigrationLog(`Created ID mapping for ${Object.keys(storeIdMapping).length} stores`);
     if (firstError) {
       throw firstError;
     }
@@ -426,11 +441,23 @@ async function migratePromoCodes() {
     addMigrationLog(`Found ${count} promo codes to migrate`);
     
     let successCount = 0;
+    let skippedCount = 0;
+    
     for (const code of (Array.isArray(promoCodes) ? promoCodes : [])) {
       try {
+        const sourceStoreId = Number(code.store_id);
+        // Get the new store ID from the mapping
+        const newStoreId = storeIdMapping[sourceStoreId];
+        
+        if (!newStoreId) {
+          addMigrationLog(`Skipping promo code for store ID ${sourceStoreId} - no mapping found`);
+          skippedCount++;
+          continue;
+        }
+        
         await destDb.promoCode.create({
           data: {
-            storeId: Number(code.store_id),
+            storeId: newStoreId, // Use the new mapped store ID
             title: code.title,
             description: code.description || '',
             starts: new Date(code.starts),
@@ -451,7 +478,7 @@ async function migratePromoCodes() {
         // Skip individual error logs
       }
     }
-    addMigrationLog(`Successfully migrated ${successCount}/${count} promo codes`);
+    addMigrationLog(`Successfully migrated ${successCount}/${count} promo codes (${skippedCount} skipped due to missing store mapping)`);
   } catch (error: any) {
     addMigrationLog(`Error in migratePromoCodes: ${error.message}`);
     throw error;
@@ -464,13 +491,27 @@ async function migrateStoreBlogs() {
     addMigrationLog(`Using store blogs table: ${tableName}`);
 
     const storeBlogs = await sourceDb.$queryRawUnsafe(`SELECT * FROM "${tableName}"`);
-    addMigrationLog(`Found ${Array.isArray(storeBlogs) ? storeBlogs.length : 0} store blogs to migrate`);
+    const count = Array.isArray(storeBlogs) ? storeBlogs.length : 0;
+    addMigrationLog(`Found ${count} store blogs to migrate`);
+    
+    let successCount = 0;
+    let skippedCount = 0;
     
     for (const blog of (Array.isArray(storeBlogs) ? storeBlogs : [])) {
       try {
+        const sourceStoreId = Number(blog.store_id);
+        // Get the new store ID from the mapping
+        const newStoreId = storeIdMapping[sourceStoreId];
+        
+        if (!newStoreId) {
+          addMigrationLog(`Skipping store blog for store ID ${sourceStoreId} - no mapping found`);
+          skippedCount++;
+          continue;
+        }
+        
         await destDb.storeBlog.create({
           data: {
-            storeId: Number(blog.store_id),
+            storeId: newStoreId, // Use the new mapped store ID
             publishDate: blog.publish_date ? blog.publish_date.toString() : '',
             post: blog.post,
             author: blog.author || 'Tyler',
@@ -479,10 +520,12 @@ async function migrateStoreBlogs() {
             pubDate: new Date(blog.pub_date)
           }
         });
+        successCount++;
       } catch (error: any) {
         addMigrationLog(`Error migrating store blog ${blog.id}: ${error.message}`);
       }
     }
+    addMigrationLog(`Successfully migrated ${successCount}/${count} store blogs (${skippedCount} skipped due to missing store mapping)`);
   } catch (error: any) {
     addMigrationLog(`Error in migrateStoreBlogs: ${error.message}`);
     throw error;
@@ -495,23 +538,39 @@ async function migrateCategoryPromoCodes() {
     addMigrationLog(`Using category-promo code table: ${tableName}`);
 
     const categoryPromoCodes = await sourceDb.$queryRawUnsafe(`SELECT * FROM "${tableName}"`);
-    addMigrationLog(`Found ${Array.isArray(categoryPromoCodes) ? categoryPromoCodes.length : 0} category promo codes to migrate`);
+    const count = Array.isArray(categoryPromoCodes) ? categoryPromoCodes.length : 0;
+    addMigrationLog(`Found ${count} category promo codes to migrate`);
+    
+    let successCount = 0;
+    let skippedCount = 0;
     
     for (const categoryPromoCode of (Array.isArray(categoryPromoCodes) ? categoryPromoCodes : [])) {
       try {
+        const sourceStoreId = Number(categoryPromoCode.store_id);
+        // Get the new store ID from the mapping
+        const newStoreId = storeIdMapping[sourceStoreId];
+        
+        if (!newStoreId) {
+          addMigrationLog(`Skipping category promo code for store ID ${sourceStoreId} - no mapping found`);
+          skippedCount++;
+          continue;
+        }
+        
         await destDb.categoryPromoCode.create({
           data: {
             categoryId: Number(categoryPromoCode.category_id),
             promoCodeId: Number(categoryPromoCode.promo_code_id),
-            storeId: Number(categoryPromoCode.store_id),
+            storeId: newStoreId, // Use the new mapped store ID
             createdAt: new Date(categoryPromoCode.created_at),
             updatedAt: new Date(categoryPromoCode.updated_at)
           }
         });
+        successCount++;
       } catch (error: any) {
         addMigrationLog(`Error migrating category promo code ${categoryPromoCode.id}: ${error.message}`);
       }
     }
+    addMigrationLog(`Successfully migrated ${successCount}/${count} category promo codes (${skippedCount} skipped due to missing store mapping)`);
   } catch (error: any) {
     addMigrationLog(`Error in migrateCategoryPromoCodes: ${error.message}`);
     throw error;
@@ -574,36 +633,41 @@ async function migrateSubscribers() {
 
 async function migrateClickLogs() {
   try {
-    const tables = await sourceDb.$queryRaw`
-      SELECT tablename 
-      FROM pg_catalog.pg_tables 
-      WHERE schemaname = 'public' 
-      AND lower(tablename) LIKE '%click%'
-      AND lower(tablename) LIKE '%log%'
-    `;
-    const tableName = Array.isArray(tables) && tables.length > 0 ? tables[0].tablename : null;
-    if (!tableName) {
-      throw new Error('Could not find click logs table in source database');
-    }
-    addMigrationLog(`Found click logs table: ${tableName}`);
+    const tableName = 'click_logs';
+    addMigrationLog(`Using click logs table: ${tableName}`);
 
     const clickLogs = await sourceDb.$queryRawUnsafe(`SELECT * FROM "${tableName}"`);
-    addMigrationLog(`Found ${Array.isArray(clickLogs) ? clickLogs.length : 0} click logs to migrate`);
+    const count = Array.isArray(clickLogs) ? clickLogs.length : 0;
+    addMigrationLog(`Found ${count} click logs to migrate`);
+    
+    let successCount = 0;
+    let skippedCount = 0;
     
     for (const log of (Array.isArray(clickLogs) ? clickLogs : [])) {
       try {
+        const sourceStoreId = Number(log.store_id);
+        // Get the new store ID from the mapping
+        const newStoreId = storeIdMapping[sourceStoreId];
+        
+        if (!newStoreId) {
+          skippedCount++;
+          continue; // Skip if no store mapping exists
+        }
+        
         await destDb.clickLog.create({
           data: {
-            promoCodeId: Number(log.promoCodeId),
-            storeId: Number(log.storeId),
-            timestamp: new Date(log.timestamp || log.createdAt),
-            date: new Date(log.date || log.createdAt)
+            promoCodeId: Number(log.promo_code_id),
+            storeId: newStoreId, // Use the new mapped store ID
+            timestamp: new Date(log.timestamp),
+            date: new Date(log.date)
           }
         });
+        successCount++;
       } catch (error: any) {
-        addMigrationLog(`Error migrating click log ${log.id}: ${error.message}`);
+        // Skip individual error logs
       }
     }
+    addMigrationLog(`Successfully migrated ${successCount}/${count} click logs (${skippedCount} skipped due to missing store mapping)`);
   } catch (error: any) {
     addMigrationLog(`Error in migrateClickLogs: ${error.message}`);
     throw error;
