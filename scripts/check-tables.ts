@@ -1,7 +1,7 @@
-const { Client } = require('pg');
-const dotenv = require('dotenv');
-const path = require('path');
-const fs = require('fs');
+import { Client } from 'pg';
+import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
 
 // Load environment variables
 const envPath = path.resolve(process.cwd(), '.env.migration');
@@ -10,6 +10,10 @@ if (fs.existsSync(envPath)) {
 } else {
   console.error('Error: .env.migration file not found');
   process.exit(1);
+}
+
+interface TableRow {
+  tablename: string;
 }
 
 async function checkTables() {
@@ -23,7 +27,7 @@ async function checkTables() {
     console.log('Connected to Heroku database');
 
     // Query to list all tables
-    const result = await client.query(`
+    const result = await client.query<TableRow>(`
       SELECT tablename 
       FROM pg_catalog.pg_tables 
       WHERE schemaname = 'public'
@@ -31,7 +35,7 @@ async function checkTables() {
     `);
 
     console.log('Tables in Heroku database:');
-    result.rows.forEach(row => {
+    result.rows.forEach((row: TableRow) => {
       console.log(`- ${row.tablename}`);
     });
 

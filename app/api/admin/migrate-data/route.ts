@@ -533,6 +533,7 @@ async function migrateSubscribers() {
       try {
         await destDb.subscriber.create({
           data: {
+            id: subscriber.id || crypto.randomUUID(),
             email: subscriber.email,
             name: subscriber.name || null,
             active: Boolean(subscriber.active),

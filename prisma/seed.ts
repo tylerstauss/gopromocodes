@@ -1,8 +1,8 @@
-const { PrismaClient } = require('@prisma/client')
-const { parse } = require('csv-parse/sync')
-const { readFileSync } = require('fs')
-const path = require('path')
-const bcrypt = require('bcryptjs')
+import { PrismaClient } from '@prisma/client'
+import { parse } from 'csv-parse/sync'
+import { readFileSync } from 'fs'
+import path from 'path'
+import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 

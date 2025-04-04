@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { getServerSession } from 'next-auth'
 import { redirect, notFound } from 'next/navigation'
-import prisma from '../../../../lib/prisma-client'
+import { prisma } from '@/lib/prisma'
 import { authOptions } from '../../../../lib/auth'
 import CategoryForm from '@/components/admin/CategoryForm'
 
