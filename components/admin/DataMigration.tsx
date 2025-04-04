@@ -10,6 +10,23 @@ interface MigrationStatus {
   error?: string;
 }
 
+interface MigrationFormData {
+  tables: string[];
+  resetDatabase: boolean;
+  destinationEnv: 'local' | 'prod';
+}
+
+const AVAILABLE_TABLES = [
+  'users',
+  'categories',
+  'stores',
+  'promo_codes',
+  'store_blogs',
+  'category_promo_codes',
+  'subscribers',
+  'click_logs'
+];
+
 export default function DataMigration() {
   const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +34,11 @@ export default function DataMigration() {
     isRunning: false,
     progress: 0,
     logs: [],
+  });
+  const [formData, setFormData] = useState<MigrationFormData>({
+    tables: ['all'],
+    resetDatabase: false,
+    destinationEnv: 'local'
   });
 
   const fetchStatus = async () => {
@@ -34,6 +56,10 @@ export default function DataMigration() {
     try {
       const response = await fetch('/api/admin/migrate-data', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
       const data = await response.json();
       
@@ -64,7 +90,7 @@ export default function DataMigration() {
     fetchStatus();
   }, []);
 
-  if (!session?.user?.email?.includes('tylerstauss@gmail.com')) {
+  if (!session?.user?.isAdmin) {
     return null;
   }
 
@@ -72,6 +98,89 @@ export default function DataMigration() {
     <div className="p-4 bg-white rounded-lg shadow">
       <h2 className="text-xl font-bold mb-4">Data Migration</h2>
       
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold mb-2">Migration Options</h3>
+        
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Destination Database
+          </label>
+          <select
+            value={formData.destinationEnv}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              destinationEnv: e.target.value as 'local' | 'prod'
+            }))}
+            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          >
+            <option value="local">Local Database</option>
+            <option value="prod">Production Database</option>
+          </select>
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Tables to Migrate
+          </label>
+          <div className="space-y-2">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={formData.tables.includes('all')}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setFormData(prev => ({ ...prev, tables: ['all'] }));
+                  } else {
+                    setFormData(prev => ({ ...prev, tables: [] }));
+                  }
+                }}
+                className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+              <span className="ml-2">All Tables</span>
+            </label>
+            {AVAILABLE_TABLES.map((table) => (
+              <label key={table} className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={formData.tables.includes(table)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setFormData(prev => ({
+                        ...prev,
+                        tables: prev.tables.filter(t => t !== 'all').concat(table)
+                      }));
+                    } else {
+                      setFormData(prev => ({
+                        ...prev,
+                        tables: prev.tables.filter(t => t !== table)
+                      }));
+                    }
+                  }}
+                  disabled={formData.tables.includes('all')}
+                  className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                />
+                <span className="ml-2">{table.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="mb-4">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={formData.resetDatabase}
+              onChange={(e) => setFormData(prev => ({
+                ...prev,
+                resetDatabase: e.target.checked
+              }))}
+              className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+            <span className="ml-2">Reset destination database before migration</span>
+          </label>
+        </div>
+      </div>
+
       <button
         onClick={startMigration}
         disabled={isLoading || status.isRunning}
