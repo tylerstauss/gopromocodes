@@ -415,6 +415,7 @@ async function migrateStores() {
         // Create the store in the destination database
         const createdStore = await destDb.store.create({
           data: {
+            id: Number(store.id), // Add the ID field explicitly
             name: store.name,
             url: store.url,
             description: store.description || '',
@@ -440,7 +441,7 @@ async function migrateStores() {
           }
         });
         
-        // Store the mapping between source ID and destination ID
+        // Store the mapping between source ID and destination ID (they should be the same now)
         storeIdMapping[sourceStoreId] = createdStore.id;
         addMigrationLog(`Mapped store ${store.name} from ID ${sourceStoreId} to ${createdStore.id}`);
         
