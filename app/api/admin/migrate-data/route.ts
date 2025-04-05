@@ -456,23 +456,14 @@ async function migratePromoCodes() {
     addMigrationLog(`Found ${count} promo codes to migrate`);
     
     let successCount = 0;
-    let skippedCount = 0;
     
     for (const code of (Array.isArray(promoCodes) ? promoCodes : [])) {
       try {
-        const sourceStoreId = Number(code.store_id);
-        // Get the new store ID from the mapping
-        const newStoreId = storeIdMapping[sourceStoreId];
-        
-        if (!newStoreId) {
-          addMigrationLog(`Skipping promo code for store ID ${sourceStoreId} - no mapping found`);
-          skippedCount++;
-          continue;
-        }
+        const storeId = Number(code.store_id);
         
         await destDb.promoCode.create({
           data: {
-            storeId: newStoreId, // Use the new mapped store ID
+            storeId: storeId, // Use the store ID directly since they match
             title: code.title,
             description: code.description || '',
             starts: new Date(code.starts),
@@ -490,10 +481,10 @@ async function migratePromoCodes() {
         });
         successCount++;
       } catch (error: any) {
-        // Skip individual error logs
+        addMigrationLog(`Error migrating promo code: ${error.message}`);
       }
     }
-    addMigrationLog(`Successfully migrated ${successCount}/${count} promo codes (${skippedCount} skipped due to missing store mapping)`);
+    addMigrationLog(`Successfully migrated ${successCount}/${count} promo codes`);
   } catch (error: any) {
     addMigrationLog(`Error in migratePromoCodes: ${error.message}`);
     throw error;
@@ -597,94 +588,4 @@ async function migrateSubscribers() {
     const tableName = 'subscribers';
     addMigrationLog(`Using subscribers table: ${tableName}`);
 
-    const subscribers = await sourceDb.$queryRawUnsafe(`SELECT * FROM "${tableName}"`);
-    const count = Array.isArray(subscribers) ? subscribers.length : 0;
-    addMigrationLog(`Found ${count} subscribers to migrate`);
-    
-    let successCount = 0;
-    let firstError = null;
-    for (const subscriber of (Array.isArray(subscribers) ? subscribers : [])) {
-      try {
-        await destDb.subscriber.create({
-          data: {
-            id: subscriber.id || crypto.randomUUID(),
-            email: subscriber.email,
-            name: subscriber.name || null,
-            active: Boolean(subscriber.active),
-            createdAt: new Date(subscriber.created_at),
-            updatedAt: new Date(subscriber.updated_at)
-          }
-        });
-        successCount++;
-      } catch (error: any) {
-        if (!firstError) {
-          firstError = error;
-          addMigrationLog(`First error encountered: ${error.message}`);
-          if (error.meta) {
-            addMigrationLog(`Error details: ${JSON.stringify(error.meta, null, 2)}`);
-          }
-          addMigrationLog(`Problem record: ${JSON.stringify({
-            email: subscriber.email,
-            name: subscriber.name,
-            active: subscriber.active,
-            createdAt: subscriber.created_at,
-            updatedAt: subscriber.updated_at
-          }, null, 2)}`);
-        }
-      }
-    }
-    addMigrationLog(`Successfully migrated ${successCount}/${count} subscribers`);
-    if (firstError) {
-      throw firstError;
-    }
-  } catch (error: any) {
-    addMigrationLog(`Error in migrateSubscribers: ${error.message}`);
-    if (error.meta) {
-      addMigrationLog(`Additional error details: ${JSON.stringify(error.meta, null, 2)}`);
-    }
-    throw error;
-  }
-}
-
-async function migrateClickLogs() {
-  try {
-    const tableName = 'click_logs';
-    addMigrationLog(`Using click logs table: ${tableName}`);
-
-    const clickLogs = await sourceDb.$queryRawUnsafe(`SELECT * FROM "${tableName}"`);
-    const count = Array.isArray(clickLogs) ? clickLogs.length : 0;
-    addMigrationLog(`Found ${count} click logs to migrate`);
-    
-    let successCount = 0;
-    let skippedCount = 0;
-    
-    for (const log of (Array.isArray(clickLogs) ? clickLogs : [])) {
-      try {
-        const sourceStoreId = Number(log.store_id);
-        // Get the new store ID from the mapping
-        const newStoreId = storeIdMapping[sourceStoreId];
-        
-        if (!newStoreId) {
-          skippedCount++;
-          continue; // Skip if no store mapping exists
-        }
-        
-        await destDb.clickLog.create({
-          data: {
-            promoCodeId: Number(log.promo_code_id),
-            storeId: newStoreId, // Use the new mapped store ID
-            timestamp: new Date(log.timestamp),
-            date: new Date(log.date)
-          }
-        });
-        successCount++;
-      } catch (error: any) {
-        // Skip individual error logs
-      }
-    }
-    addMigrationLog(`Successfully migrated ${successCount}/${count} click logs (${skippedCount} skipped due to missing store mapping)`);
-  } catch (error: any) {
-    addMigrationLog(`Error in migrateClickLogs: ${error.message}`);
-    throw error;
-  }
-} 
+    const subscribers = await sourceDb.$queryRawUnsafe(`
