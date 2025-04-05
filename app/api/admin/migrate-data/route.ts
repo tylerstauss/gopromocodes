@@ -588,4 +588,85 @@ async function migrateSubscribers() {
     const tableName = 'subscribers';
     addMigrationLog(`Using subscribers table: ${tableName}`);
 
-    const subscribers = await sourceDb.$queryRawUnsafe(`
+    const subscribers = await sourceDb.$queryRawUnsafe(`SELECT * FROM "${tableName}"`);
+    const count = Array.isArray(subscribers) ? subscribers.length : 0;
+    addMigrationLog(`Found ${count} subscribers to migrate`);
+    
+    let successCount = 0;
+    let firstError = null;
+    for (const subscriber of (Array.isArray(subscribers) ? subscribers : [])) {
+      try {
+        await destDb.subscriber.create({
+          data: {
+            email: subscriber.email,
+            active: Boolean(subscriber.active),
+            createdAt: new Date(subscriber.created_at),
+            updatedAt: new Date(subscriber.updated_at)
+          }
+        });
+        successCount++;
+      } catch (error: any) {
+        if (!firstError) {
+          firstError = error;
+          addMigrationLog(`First error encountered: ${error.message}`);
+          if (error.meta) {
+            addMigrationLog(`Error details: ${JSON.stringify(error.meta, null, 2)}`);
+          }
+          addMigrationLog(`Problem record: ${JSON.stringify({
+            email: subscriber.email,
+            active: subscriber.active,
+            createdAt: subscriber.created_at,
+            updatedAt: subscriber.updated_at
+          }, null, 2)}`);
+        }
+      }
+    }
+    addMigrationLog(`Successfully migrated ${successCount}/${count} subscribers`);
+    if (firstError) {
+      throw firstError;
+    }
+  } catch (error: any) {
+    addMigrationLog(`Error in migrateSubscribers: ${error.message}`);
+    if (error.meta) {
+      addMigrationLog(`Additional error details: ${JSON.stringify(error.meta, null, 2)}`);
+    }
+    throw error;
+  }
+}
+
+async function migrateClickLogs() {
+  try {
+    const tableName = 'click_logs';
+    addMigrationLog(`Using click logs table: ${tableName}`);
+
+    const clickLogs = await sourceDb.$queryRawUnsafe(`SELECT * FROM "${tableName}"`);
+    const count = Array.isArray(clickLogs) ? clickLogs.length : 0;
+    addMigrationLog(`Found ${count} click logs to migrate`);
+    
+    let successCount = 0;
+    let skippedCount = 0;
+    
+    for (const log of (Array.isArray(clickLogs) ? clickLogs : [])) {
+      try {
+        const storeId = Number(log.store_id);
+        
+        await destDb.clickLog.create({
+          data: {
+            promoCodeId: Number(log.promo_code_id),
+            storeId: storeId, // Use store ID directly since they match
+            timestamp: new Date(log.timestamp),
+            date: new Date(log.date)
+          }
+        });
+        successCount++;
+      } catch (error: any) {
+        addMigrationLog(`Error migrating click log: ${error.message}`);
+        skippedCount++;
+      }
+    }
+    addMigrationLog(`Successfully migrated ${successCount}/${count} click logs (${skippedCount} skipped)`);
+  } catch (error: any) {
+    addMigrationLog(`Error in migrateClickLogs: ${error.message}`);
+    throw error;
+  }
+}
