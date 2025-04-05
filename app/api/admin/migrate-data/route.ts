@@ -402,7 +402,11 @@ async function migrateStores() {
     const tableName = 'stores';
     addMigrationLog(`Starting stores migration...`);
 
-    const stores = await sourceDb.$queryRawUnsafe(`SELECT * FROM "${tableName}"`);
+    // Query stores ordered by ID ascending
+    const stores = await sourceDb.$queryRawUnsafe(`
+      SELECT * FROM "${tableName}"
+      ORDER BY id ASC
+    `);
     const count = Array.isArray(stores) ? stores.length : 0;
     addMigrationLog(`Found ${count} stores to migrate`);
     
@@ -412,10 +416,10 @@ async function migrateStores() {
       try {
         const sourceStoreId = Number(store.id);
         
-        // Create the store in the destination database
+        // Create the store in the destination database with the original ID
         const createdStore = await destDb.store.create({
           data: {
-            id: Number(store.id), // Add the ID field explicitly
+            id: sourceStoreId, // Preserve the original ID
             name: store.name,
             url: store.url,
             description: store.description || '',
@@ -443,7 +447,7 @@ async function migrateStores() {
         
         // Store the mapping between source ID and destination ID (they should be the same now)
         storeIdMapping[sourceStoreId] = createdStore.id;
-        addMigrationLog(`Mapped store ${store.name} from ID ${sourceStoreId} to ${createdStore.id}`);
+        addMigrationLog(`Migrated store ${store.name} with ID ${sourceStoreId}`);
         
         successCount++;
       } catch (error: any) {
