@@ -83,10 +83,20 @@ async function main() {
       skip_empty_lines: true
     })
 
+    // Get the current maximum store ID
+    const maxStore = await prisma.store.findFirst({
+      orderBy: {
+        id: 'desc'
+      }
+    });
+    let currentId = maxStore ? maxStore.id : 0;
+
     for (const row of stores) {
       const userSubmit = row[6] === '0'
       const topStore = row[8] === 'yes'
       const slug = row[7].toLowerCase()
+      
+      currentId++; // Increment the ID for each new store
       
       await prisma.store.upsert({
         where: { slug },
@@ -103,6 +113,7 @@ async function main() {
           searchTerms: row[9]
         },
         create: {
+          id: currentId,
           name: row[0],
           url: row[1],
           description: row[2],
