@@ -59,13 +59,22 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Create the store
+    // Get the maximum store ID and increment it by 1
+    const maxStore = await prisma.store.findFirst({
+      orderBy: {
+        id: 'desc'
+      }
+    });
+    const nextId = maxStore ? maxStore.id + 1 : 1;
+
+    // Create the store with the generated ID
     const store = await prisma.store.create({
       data: {
+        id: nextId,
         name: storeData.name,
         url: storeData.url,
         slug: storeData.slug,
-        description: storeData.description || null,
+        description: storeData.description || '',
         active: storeData.active ?? true,
         categoryId: storeData.categoryId || null,
         topStore: storeData.topStore ?? false,
