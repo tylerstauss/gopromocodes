@@ -3,6 +3,18 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { migrationStatus, addMigrationLog } from '../migration-status/route';
 import { PrismaClient } from '@prisma/client';
+import { execSync } from 'child_process';
+
+const AVAILABLE_TABLES = [
+  'users',
+  'categories',
+  'stores',
+  'promo_codes',
+  'store_blogs',
+  'category_promo_codes',
+  'subscribers',
+  'click_logs'
+];
 
 // Create Prisma client for source
 const sourceDb = new PrismaClient({
@@ -95,18 +107,17 @@ function getDestinationDbUrl(destinationEnv: string): string {
 
 async function performMigration(tables: string[], resetDatabase: boolean, destinationEnv: string) {
   try {
-    addMigrationLog('Starting migration process...');
-    addMigrationLog(`Tables to migrate: ${tables.join(', ')}`);
+    const tablesToMigrate = tables.includes('all') ? AVAILABLE_TABLES : tables;
+    addMigrationLog(`Starting migration with tables: ${tablesToMigrate.join(', ')}`);
     addMigrationLog(`Reset database: ${resetDatabase}`);
-    addMigrationLog(`Destination environment: ${destinationEnv}`);
+    addMigrationLog(`Destination: ${destinationEnv}`);
 
-    // Get destination database URL and create client
+    // Initialize destination database client
     const destDbUrl = getDestinationDbUrl(destinationEnv);
     if (!destDbUrl) {
-      throw new Error(`No database URL found for environment: ${destinationEnv}`);
+      throw new Error('Destination database URL not found');
     }
 
-    // Create destination database client
     destDb = new PrismaClient({
       datasources: {
         db: {
@@ -115,136 +126,96 @@ async function performMigration(tables: string[], resetDatabase: boolean, destin
       }
     });
 
-    // Log database information (without credentials)
-    const sourceUrl = process.env.HEROKU_DATABASE_URL?.replace(/\/\/.*@/, '//[hidden]@').split('?')[0] || 'not set';
-    const destUrl = destDbUrl.replace(/\/\/.*@/, '//[hidden]@').split('?')[0] || 'not set';
-    addMigrationLog('Database Configuration:');
-    addMigrationLog(`- Source: ${sourceUrl}`);
-    addMigrationLog(`- Destination (${destinationEnv}): ${destUrl}`);
-
-    // Test database connections
-    try {
-      await sourceDb.$queryRaw`SELECT 1`;
-      addMigrationLog('✓ Source database connection successful');
-    } catch (error: any) {
-      addMigrationLog(`✗ Source database connection failed: ${error.message}`);
-      throw error;
-    }
-
-    try {
-      await destDb.$queryRaw`SELECT 1`;
-      addMigrationLog(`✓ Destination (${destinationEnv}) database connection successful`);
-    } catch (error: any) {
-      addMigrationLog(`✗ Destination database connection failed: ${error.message}`);
-      throw error;
-    }
-
-    // Check destination database connection and create schema
     addMigrationLog('Connected to destination database');
-    
+
     if (resetDatabase) {
       addMigrationLog('Resetting destination database...');
-
-      try {
-        // Use a more robust approach for production environments
-        if (destinationEnv === 'prod') {
-          addMigrationLog('Using Prisma reset for production database...');
-          
-          // First try to use built-in Prisma methods
+      
+      if (destinationEnv === 'prod') {
+        // For production, use a more robust approach
+        try {
+          // Disable foreign key checks temporarily and drop all tables in public schema
           await destDb.$executeRawUnsafe(`
-            DO $$ 
-            DECLARE
+            DO $$ DECLARE
               r RECORD;
             BEGIN
-              -- Disable foreign key checks temporarily
-              EXECUTE 'SET CONSTRAINTS ALL DEFERRED';
-              
-              -- Drop all tables in the public schema
+              -- Disable triggers
               FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
-                EXECUTE 'DROP TABLE IF EXISTS "' || r.tablename || '" CASCADE';
+                EXECUTE 'ALTER TABLE public.' || quote_ident(r.tablename) || ' DISABLE TRIGGER ALL';
               END LOOP;
               
-              -- Enable foreign key checks
-              EXECUTE 'SET CONSTRAINTS ALL IMMEDIATE';
+              -- Drop all tables
+              FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
+                EXECUTE 'DROP TABLE IF EXISTS public.' || quote_ident(r.tablename) || ' CASCADE';
+              END LOOP;
             END $$;
           `);
-          
-          addMigrationLog('Successfully dropped all tables in production database');
-        } else {
-          // For local database, use the original approach
-          await destDb.$executeRaw`DROP SCHEMA public CASCADE;`;
-          await destDb.$executeRaw`CREATE SCHEMA public;`;
+          addMigrationLog('Successfully reset production database');
+        } catch (error: any) {
+          addMigrationLog(`Warning: Error during production database reset: ${error.message}`);
+          addMigrationLog('Falling back to Prisma CLI for database reset');
+          // Use Prisma CLI as fallback
+          execSync('DATABASE_URL="' + destDbUrl + '" npx prisma db push --force-reset --skip-generate', { stdio: 'inherit' });
         }
-      } catch (error: any) {
-        addMigrationLog(`Warning: Could not reset database using SQL: ${error.message}`);
-        addMigrationLog('Falling back to Prisma CLI for database reset...');
+      } else {
+        // For local database, we can use a simpler approach
+        await destDb.$executeRawUnsafe('DROP SCHEMA IF EXISTS public CASCADE');
+        await destDb.$executeRawUnsafe('CREATE SCHEMA public');
+        addMigrationLog('Successfully reset local database');
       }
+
+      // Push the schema to create all tables
+      execSync('DATABASE_URL="' + destDbUrl + '" npx prisma db push --skip-generate', { stdio: 'inherit' });
+      addMigrationLog('Successfully created database schema');
+    }
+
+    // Process each table in sequence
+    for (const table of tablesToMigrate) {
+      addMigrationLog(`Processing table: ${table}`);
       
-      // Push the Prisma schema to create all tables
-      addMigrationLog('Creating database schema using Prisma...');
-      await destDb.$executeRaw`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`;
-      
-      // Use prisma push to create the schema
-      const { execSync } = require('child_process');
-      
-      try {
-        // Add force-reset flag for more reliable reset
-        execSync(`DATABASE_URL="${destDbUrl}" npx prisma db push --force-reset --skip-generate`, { 
-          stdio: 'inherit',
-          env: {
-            ...process.env,
-            DATABASE_URL: destDbUrl
-          }
-        });
-        addMigrationLog('Database schema created successfully');
-      } catch (error: any) {
-        addMigrationLog(`Error creating schema: ${error.message}`);
-        throw error;
+      switch (table) {
+        case 'categories':
+          await migrateCategories();
+          break;
+        case 'stores':
+          await migrateStores();
+          break;
+        case 'promo_codes':
+          await migratePromoCodes();
+          break;
+        case 'store_blogs':
+          await migrateStoreBlogs();
+          break;
+        case 'category_promo_codes':
+          await migrateCategoryPromoCodes();
+          break;
+        case 'subscribers':
+          await migrateSubscribers();
+          break;
+        case 'click_logs':
+          await migrateClickLogs();
+          break;
+        case 'users':
+          await migrateUsers();
+          break;
+        default:
+          addMigrationLog(`Unknown table: ${table}`);
       }
     }
-    
-    // Configure tables to migrate
-    const migrationFunctions = [
-      { name: 'users', migrate: migrateUsers },
-      { name: 'categories', migrate: migrateCategories },
-      { name: 'stores', migrate: migrateStores },
-      { name: 'promo_codes', migrate: migratePromoCodes },
-      { name: 'store_blogs', migrate: migrateStoreBlogs },
-      { name: 'category_promo_codes', migrate: migrateCategoryPromoCodes },
-      { name: 'subscribers', migrate: migrateSubscribers },
-      { name: 'click_logs', migrate: migrateClickLogs }
-    ];
-    
-    // Filter tables if specified
-    const tablesToProcess = tables.includes('all') 
-      ? migrationFunctions
-      : migrationFunctions.filter(table => tables.includes(table.name));
-    
-    // Process each table
-    for (const table of tablesToProcess) {
-      addMigrationLog(`Migrating ${table.name}...`);
-      try {
-        await table.migrate();
-        addMigrationLog(`Migration of ${table.name} completed`);
-      } catch (error: any) {
-        addMigrationLog(`Error migrating ${table.name}: ${error.message}`);
-        throw error;
-      }
-    }
-    
+
     addMigrationLog('Migration completed successfully');
     migrationStatus.success = true;
   } catch (error: any) {
-    migrationStatus.error = error.message;
     addMigrationLog(`Migration failed: ${error.message}`);
     throw error;
   } finally {
-    // Disconnect from databases
+    migrationStatus.inProgress = false;
+    
+    // Close database connections
     await sourceDb.$disconnect();
     if (destDb) {
       await destDb.$disconnect();
     }
-    migrationStatus.inProgress = false;
   }
 }
 
