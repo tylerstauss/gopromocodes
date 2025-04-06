@@ -194,8 +194,8 @@ export default async function StorePage({ params }: Props) {
 
             <div className="flex justify-between items-start">
               <div>
-                <h1>{store.name} Promo Codes & Discounts</h1>
-                <h2>There are currently {store.promoCodes.length} {store.name} Promotion Codes and {store.name} Coupons.</h2>
+                <h1 className="text-3xl font-bold text-gray-900">{store.name} Promo Codes & Discounts</h1>
+                <h2 className="text-lg text-gray-600 mt-2">There are currently {store.promoCodes.length} {store.name} Promotion Codes and {store.name} Coupons.</h2>
               </div>
               {session?.user?.isAdmin && (
                 <Link
@@ -209,10 +209,10 @@ export default async function StorePage({ params }: Props) {
                 </Link>
               )}
             </div>
-            <p className={styles.storeDescription}>
+            <p className="mt-4 text-gray-600">
               {store.description}
               <br />
-              Store located at: <a href={store.url} target="_blank" rel="nofollow">{store.url}</a>
+              Store located at: <a href={store.url} target="_blank" rel="nofollow" className="text-blue-600 hover:underline">{store.url}</a>
             </p>
           </div>
 
@@ -249,38 +249,21 @@ export default async function StorePage({ params }: Props) {
                         {!code.code || code.code === 'NULL' || code.code === 'n/a' ? (
                           <span>No Code Needed</span>
                         ) : (
-                          <span>
-                            Use code: <TrackablePromoLink 
-                              href={code.link}
-                              promoCodeId={code.id}
-                              storeId={code.storeId}
-                              className="text-blue-600 hover:underline"
-                            >
-                              {code.code}
-                            </TrackablePromoLink>
-                          </span>
+                          <span>Code: {code.code}</span>
                         )}
                       </p>
-                      
-                      <p className="mt-1 text-sm text-gray-500">
-                        Expires: {code.expires && code.expires.toString() !== '2099-12-31' 
-                          ? new Date(code.expires).toLocaleDateString() 
-                          : 'Never'}
-                      </p>
-                      
-                      <p className="mt-2 text-sm text-gray-500">
-                        Used {code.clickStats.total} times ({code.clickStats.recent} in the last 7 days)
-                      </p>
                     </div>
-                    <TrackablePromoLink
-                      href={code.link}
-                      promoCodeId={code.id}
-                      storeId={code.storeId}
-                      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                    >
-                      Get Code
-                    </TrackablePromoLink>
+                    {code.freeShipping && (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        Free Shipping
+                      </span>
+                    )}
                   </div>
+                  {code.expires && (
+                    <p className="mt-2 text-sm text-gray-500">
+                      Expires: {new Date(code.expires).toLocaleDateString()}
+                    </p>
+                  )}
                 </div>
               ))
             )}
