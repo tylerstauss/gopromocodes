@@ -5,7 +5,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import TrackablePromoLink from '@/components/TrackablePromoLink'
 import NewsletterSignup from '@/components/NewsletterSignup'
-import styles from '@/styles/store.module.css'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
@@ -174,12 +173,12 @@ export default async function StorePage({ params }: Props) {
   const freeShippingCount = store.promoCodes.filter(code => code.freeShipping).length
 
   return (
-    <div className={styles.storeContainer}>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex flex-col md:flex-row gap-8">
         {/* Main Content Column */}
         <div className="md:w-2/3">
           {/* Store Info */}
-          <div className={styles.storeInfo}>
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
             <div className="flex justify-between items-start">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">{store.name} Promo Codes & Discounts</h1>
@@ -205,20 +204,20 @@ export default async function StorePage({ params }: Props) {
           </div>
 
           {/* Current Codes */}
-          <div className={styles.redBanner}>
-            <h2>Current Codes</h2>
+          <div className="bg-red-600 text-white py-3 px-4 rounded-t-lg">
+            <h2 className="text-xl font-semibold">Current Codes</h2>
           </div>
-          <div className={styles.couponList}>
+          <div className="bg-white rounded-b-lg shadow divide-y divide-gray-200">
             {store.promoCodes.length === 0 ? (
-              <div className={styles.singleCoupon}>
+              <div className="p-4">
                 <p>No active promo codes at the moment. Check back soon!</p>
               </div>
             ) : (
               store.promoCodes.map((code) => (
-                <div key={code.id} className={styles.singleCoupon}>
+                <div key={code.id} className="p-4">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className={styles.couponTitle}>
+                      <p className="text-lg font-medium">
                         <TrackablePromoLink 
                           href={code.link} 
                           promoCodeId={code.id}
@@ -230,7 +229,7 @@ export default async function StorePage({ params }: Props) {
                       </p>
                       
                       {code.description && code.description !== 'NULL' && (
-                        <p className={styles.couponDescription}>{code.description}</p>
+                        <p className="mt-2 text-gray-600">{code.description}</p>
                       )}
                       
                       <p className="mt-2 font-medium">
@@ -251,16 +250,22 @@ export default async function StorePage({ params }: Props) {
                       </p>
                       
                       {code.expires && (
-                        <p className={styles.couponExpiration}>
+                        <p className="mt-1 text-sm text-gray-500">
                           Expires: {new Date(code.expires).toLocaleDateString()}
                         </p>
                       )}
                     </div>
-                    <div className={styles.couponStats}>
-                      <p>{code.clickStats.total} uses</p>
-                      {code.clickStats.recent > 0 && (
-                        <p className={styles.recent}>{code.clickStats.recent} in last 7 days</p>
-                      )}
+                    <div className="text-right text-sm">
+                      <div className="bg-gray-100 rounded px-3 py-1">
+                        <p className="text-gray-600">
+                          {code.clickStats.total} uses
+                        </p>
+                        {code.clickStats.recent > 0 && (
+                          <p className="text-green-600 text-xs">
+                            {code.clickStats.recent} in last 7 days
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -270,13 +275,13 @@ export default async function StorePage({ params }: Props) {
 
           {/* User Submission Form */}
           {store.userSubmit && (
-            <div className={styles.storeInfo}>
+            <div className="bg-white rounded-lg shadow-sm p-6 mt-6">
               <p>
                 Do you have a promotion code for {store.name}?
                 Add your {store.name} promo code here for others' benefit.
               </p>
               {/* TODO: Add user submission form */}
-              <p className={styles.disclaimer}>
+              <p className="mt-4 text-sm text-gray-500">
                 To signup for {store.name} coupon codes, please enter your email address in the Newsletter box on the right side of the page.
                 <br /><br />
                 The {store.name} promotional codes listed above are available because GoPromoCodes.com is an affiliate of {store.name}. 
@@ -290,14 +295,16 @@ export default async function StorePage({ params }: Props) {
           )}
 
           {/* Store Blogs */}
-          <div className={styles.redBanner}>
-            <h2>Learn more about how to save the most at {store.name}</h2>
+          <div className="bg-red-600 text-white py-3 px-4 rounded-t-lg mt-6">
+            <h2 className="text-xl font-semibold">Learn more about how to save the most at {store.name}</h2>
           </div>
-          <div className={styles.storeBlogs}>
+          <div className="bg-white rounded-b-lg shadow divide-y divide-gray-200">
             {store.blogs.map((blog) => (
-              <div key={blog.id} className={styles.blogPost}>
-                <span>{blog.publishDate}</span>
-                <div dangerouslySetInnerHTML={{ __html: blog.post }} />
+              <div key={blog.id} className="p-4">
+                <span className="text-sm text-gray-500">{blog.publishDate}</span>
+                <div className="mt-2 text-base font-medium text-gray-900">
+                  <div dangerouslySetInnerHTML={{ __html: blog.post }} />
+                </div>
               </div>
             ))}
           </div>
@@ -306,8 +313,8 @@ export default async function StorePage({ params }: Props) {
         {/* Sidebar Column */}
         <div className="md:w-1/3">
           {/* Store Offer Data */}
-          <div className={styles.sidebarElement}>
-            <h2 className={styles.sidebarHeader}>{store.name} Offer Data</h2>
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">{store.name} Offer Data</h2>
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-gray-600">Total Valid Offers:</span>
@@ -325,8 +332,8 @@ export default async function StorePage({ params }: Props) {
           </div>
 
           {/* Top Stores */}
-          <div className={styles.sidebarElement}>
-            <h2 className={styles.sidebarHeader}>Top Stores</h2>
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Top Stores</h2>
             <div className="space-y-2">
               {topStores.map((store) => (
                 <div key={store.id} className="flex justify-between items-center">
@@ -354,14 +361,14 @@ export default async function StorePage({ params }: Props) {
           </div>
           
           {/* Newsletter Signup */}
-          <div className={styles.emailSignup}>
-            <h3>Get Our Newsletter</h3>
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">Get Our Newsletter</h3>
             <NewsletterSignup />
             <div className="flex items-center mt-3">
-              <div className={styles.mailboxImage}>
+              <div className="mr-2">
                 <Image src="/images/mailbox.svg" alt="Mailbox" width={32} height={32} />
               </div>
-              <p>Our most popular coupons sent directly to your inbox!</p>
+              <p className="text-gray-600 text-sm">Our most popular coupons sent directly to your inbox!</p>
             </div>
             <div className="mt-2 text-xs text-right">
               <Link href="/newsletter/manage" className="text-blue-600 hover:underline">
@@ -371,9 +378,9 @@ export default async function StorePage({ params }: Props) {
           </div>
           
           {/* Categories */}
-          <div className={styles.sidebarElement}>
-            <h2 className={styles.sidebarHeader}>Categories</h2>
-            <ul>
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Categories</h2>
+            <ul className="space-y-2">
               {categories.map((category) => (
                 <li key={category.id}>
                   <Link href={`/categories/${category.slug}`} className="text-blue-600 hover:underline">
