@@ -598,6 +598,7 @@ async function migrateSubscribers() {
       try {
         await destDb.subscriber.create({
           data: {
+            id: subscriber.id,
             email: subscriber.email,
             active: Boolean(subscriber.active),
             createdAt: new Date(subscriber.created_at),
@@ -613,6 +614,7 @@ async function migrateSubscribers() {
             addMigrationLog(`Error details: ${JSON.stringify(error.meta, null, 2)}`);
           }
           addMigrationLog(`Problem record: ${JSON.stringify({
+            id: subscriber.id,
             email: subscriber.email,
             active: subscriber.active,
             createdAt: subscriber.created_at,
