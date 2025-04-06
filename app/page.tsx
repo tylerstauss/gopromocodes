@@ -31,21 +31,28 @@ async function getPromoCodes() {
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-  // Get promo codes with store info (no click tracking for now)
+  // Get promo codes with click stats
   const promoCodesWithClicks = await prisma.$queryRaw<RawPromoCode[]>`
     WITH PromoCodeClicks AS (
       SELECT 
         p.*,
         s.name as "storeName",
         s.slug as "storeSlug",
-        0 as weighted_clicks,
-        0 as total_clicks,
-        0 as recent_clicks
+        COALESCE(SUM(
+          CASE 
+            WHEN c.date >= CURRENT_DATE - INTERVAL '7 days' THEN 2  -- Recent clicks count double
+            WHEN c.date >= CURRENT_DATE - INTERVAL '30 days' THEN 1  -- Older clicks count once
+            ELSE 0
+          END
+        ), 0) as weighted_clicks,
+        COUNT(c.id) as total_clicks,
+        COUNT(CASE WHEN c.date >= CURRENT_DATE - INTERVAL '7 days' THEN 1 END) as recent_clicks
       FROM "PromoCode" p
-      LEFT JOIN "Store" s ON p."storeId" = s.id
+      JOIN "Store" s ON p."storeId" = s.id
+      LEFT JOIN "ClickLog" c ON p.id = c."promoCodeId"
       WHERE 
         p.approved = true 
-        AND (p.expires IS NULL OR p.expires >= ${new Date()})
+        AND (p.expires IS NULL OR p.expires >= CURRENT_DATE)
       GROUP BY p.id, s.name, s.slug
     )
     SELECT *
@@ -72,23 +79,27 @@ async function getPromoCodes() {
 }
 
 async function getTopStores() {
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-  // Get stores without click tracking for now
   const storesWithClicks = await prisma.$queryRaw<RawStore[]>`
     WITH StoreClicks AS (
       SELECT 
-        s.*,
-        0 as weighted_clicks,
-        0 as total_clicks,
-        0 as recent_clicks
+        s.id,
+        s.name,
+        s.slug,
+        s."createdAt",
+        COALESCE(SUM(
+          CASE 
+            WHEN c.date >= CURRENT_DATE - INTERVAL '7 days' THEN 2  -- Recent clicks count double
+            WHEN c.date >= CURRENT_DATE - INTERVAL '30 days' THEN 1  -- Older clicks count once
+            ELSE 0
+          END
+        ), 0) as weighted_clicks,
+        COUNT(c.id) as total_clicks,
+        COUNT(CASE WHEN c.date >= CURRENT_DATE - INTERVAL '7 days' THEN 1 END) as recent_clicks
       FROM "Store" s
+      LEFT JOIN "PromoCode" p ON s.id = p."storeId"
+      LEFT JOIN "ClickLog" c ON p.id = c."promoCodeId"
       WHERE s.active = true
-      GROUP BY s.id
+      GROUP BY s.id, s.name, s.slug, s."createdAt"
     )
     SELECT *
     FROM StoreClicks
