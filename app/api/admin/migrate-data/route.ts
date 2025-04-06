@@ -456,14 +456,26 @@ async function migratePromoCodes() {
     addMigrationLog(`Found ${count} promo codes to migrate`);
     
     let successCount = 0;
+    let skippedCount = 0;
     
     for (const code of (Array.isArray(promoCodes) ? promoCodes : [])) {
       try {
         const storeId = Number(code.store_id);
         
+        // Verify the store exists in the destination database
+        const storeExists = await destDb.store.findUnique({
+          where: { id: storeId }
+        });
+        
+        if (!storeExists) {
+          addMigrationLog(`Skipping promo code for non-existent store ID ${storeId}`);
+          skippedCount++;
+          continue;
+        }
+        
         await destDb.promoCode.create({
           data: {
-            storeId: storeId, // Use the store ID directly since they match
+            storeId: storeId,
             title: code.title,
             description: code.description || '',
             starts: new Date(code.starts),
@@ -481,10 +493,14 @@ async function migratePromoCodes() {
         });
         successCount++;
       } catch (error: any) {
-        addMigrationLog(`Error migrating promo code: ${error.message}`);
+        addMigrationLog(`Error migrating promo code for store ID ${code.store_id}: ${error.message}`);
+        if (error.meta) {
+          addMigrationLog(`Error details: ${JSON.stringify(error.meta, null, 2)}`);
+        }
+        skippedCount++;
       }
     }
-    addMigrationLog(`Successfully migrated ${successCount}/${count} promo codes`);
+    addMigrationLog(`Successfully migrated ${successCount}/${count} promo codes (${skippedCount} skipped)`);
   } catch (error: any) {
     addMigrationLog(`Error in migratePromoCodes: ${error.message}`);
     throw error;
