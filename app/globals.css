@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom styles from original Ruby app */
-
 /* Logo styles */
 #logo {
   display: block;
