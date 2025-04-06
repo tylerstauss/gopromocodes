@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import TrackablePromoLink from '@/components/TrackablePromoLink'
 import NewsletterSignup from '@/components/NewsletterSignup'
-import styles from '@/app/styles/store.module.css'
+import styles from '@/styles/store.module.css'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
