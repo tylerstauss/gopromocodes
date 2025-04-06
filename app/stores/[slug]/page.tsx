@@ -6,6 +6,8 @@ import Image from 'next/image'
 import TrackablePromoLink from '@/components/TrackablePromoLink'
 import NewsletterSignup from '@/components/NewsletterSignup'
 import styles from './store.module.css'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 
 type Props = {
   params: { slug: string }
@@ -162,10 +164,11 @@ async function getCategories() {
 }
 
 export default async function StorePage({ params }: Props) {
-  const [store, topStores, categories] = await Promise.all([
+  const [store, topStores, categories, session] = await Promise.all([
     getStore(params.slug),
     getTopStores(),
-    getCategories()
+    getCategories(),
+    getServerSession(authOptions)
   ])
   
   const freeShippingCount = store.promoCodes.filter(code => code.freeShipping).length
@@ -189,8 +192,23 @@ export default async function StorePage({ params }: Props) {
               <li>{store.name}</li>
             </ol>
 
-            <h1>{store.name} Promo Codes & Discounts</h1>
-            <h2>There are currently {store.promoCodes.length} {store.name} Promotion Codes and {store.name} Coupons.</h2>
+            <div className="flex justify-between items-start">
+              <div>
+                <h1>{store.name} Promo Codes & Discounts</h1>
+                <h2>There are currently {store.promoCodes.length} {store.name} Promotion Codes and {store.name} Coupons.</h2>
+              </div>
+              {session?.user?.isAdmin && (
+                <Link
+                  href={`/admin/stores/${store.id}`}
+                  className="inline-flex items-center px-3 py-1.5 border border-indigo-600 text-indigo-600 hover:bg-indigo-50 rounded-md"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Edit Store
+                </Link>
+              )}
+            </div>
             <p className={styles.storeDescription}>
               {store.description}
               <br />
