@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import TrackablePromoLink from '@/components/TrackablePromoLink'
 import NewsletterSignup from '@/components/NewsletterSignup'
-import styles from './store.module.css'
+import styles from '@/app/styles/store.module.css'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
@@ -174,24 +174,12 @@ export default async function StorePage({ params }: Props) {
   const freeShippingCount = store.promoCodes.filter(code => code.freeShipping).length
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className={styles.storeContainer}>
       <div className="flex flex-col md:flex-row gap-8">
         {/* Main Content Column */}
         <div className="md:w-2/3">
           {/* Store Info */}
           <div className={styles.storeInfo}>
-            <ol className={styles.breadcrumbs}>
-              <li>
-                <Link href="/">Home</Link>
-              </li>
-              <li> &gt; </li>
-              <li>
-                <Link href="/stores">Stores</Link>
-              </li>
-              <li> &gt; </li>
-              <li>{store.name}</li>
-            </ol>
-
             <div className="flex justify-between items-start">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">{store.name} Promo Codes & Discounts</h1>
@@ -220,17 +208,17 @@ export default async function StorePage({ params }: Props) {
           <div className={styles.redBanner}>
             <h2>Current Codes</h2>
           </div>
-          <div className="bg-white rounded-b-lg shadow divide-y divide-gray-200">
+          <div className={styles.couponList}>
             {store.promoCodes.length === 0 ? (
-              <div className="p-4 text-center text-gray-600">
+              <div className={styles.singleCoupon}>
                 <p>No active promo codes at the moment. Check back soon!</p>
               </div>
             ) : (
               store.promoCodes.map((code) => (
-                <div key={code.id} className="p-4">
+                <div key={code.id} className={styles.singleCoupon}>
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="text-lg font-medium">
+                      <p className={styles.couponTitle}>
                         <TrackablePromoLink 
                           href={code.link} 
                           promoCodeId={code.id}
@@ -242,28 +230,39 @@ export default async function StorePage({ params }: Props) {
                       </p>
                       
                       {code.description && code.description !== 'NULL' && (
-                        <p className="mt-2 text-gray-600">{code.description}</p>
+                        <p className={styles.couponDescription}>{code.description}</p>
                       )}
                       
                       <p className="mt-2 font-medium">
                         {!code.code || code.code === 'NULL' || code.code === 'n/a' ? (
                           <span>No Code Needed</span>
                         ) : (
-                          <span>Code: {code.code}</span>
+                          <span>
+                            Use code: <TrackablePromoLink 
+                              href={code.link}
+                              promoCodeId={code.id}
+                              storeId={code.storeId}
+                              className="text-blue-600 hover:underline"
+                            >
+                              {code.code}
+                            </TrackablePromoLink>
+                          </span>
                         )}
                       </p>
+                      
+                      {code.expires && (
+                        <p className={styles.couponExpiration}>
+                          Expires: {new Date(code.expires).toLocaleDateString()}
+                        </p>
+                      )}
                     </div>
-                    {code.freeShipping && (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        Free Shipping
-                      </span>
-                    )}
+                    <div className={styles.couponStats}>
+                      <p>{code.clickStats.total} uses</p>
+                      {code.clickStats.recent > 0 && (
+                        <p className={styles.recent}>{code.clickStats.recent} in last 7 days</p>
+                      )}
+                    </div>
                   </div>
-                  {code.expires && (
-                    <p className="mt-2 text-sm text-gray-500">
-                      Expires: {new Date(code.expires).toLocaleDateString()}
-                    </p>
-                  )}
                 </div>
               ))
             )}
@@ -309,27 +308,25 @@ export default async function StorePage({ params }: Props) {
           {/* Store Offer Data */}
           <div className={styles.sidebarElement}>
             <h2 className={styles.sidebarHeader}>{store.name} Offer Data</h2>
-            <table className={styles.merchantStats}>
-              <tbody>
-                <tr>
-                  <td>Total Valid Offers:</td>
-                  <td>{store.promoCodes.length}</td>
-                </tr>
-                <tr>
-                  <td>Free Shipping Offers:</td>
-                  <td>{freeShippingCount}</td>
-                </tr>
-                <tr>
-                  <td>Last Offer Added:</td>
-                  <td>{store.promoCodes[0]?.createdAt.toLocaleDateString()}</td>
-                </tr>
-              </tbody>
-            </table>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Total Valid Offers:</span>
+                <span className="font-medium">{store.promoCodes.length}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Free Shipping Offers:</span>
+                <span className="font-medium">{freeShippingCount}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Last Offer Added:</span>
+                <span className="font-medium">{store.promoCodes[0]?.createdAt.toLocaleDateString()}</span>
+              </div>
+            </div>
           </div>
 
           {/* Top Stores */}
-          <div className="bg-white p-4 rounded-lg shadow mb-6">
-            <h2 className="text-lg font-semibold mb-3">Top Stores</h2>
+          <div className={styles.sidebarElement}>
+            <h2 className={styles.sidebarHeader}>Top Stores</h2>
             <div className="space-y-2">
               {topStores.map((store) => (
                 <div key={store.id} className="flex justify-between items-center">
@@ -357,16 +354,14 @@ export default async function StorePage({ params }: Props) {
           </div>
           
           {/* Newsletter Signup */}
-          <div className="bg-white p-4 rounded-lg shadow mb-6">
-            <h3 className="text-lg font-semibold mb-3">Get Our Newsletter</h3>
+          <div className={styles.emailSignup}>
+            <h3>Get Our Newsletter</h3>
             <NewsletterSignup />
             <div className="flex items-center mt-3">
-              <div className="mr-2">
+              <div className={styles.mailboxImage}>
                 <Image src="/images/mailbox.svg" alt="Mailbox" width={32} height={32} />
               </div>
-              <p className="text-sm text-gray-600">
-                Our most popular coupons sent directly to your inbox!
-              </p>
+              <p>Our most popular coupons sent directly to your inbox!</p>
             </div>
             <div className="mt-2 text-xs text-right">
               <Link href="/newsletter/manage" className="text-blue-600 hover:underline">
@@ -376,15 +371,12 @@ export default async function StorePage({ params }: Props) {
           </div>
           
           {/* Categories */}
-          <div className="bg-white p-4 rounded-lg shadow">
-            <h2 className="text-lg font-semibold mb-3">Categories</h2>
-            <ul className="space-y-1">
+          <div className={styles.sidebarElement}>
+            <h2 className={styles.sidebarHeader}>Categories</h2>
+            <ul>
               {categories.map((category) => (
                 <li key={category.id}>
-                  <Link 
-                    href={`/categories/${category.slug}`}
-                    className="text-blue-600 hover:underline"
-                  >
+                  <Link href={`/categories/${category.slug}`} className="text-blue-600 hover:underline">
                     {category.name}
                   </Link>
                 </li>
