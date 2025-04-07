@@ -1,7 +1,0 @@
-gopromocodes-next/
-gopromocodes-ruby/
-node_modules/
-.next/
-.env
-.env.local
-.env.*.local 
