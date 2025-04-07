@@ -47,7 +47,7 @@ interface StoreContentProps {
   store: {
     id: number;
     name: string;
-    description: string;
+    description: string | null;
     url: string;
     userSubmit: boolean;
     promoCodes: Array<{
@@ -85,7 +85,7 @@ interface StoreContentProps {
     name: string;
     slug: string;
   }>;
-  session: any; // Using any for session as it's from next-auth
+  session: any;
 }
 
 // Validate and sanitize slug
@@ -264,7 +264,7 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
             )}
           </div>
           <p className="mt-4 text-gray-600">
-            {store.description}
+            {store.description || 'No description available.'}
             <br />
             Store located at: <a href={store.url} target="_blank" rel="nofollow" className="text-blue-600 hover:underline">{store.url}</a>
           </p>
