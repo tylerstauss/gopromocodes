@@ -9,6 +9,11 @@ interface PageLayoutProps {
     id: number;
     name: string;
     slug: string;
+    clickStats?: {
+      total: number;
+      recent: number;
+      weighted: number;
+    };
   }>;
   popularCategories?: Array<{
     id: number;
@@ -29,16 +34,14 @@ const PageLayout = ({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-      <div className="md:col-span-8">
+    <div className="flex flex-col md:flex-row gap-8">
+      <div className="md:w-8/12">
         {children}
       </div>
-      <div className="md:col-span-4">
-        <Sidebar
-          popularStores={popularStores}
-          popularCategories={popularCategories}
-        />
-      </div>
+      <Sidebar
+        popularStores={popularStores}
+        popularCategories={popularCategories}
+      />
     </div>
   );
 };

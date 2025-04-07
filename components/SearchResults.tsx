@@ -1,100 +1,105 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Store, PromoCode, Category, CategoryPromoCode } from '@prisma/client'
+import PageLayout from '@/components/PageLayout'
 
-type StoreWithCount = Store & {
-  _count: {
-    promoCodes: number
-  }
+interface SearchResult {
+  type: 'store' | 'promocode'
+  data: any
+  relevance: number
 }
 
-type PromoCodeWithRelations = PromoCode & {
-  store: Store
-  categories: (CategoryPromoCode & {
-    category: Category
-  })[]
-}
-
-type Props = {
+interface Props {
   query: string
-  type: 'all' | 'stores' | 'codes'
-  stores: StoreWithCount[]
-  promoCodes: PromoCodeWithRelations[]
+  popularStores: Array<{
+    id: number
+    name: string
+    slug: string
+  }>
+  popularCategories: Array<{
+    id: number
+    name: string
+    slug: string
+  }>
 }
 
-export default function SearchResults({ query, type, stores, promoCodes }: Props) {
-  return (
-    <div>
-      {(type === 'all' || type === 'stores') && stores.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4">Stores</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {stores.map((store) => (
-              <Link
-                key={store.id}
-                href={`/stores/${store.slug}`}
-                className="block p-6 bg-white rounded-lg shadow hover:shadow-md transition-shadow"
-              >
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{store.name}</h3>
-                {store.description && (
-                  <p className="text-gray-600 mb-4 line-clamp-2">{store.description}</p>
-                )}
-                <div className="text-sm text-gray-500">
-                  {store._count.promoCodes} active codes
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
+export default function SearchResults({ query, popularStores, popularCategories }: Props) {
+  const [results, setResults] = useState<SearchResult[]>([])
+  const [loading, setLoading] = useState(true)
 
-      {(type === 'all' || type === 'codes') && promoCodes.length > 0 && (
-        <div>
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4">Promo Codes</h2>
-          <div className="space-y-6">
-            {promoCodes.map((code) => (
-              <div key={code.id} className="bg-white shadow rounded-lg p-6">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900">{code.title}</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Store: <Link href={`/stores/${code.store.slug}`} className="hover:text-blue-600">{code.store.name}</Link>
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      Categories: {code.categories.map(c => c.category.name).join(', ')}
-                    </p>
-                    {code.description && (
-                      <p className="mt-2 text-gray-700">{code.description}</p>
-                    )}
-                    <div className="mt-2 space-y-1 text-sm text-gray-600">
-                      <p>Code: {code.code}</p>
-                      {code.expires && (
-                        <p>Expires: {new Date(code.expires).toLocaleDateString()}</p>
-                      )}
-                      <p>Free Shipping: {code.freeShipping ? 'Yes' : 'No'}</p>
-                    </div>
-                  </div>
-                  <a
-                    href={code.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    Get Code
-                  </a>
+  useEffect(() => {
+    const fetchResults = async () => {
+      if (!query) return
+      
+      try {
+        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
+        const data = await response.json()
+        setResults(data)
+      } catch (error) {
+        console.error('Error fetching search results:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchResults()
+  }, [query])
+
+  if (loading) {
+    return (
+      <PageLayout popularStores={popularStores} popularCategories={popularCategories}>
+        <div className="text-center">Loading search results...</div>
+      </PageLayout>
+    )
+  }
+
+  return (
+    <PageLayout popularStores={popularStores} popularCategories={popularCategories}>
+      <h1 className="text-2xl font-bold mb-6">
+        Search Results for "{query}"
+      </h1>
+
+      {results.length === 0 ? (
+        <div className="text-center text-gray-500">
+          No results found for "{query}"
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {/* Store Results */}
+          {results
+            .filter(result => result.type === 'store')
+            .map((result, index) => (
+              <div key={index} className="bg-white rounded-lg shadow p-4">
+                <Link href={`/stores/${result.data.slug}`}>
+                  <h2 className="text-xl font-semibold text-blue-600 hover:text-blue-800">
+                    {result.data.name}
+                  </h2>
+                </Link>
+                <p className="text-gray-600 mt-2">{result.data.description}</p>
+              </div>
+            ))}
+
+          {/* Promocode Results */}
+          {results
+            .filter(result => result.type === 'promocode')
+            .map((result, index) => (
+              <div key={index} className="bg-white rounded-lg shadow p-4">
+                <Link href={`/stores/${result.data.storeSlug}`}>
+                  <h2 className="text-xl font-semibold text-blue-600 hover:text-blue-800">
+                    {result.data.title}
+                  </h2>
+                </Link>
+                <p className="text-gray-600 mt-2">{result.data.description}</p>
+                <div className="mt-2">
+                  <span className="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded">
+                    {result.data.code}
+                  </span>
                 </div>
               </div>
             ))}
-          </div>
         </div>
       )}
-
-      {query && stores.length === 0 && promoCodes.length === 0 && (
-        <div className="bg-white shadow rounded-lg p-6">
-          <p className="text-gray-600">No results found for "{query}".</p>
-        </div>
-      )}
-    </div>
+    </PageLayout>
   )
 } 
