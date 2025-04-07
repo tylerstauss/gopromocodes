@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 interface StoreResult {
-  id: string;
+  id: number;
   name: string;
   slug: string;
   description: string | null;
