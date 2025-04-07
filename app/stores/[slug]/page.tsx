@@ -216,15 +216,15 @@ export default async function StorePage({ params }: Props) {
               </div>
             ) : (
               store.promoCodes.map((code) => (
-                <div key={code.id} className="p-4 border-10 border-brand-gray rounded-lg">
+                <div key={code.id} className="border-10 border-brand-gray border-b-4 border-brand-gray rounded-lg p-4 mb-4">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="text-lg font-medium text-brand-red">
+                      <p className="text-brand-red font-trebuchet text-lg">
                         <TrackablePromoLink 
                           href={code.link} 
                           promoCodeId={code.id}
                           storeId={code.storeId}
-                          className="text-blue-600 hover:underline"
+                          className="text-brand-red hover:underline"
                         >
                           {code.title}
                         </TrackablePromoLink>
@@ -297,30 +297,44 @@ export default async function StorePage({ params }: Props) {
         {/* Sidebar */}
         <div className="md:w-1/3">
           {/* Store Stats */}
-          <div className="bg-white rounded-lg shadow-custom p-4 mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Store Statistics</h3>
-            <table className="w-full">
-              <tbody>
-                <tr className="border-b border-gray-200">
-                  <td className="py-2 text-gray-600">Total Promo Codes</td>
-                  <td className="py-2 font-medium">{store.promoCodes.length}</td>
-                </tr>
-                <tr className="border-b border-gray-200">
-                  <td className="py-2 text-gray-600">Free Shipping Offers</td>
-                  <td className="py-2 font-medium">{freeShippingCount}</td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="border-10 border-brand-gray bg-brand-gray rounded-lg mb-6">
+            <div className="bg-white rounded-lg p-4">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Store Statistics</h3>
+              <table className="w-full">
+                <tbody>
+                  <tr className="border-b border-gray-200">
+                    <td className="py-2 text-gray-600">Total Promo Codes</td>
+                    <td className="py-2 font-medium">{store.promoCodes.length}</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="py-2 text-gray-600">Free Shipping Offers</td>
+                    <td className="py-2 font-medium">{freeShippingCount}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
           {/* Newsletter Signup */}
-          <NewsletterSignup />
+          <div className="border-10 border-brand-gray bg-brand-gray rounded-lg mb-6">
+            <div className="bg-white rounded-lg p-4">
+              <NewsletterSignup />
+            </div>
+          </div>
 
           {/* Top Stores */}
-          <TopStores stores={topStores} />
+          <div className="border-10 border-brand-gray bg-brand-gray rounded-lg mb-6">
+            <div className="bg-white rounded-lg p-4">
+              <TopStores stores={topStores} />
+            </div>
+          </div>
 
           {/* Categories */}
-          <Categories categories={categories} />
+          <div className="border-10 border-brand-gray bg-brand-gray rounded-lg mb-6">
+            <div className="bg-white rounded-lg p-4">
+              <Categories categories={categories} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

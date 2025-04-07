@@ -21,37 +21,19 @@
 
 /* Banner styles */
 .red-banner {
-  background-color: #d9172c;
-  padding: 0px 0 10px 22px;
-  font-weight: bold;
-  font-size: 20px;
-  color: #fff;
-  vertical-align: top;
-  text-shadow: 0 1px 0 #666;
-  border-radius: 0.3em;
+  @apply bg-brand-red px-6 py-2 font-bold text-xl text-white shadow-md rounded;
 }
 
 .blue-banner {
-  background: linear-gradient(-90deg, #25475a, #34637f, #25475a);
-  padding: 0px 0 10px 22px;
-  font-weight: bold;
-  font-size: 20px;
-  color: #fff;
-  vertical-align: top;
-  text-shadow: 0 1px 0 #666;
-  border-radius: 0.3em;
+  @apply bg-gradient-blue px-6 py-2 font-bold text-xl text-white shadow-md rounded;
 }
 
 .blue-banner h3 {
-  color: #fff;
-  font-size: 32px;
-  padding: 10px 0;
-  text-shadow: 0 -1px 0 #000;
-  text-align: center;
+  @apply text-white text-3xl py-2 text-center;
 }
 
 .blue-banner h3 span.highlight {
-  color: #abe1fa;
+  @apply text-brand-highlight;
 }
 
 /* Coupon styles */
