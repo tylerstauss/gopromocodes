@@ -5,6 +5,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import TrackablePromoLink from '@/components/TrackablePromoLink'
 import NewsletterSignup from '@/components/NewsletterSignup'
+import TopStores from '@/components/TopStores'
+import Categories from '@/components/Categories'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
@@ -204,20 +206,20 @@ export default async function StorePage({ params }: Props) {
           </div>
 
           {/* Current Codes */}
-          <div className="bg-red-600 text-white py-3 px-4 rounded-t-lg">
+          <div className="bg-brand-red text-white py-3 px-4 rounded-t-lg">
             <h2 className="text-xl font-semibold">Current Codes</h2>
           </div>
-          <div className="bg-white rounded-b-lg shadow divide-y divide-gray-200">
+          <div className="bg-white rounded-b-lg shadow-custom divide-y divide-gray-200">
             {store.promoCodes.length === 0 ? (
               <div className="p-4">
                 <p>No active promo codes at the moment. Check back soon!</p>
               </div>
             ) : (
               store.promoCodes.map((code) => (
-                <div key={code.id} className="p-4">
+                <div key={code.id} className="p-4 border-10 border-brand-gray rounded-lg">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="text-lg font-medium">
+                      <p className="text-lg font-medium text-brand-red">
                         <TrackablePromoLink 
                           href={code.link} 
                           promoCodeId={code.id}
@@ -248,24 +250,6 @@ export default async function StorePage({ params }: Props) {
                           </span>
                         )}
                       </p>
-                      
-                      {code.expires && (
-                        <p className="mt-1 text-sm text-gray-500">
-                          Expires: {new Date(code.expires).toLocaleDateString()}
-                        </p>
-                      )}
-                    </div>
-                    <div className="text-right text-sm">
-                      <div className="bg-gray-100 rounded px-3 py-1">
-                        <p className="text-gray-600">
-                          {code.clickStats.total} uses
-                        </p>
-                        {code.clickStats.recent > 0 && (
-                          <p className="text-green-600 text-xs">
-                            {code.clickStats.recent} in last 7 days
-                          </p>
-                        )}
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -310,86 +294,33 @@ export default async function StorePage({ params }: Props) {
           </div>
         </div>
 
-        {/* Sidebar Column */}
+        {/* Sidebar */}
         <div className="md:w-1/3">
-          {/* Store Offer Data */}
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">{store.name} Offer Data</h2>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Total Valid Offers:</span>
-                <span className="font-medium">{store.promoCodes.length}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Free Shipping Offers:</span>
-                <span className="font-medium">{freeShippingCount}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Last Offer Added:</span>
-                <span className="font-medium">{store.promoCodes[0]?.createdAt.toLocaleDateString()}</span>
-              </div>
-            </div>
+          {/* Store Stats */}
+          <div className="bg-white rounded-lg shadow-custom p-4 mb-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Store Statistics</h3>
+            <table className="w-full">
+              <tbody>
+                <tr className="border-b border-gray-200">
+                  <td className="py-2 text-gray-600">Total Promo Codes</td>
+                  <td className="py-2 font-medium">{store.promoCodes.length}</td>
+                </tr>
+                <tr className="border-b border-gray-200">
+                  <td className="py-2 text-gray-600">Free Shipping Offers</td>
+                  <td className="py-2 font-medium">{freeShippingCount}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
-          {/* Top Stores */}
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Top Stores</h2>
-            <div className="space-y-2">
-              {topStores.map((store) => (
-                <div key={store.id} className="flex justify-between items-center">
-                  <Link 
-                    href={`/stores/${store.slug}`}
-                    className="text-blue-600 hover:underline truncate flex-1"
-                  >
-                    {store.name}
-                  </Link>
-                  <div className="text-right text-sm ml-2">
-                    <div className="bg-gray-100 rounded px-2 py-0.5">
-                      <p className="text-gray-600 text-xs">
-                        {store.clickStats.total} uses
-                      </p>
-                      {store.clickStats.recent > 0 && (
-                        <p className="text-green-600 text-xs">
-                          {store.clickStats.recent} recent
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          
           {/* Newsletter Signup */}
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">Get Our Newsletter</h3>
-            <NewsletterSignup />
-            <div className="flex items-center mt-3">
-              <div className="mr-2">
-                <Image src="/images/mailbox.svg" alt="Mailbox" width={32} height={32} />
-              </div>
-              <p className="text-gray-600 text-sm">Our most popular coupons sent directly to your inbox!</p>
-            </div>
-            <div className="mt-2 text-xs text-right">
-              <Link href="/newsletter/manage" className="text-blue-600 hover:underline">
-                Manage subscription
-              </Link>
-            </div>
-          </div>
-          
+          <NewsletterSignup />
+
+          {/* Top Stores */}
+          <TopStores stores={topStores} />
+
           {/* Categories */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Categories</h2>
-            <ul className="space-y-2">
-              {categories.map((category) => (
-                <li key={category.id}>
-                  <Link href={`/categories/${category.slug}`} className="text-blue-600 hover:underline">
-                    {category.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <Categories categories={categories} />
         </div>
       </div>
     </div>

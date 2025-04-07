@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
 
 export default function NewsletterSignup() {
   const [email, setEmail] = useState('')
@@ -39,7 +41,14 @@ export default function NewsletterSignup() {
   }
 
   return (
-    <div className="newsletter-signup">
+    <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+      <h3 className="text-xl font-semibold text-gray-900 mb-4">Get Our Newsletter</h3>
+      <div className="flex items-center mb-4">
+        <div className="mr-2">
+          <Image src="/images/mailbox.svg" alt="Mailbox" width={32} height={32} />
+        </div>
+        <p className="text-gray-600 text-sm">Our most popular coupons sent directly to your inbox!</p>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-3">
         <div className="flex flex-col">
           <div className="relative">
@@ -77,6 +86,11 @@ export default function NewsletterSignup() {
           )}
         </button>
       </form>
+      <div className="mt-2 text-xs text-right">
+        <Link href="/newsletter/manage" className="text-blue-600 hover:underline">
+          Manage subscription
+        </Link>
+      </div>
       
       {status === 'success' && (
         <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded-md">

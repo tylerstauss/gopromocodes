@@ -35,6 +35,12 @@ module.exports = {
         myriad: ['MyriadProRegular', 'Arial', 'sans-serif'],
         trebuchet: ['"Trebuchet MS"', 'Arial', 'Helvetica', 'sans-serif']
       },
+      boxShadow: {
+        'custom': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+      },
+      backgroundImage: {
+        'gradient-blue': 'linear-gradient(-90deg, #25475a, #34637f, #25475a)',
+      },
     },
   },
   plugins: [],

@@ -308,23 +308,7 @@ export default async function Home() {
             </div>
             
             {/* Newsletter Signup */}
-            <div className="bg-white p-4 rounded-lg shadow mb-6">
-              <h3 className="text-lg font-semibold mb-3">Get Our Newsletter</h3>
-              <NewsletterSignup />
-              <div className="flex items-center mt-3">
-                <div className="mr-2">
-                  <Image src="/images/mailbox.svg" alt="Mailbox" width={32} height={32} />
-                </div>
-                <p className="text-sm text-gray-600">
-                  Our most popular coupons sent directly to your inbox!
-                </p>
-              </div>
-              <div className="mt-2 text-xs text-right">
-                <Link href="/newsletter/manage" className="text-blue-600 hover:underline">
-                  Manage subscription
-                </Link>
-              </div>
-            </div>
+            <NewsletterSignup />
             
             {/* Categories */}
             <div className="bg-white p-4 rounded-lg shadow">
