@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+
+// Force clean build - v1 [timestamp: ${new Date().toISOString()}]
 const nextConfig = {
   // Environment variables are loaded from .env automatically
   reactStrictMode: true,
@@ -16,6 +18,10 @@ const nextConfig = {
   experimental: {
     // Optimize CSS loading
     optimizeCss: true,
+    // Force full CSS optimization
+    optimizeServerReact: true,
+    // Clear module cache between builds
+    incrementalCacheHandlerPath: false
   },
   // Enable static exports if needed
   // output: 'export',
@@ -38,6 +44,7 @@ const nextConfig = {
         test: /\.(css|scss)$/,
         chunks: 'all',
         enforce: true,
+        reuseExistingChunk: false // Disable chunk reuse
       };
     }
     return config;
