@@ -15,7 +15,7 @@ interface TopStoresProps {
 
 export default function TopStores({ stores }: TopStoresProps) {
   return (
-    <div>
+    <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Stores</h3>
       <div className="space-y-3">
         {stores.map((store) => (

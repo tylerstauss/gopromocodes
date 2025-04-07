@@ -315,19 +315,13 @@ export default async function StorePage({ params }: Props) {
           </div>
 
           {/* Newsletter Signup */}
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <NewsletterSignup />
-          </div>
+          <NewsletterSignup />
 
           {/* Top Stores */}
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <TopStores stores={topStores} />
-          </div>
+          <TopStores stores={topStores} />
 
           {/* Categories */}
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <Categories categories={categories} />
-          </div>
+          <Categories categories={categories} />
         </div>
       </div>
     </div>

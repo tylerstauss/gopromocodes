@@ -10,7 +10,7 @@ interface CategoriesProps {
 
 export default function Categories({ categories }: CategoriesProps) {
   return (
-    <div>
+    <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Categories</h3>
       <ul className="space-y-1">
         {categories.map((category) => (
