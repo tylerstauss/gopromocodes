@@ -249,16 +249,18 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
   return (
     <div className="flex flex-col md:flex-row gap-8">
       {/* Main Content Column */}
-      <div className="md:w-2/3">
-        {/* Store Info */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+      <div className="w-full md:w-2/3 space-y-8">
+        {/* Store Info Card */}
+        <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">{store.name} Promo Codes & Discounts</h1>
-              <h2 className="text-lg text-gray-600 mt-2">There are currently {store.promoCodes.length} {store.name} Promotion Codes and {store.name} Coupons.</h2>
+              <h2 className="text-lg text-gray-600 mt-2">
+                There are currently {store.promoCodes.length} {store.name} Promotion Codes and {store.name} Coupons.
+              </h2>
             </div>
-            {session?.user?.isAdmin && (
-              <Link
+            {session?.user && (
+              <Link 
                 href={`/admin/stores/${store.id}`}
                 className="inline-flex items-center px-3 py-1.5 border border-indigo-600 text-indigo-600 hover:bg-indigo-50 rounded-md"
               >
@@ -270,29 +272,33 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
             )}
           </div>
           <p className="mt-4 text-gray-600">
-            {store.description || 'No description available.'}
+            {store.description}
             <br />
-            Store located at: <a href={store.url} target="_blank" rel="nofollow" className="text-blue-600 hover:underline">{store.url}</a>
+            Store located at:{' '}
+            <a 
+              href={store.url} 
+              target="_blank" 
+              rel="nofollow" 
+              className="text-blue-600 hover:underline"
+            >
+              {store.url}
+            </a>
           </p>
         </div>
 
-        {/* Current Codes */}
-        <div className="bg-brand-red text-white py-3 px-4 rounded-t-lg">
-          <h2 className="text-xl font-semibold">Current Codes</h2>
-        </div>
-        <div className="bg-white rounded-b-lg shadow-sm divide-y divide-gray-200">
-          {store.promoCodes.length === 0 ? (
-            <div className="p-4">
-              <p>No active promo codes at the moment. Check back soon!</p>
-            </div>
-          ) : (
-            store.promoCodes.map((code) => (
+        {/* Promo Codes Section */}
+        <div>
+          <div className="bg-brand-red text-white py-3 px-4 rounded-t-lg">
+            <h2 className="text-xl font-semibold">Current Codes</h2>
+          </div>
+          <div className="bg-white rounded-b-lg shadow-sm divide-y divide-gray-200">
+            {store.promoCodes.map((code) => (
               <div key={code.id} className="p-4">
                 <div className="flex justify-between items-start">
                   <div>
                     <p className="text-brand-red font-trebuchet text-lg">
-                      <TrackablePromoLink 
-                        href={code.link} 
+                      <TrackablePromoLink
+                        href={code.link}
                         promoCodeId={code.id}
                         storeId={code.storeId}
                         className="text-brand-red hover:underline"
@@ -300,28 +306,18 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
                         {code.title}
                       </TrackablePromoLink>
                     </p>
-                    
-                    {code.description && (
-                      <p className="mt-2 text-gray-600">{code.description}</p>
-                    )}
-                    
+                    <p className="mt-2 text-gray-600">{code.description}</p>
                     <p className="mt-2 font-medium">
-                      {!code.code || code.code === 'NULL' || code.code === 'n/a' ? (
-                        <span>No Code Needed</span>
-                      ) : (
-                        <span>
-                          Use code: <TrackablePromoLink 
-                            href={code.link}
-                            promoCodeId={code.id}
-                            storeId={code.storeId}
-                            className="text-blue-600 hover:underline"
-                          >
-                            {code.code}
-                          </TrackablePromoLink>
-                        </span>
-                      )}
+                      <span>Use code: </span>
+                      <TrackablePromoLink
+                        href={code.link}
+                        promoCodeId={code.id}
+                        storeId={code.storeId}
+                        className="text-blue-600 hover:underline"
+                      >
+                        {code.code}
+                      </TrackablePromoLink>
                     </p>
-                    
                     {code.expires && (
                       <p className="mt-2 text-sm text-gray-500">
                         Expires: {new Date(code.expires).toLocaleDateString()}
@@ -330,36 +326,39 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
                   </div>
                 </div>
               </div>
-            ))
-          )}
+            ))}
+          </div>
         </div>
 
-        {/* Store Blogs */}
+        {/* Blog Section */}
         {store.blogs.length > 0 && (
-          <>
-            <div className="bg-red-600 text-white py-3 px-4 rounded-t-lg mt-6">
-              <h2 className="text-xl font-semibold">Learn more about how to save the most at {store.name}</h2>
+          <div>
+            <div className="bg-red-600 text-white py-3 px-4 rounded-t-lg">
+              <h2 className="text-xl font-semibold">
+                Learn more about how to save the most at {store.name}
+              </h2>
             </div>
             <div className="bg-white rounded-b-lg shadow divide-y divide-gray-200">
               {store.blogs.map((blog) => (
                 <div key={blog.id} className="p-4">
-                  <span className="text-sm text-gray-500">{blog.publishDate}</span>
-                  {blog.post && (
-                    <div className="mt-2 text-base font-medium text-gray-900">
-                      <div dangerouslySetInnerHTML={{ __html: blog.post }} />
-                    </div>
-                  )}
+                  <span className="text-sm text-gray-500">
+                    {new Date(blog.publishDate).toLocaleDateString()}
+                  </span>
+                  <div 
+                    className="mt-2 text-base font-medium text-gray-900"
+                    dangerouslySetInnerHTML={{ __html: blog.post || '' }}
+                  />
                 </div>
               ))}
             </div>
-          </>
+          </div>
         )}
       </div>
 
-      {/* Sidebar */}
-      <div className="md:w-1/3">
+      {/* Sidebar Column */}
+      <div className="w-full md:w-1/3 space-y-6">
         {/* Store Stats */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div className="bg-white rounded-lg shadow-sm p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Store Statistics</h3>
           <table className="w-full">
             <tbody>
@@ -379,10 +378,41 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
         <NewsletterSignup />
 
         {/* Top Stores */}
-        <TopStores stores={topStores} />
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Stores</h3>
+          <ul className="space-y-2">
+            {topStores.map((store) => (
+              <li key={store.id}>
+                <Link 
+                  href={`/stores/${store.slug}`}
+                  className="text-blue-600 hover:underline"
+                >
+                  {store.name}
+                </Link>
+                <span className="text-sm text-gray-500 ml-2">
+                  ({store.clickStats?.total || 0} clicks)
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         {/* Categories */}
-        <Categories categories={categories} />
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Categories</h3>
+          <ul className="space-y-1">
+            {categories.map((category) => (
+              <li key={category.id} className="bg-white rounded">
+                <Link
+                  href={`/categories/${category.slug}`}
+                  className="block px-3 py-2 text-blue-600 hover:underline font-trebuchet"
+                >
+                  {category.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
@@ -400,18 +430,9 @@ export default async function StorePage({ params }: Props) {
     ]);
 
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <StorePageWrapper>
-          <Suspense fallback={<LoadingSpinner />}>
-            <StoreContent 
-              store={store} 
-              topStores={topStores} 
-              categories={categories} 
-              session={session} 
-            />
-          </Suspense>
-        </StorePageWrapper>
-      </div>
+      <StorePageWrapper>
+        <StoreContent store={store} topStores={topStores} categories={categories} session={session} />
+      </StorePageWrapper>
     );
   } catch (error) {
     console.error('Error in StorePage:', error);
