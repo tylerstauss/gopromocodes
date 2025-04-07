@@ -164,6 +164,7 @@ async function getCategories() {
   })
 }
 
+// Force new deployment to clear cache
 export default async function StorePage({ params }: Props) {
   const [store, topStores, categories, session] = await Promise.all([
     getStore(params.slug),
