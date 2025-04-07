@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  googleId  String?  @unique
+  isAdmin   Boolean  @default(false)
+  resetToken        String?
+  resetTokenExpiry  DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Blog      Blog[]
+}
+
+model Store {
+  id                 Int                 @id
+  name               String
+  url                String
+  description        String?
+  active             Boolean             @default(true)
+  userSubmit         Boolean             @default(true)
+  metaKeywords       String?
+  metaTitle          String?
+  metaDescription    String?
+  categoryId         Int?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  slug               String              @unique
+  topStore           Boolean             @default(false)
+  oldSlug            String?
+  searchTerms        String?
+  networkId          String?
+  network            String?
+  domain             String?
+  viglinkId          Int?
+  viglinkGroupId     Int?
+  viglinkName        String?
+  paths              String?
+  Blog               Blog[]
+  categoryPromoCodes CategoryPromoCode[]
+  promoCodes         PromoCode[]
+  category           Category?           @relation(fields: [categoryId], references: [id])
+  blogs              StoreBlog[]
+  clicks             ClickLog[]
+}
+
+model Category {
+  id              Int                 @id @default(autoincrement())
+  name            String
+  description     String?
+  metaKeywords    String?
+  metaTitle       String?
+  metaDescription String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  slug            String              @unique
+  promoCodes      CategoryPromoCode[]
+  stores          Store[]
+}
+
+model PromoCode {
+  id           Int                 @id @default(autoincrement())
+  storeId      Int
+  title        String
+  description  String?
+  starts       DateTime
+  code         String
+  link         String
+  homepage     Boolean             @default(false)
+  freeShipping Boolean             @default(false)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  expires      DateTime?
+  userSubmit   Boolean             @default(false)
+  approved     Boolean             @default(true)
+  orderId      Int?
+  categories   CategoryPromoCode[]
+  store        Store               @relation(fields: [storeId], references: [id])
+  clicks       ClickLog[]
+}
+
+model CategoryPromoCode {
+  id          Int       @id @default(autoincrement())
+  categoryId  Int
+  promoCodeId Int
+  storeId     Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  category    Category  @relation(fields: [categoryId], references: [id])
+  promoCode   PromoCode @relation(fields: [promoCodeId], references: [id])
+  store       Store     @relation(fields: [storeId], references: [id])
+
+  @@unique([categoryId, promoCodeId])
+  @@index([storeId])
+}
+
+model StoreBlog {
+  id          Int      @id @default(autoincrement())
+  storeId     Int
+  publishDate String
+  post        String
+  author      String   @default("Tyler")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  pubDate     DateTime
+  store       Store    @relation(fields: [storeId], references: [id])
+}
+
+model Subscriber {
+  id        String   @id
+  email     String   @unique
+  name      String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model NetworkMerchant {
+  id        String  @id @default(cuid())
+  network   String
+  websiteId String
+  name      String
+  networkId String
+  url       String
+  domain    String
+  active    Boolean @default(true)
+  joined    Boolean @default(false)
+  linkId    String?
+}
+
+model Blog {
+  id          Int       @id @default(autoincrement())
+  title       String
+  slug        String    @unique
+  content     String
+  excerpt     String?
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+  authorId    Int
+  storeId     Int?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+  User        User      @relation(fields: [authorId], references: [id])
+  Store       Store?    @relation(fields: [storeId], references: [id])
+}
+
+model ClickLog {
+  id          Int       @id @default(autoincrement())
+  promoCodeId Int
+  storeId     Int
+  timestamp   DateTime  @default(now())
+  date        DateTime  @default(now()) @db.Date
+  promoCode   PromoCode @relation(fields: [promoCodeId], references: [id])
+  store       Store     @relation(fields: [storeId], references: [id])
+
+  @@index([storeId])
+  @@index([promoCodeId])
+  @@index([date])
+}
