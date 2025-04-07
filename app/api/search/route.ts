@@ -1,104 +1,133 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+interface StoreResult {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  _count?: {
+    promoCodes: number;
+  };
+}
+
+interface PromocodeResult {
+  id: string;
+  title: string;
+  description: string | null;
+  code: string;
+  store: {
+    slug: string;
+  };
+}
+
+type SearchResult = {
+  type: 'store';
+  data: StoreResult;
+  relevance: number;
+}
+
+function calculateRelevance(query: string, text: string): number {
+  const normalizedQuery = query.toLowerCase().trim()
+  const normalizedText = text.toLowerCase().trim()
+  
+  // Exact match gets highest relevance
+  if (normalizedText === normalizedQuery) return 1.0
+  
+  // Starts with query gets high relevance
+  if (normalizedText.startsWith(normalizedQuery)) return 0.9
+  
+  // Contains query as whole word gets medium-high relevance
+  const wholeWordRegex = new RegExp(`\\b${normalizedQuery}\\b`, 'i')
+  if (wholeWordRegex.test(normalizedText)) return 0.8
+  
+  // Contains query as substring at word boundary
+  const partialWordRegex = new RegExp(`\\b${normalizedQuery}`, 'i')
+  if (partialWordRegex.test(normalizedText)) return 0.7
+  
+  // Contains query as substring (only for longer queries)
+  if (normalizedQuery.length >= 4 && normalizedText.includes(normalizedQuery)) return 0.5
+  
+  return 0
+}
+
 export async function GET(request: NextRequest) {
+  console.log('Search API called')
   const searchParams = request.nextUrl.searchParams
   const query = searchParams.get('q')
-  const limit = parseInt(searchParams.get('limit') || '10')
+  console.log('Search query:', query)
 
-  if (!query) {
+  if (!query || query.length < 2) {
+    console.log('Query rejected - too short or empty')
     return NextResponse.json([])
   }
 
-  // Find stores matching the query
-  const stores = await prisma.store.findMany({
-    where: {
-      AND: [
-        { active: true },
-        {
-          OR: [
-            { name: { contains: query, mode: 'insensitive' } },
-            { description: { contains: query, mode: 'insensitive' } }
-          ]
+  try {
+    // Search for stores with promo code count
+    const storeResults = await prisma.store.findMany({
+      where: {
+        OR: [
+          { name: { contains: query, mode: 'insensitive' } },
+          { description: { contains: query, mode: 'insensitive' } },
+        ],
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        _count: {
+          select: {
+            promoCodes: true
+          }
         }
-      ]
-    },
-    select: {
-      id: true,
-      name: true,
-      slug: true
-    },
-    orderBy: { name: 'asc' },
-    take: limit
-  })
+      },
+    })
 
-  // Find promo codes matching the query
-  const promoCodes = await prisma.promoCode.findMany({
-    where: {
-      OR: [
-        { title: { contains: query, mode: 'insensitive' } },
-        { description: { contains: query, mode: 'insensitive' } },
-        { code: { contains: query, mode: 'insensitive' } }
-      ]
-    },
-    select: {
-      id: true,
-      title: true,
-      code: true,
-      storeId: true,
-      store: {
-        select: {
-          name: true,
-          slug: true
+    console.log('Found stores:', storeResults.length)
+
+    // Calculate relevance for stores only
+    const results = storeResults
+      .map((store: StoreResult) => {
+        const nameRelevance = calculateRelevance(query, store.name)
+        // Only consider description if it's a longer query and no name match
+        const descriptionRelevance = (!nameRelevance && query.length >= 4 && store.description)
+          ? calculateRelevance(query, store.description) * 0.05
+          : 0
+
+        return {
+          type: 'store' as const,
+          data: store,
+          relevance: Math.max(nameRelevance, descriptionRelevance)
         }
-      }
-    },
-    orderBy: { createdAt: 'desc' },
-    take: limit
-  })
+      })
+      .filter(result => result.relevance >= 0.5)
+      .sort((a: SearchResult, b: SearchResult) => {
+        // First sort by relevance
+        const relevanceDiff = b.relevance - a.relevance
+        if (relevanceDiff !== 0) return relevanceDiff
+        
+        // If same relevance, sort by promo code count (more codes first)
+        const countDiff = (b.data._count?.promoCodes || 0) - (a.data._count?.promoCodes || 0)
+        if (countDiff !== 0) return countDiff
 
-  // Combine and transform results
-  const storeResults = stores.map(store => ({
-    type: 'store' as const,
-    id: store.id,
-    name: store.name,
-    slug: store.slug
-  }))
+        // Finally, sort by name length
+        return a.data.name.length - b.data.name.length
+      })
 
-  const promoCodeResults = promoCodes.map(code => ({
-    type: 'promoCode' as const,
-    id: code.id,
-    title: code.title,
-    code: code.code,
-    storeId: code.storeId,
-    storeName: code.store.name,
-    storeSlug: code.store.slug
-  }))
+    console.log('Filtered and sorted results:', results.length)
+    console.log('Top results:', results.slice(0, 2).map(r => ({ 
+      name: r.data.name, 
+      relevance: r.relevance,
+      promoCount: r.data._count?.promoCodes
+    })))
 
-  // Combine results, alternating between types and respecting overall limit
-  const combined = []
-  const maxPerType = Math.ceil(limit / 2)
-  
-  for (let i = 0; i < Math.max(storeResults.length, promoCodeResults.length); i++) {
-    if (i < storeResults.length && storeResults.length <= maxPerType) {
-      combined.push(storeResults[i])
-    }
-    
-    if (i < promoCodeResults.length && promoCodeResults.length <= maxPerType) {
-      combined.push(promoCodeResults[i])
-    }
+    return NextResponse.json(results)
+  } catch (error) {
+    console.error('Search error:', error)
+    return NextResponse.json(
+      { error: 'An error occurred while searching' },
+      { status: 500 }
+    )
   }
-
-  // If we still have space, add more results from whichever type has more
-  if (combined.length < limit) {
-    if (storeResults.length > maxPerType) {
-      const remaining = storeResults.slice(maxPerType, limit - combined.length + maxPerType)
-      combined.push(...remaining)
-    } else if (promoCodeResults.length > maxPerType) {
-      const remaining = promoCodeResults.slice(maxPerType, limit - combined.length + maxPerType)
-      combined.push(...remaining)
-    }
-  }
-
-  return NextResponse.json(combined.slice(0, limit))
 } 
