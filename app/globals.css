@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Logo styles */
+/* Logo styles - only keeping what's necessary */
 #logo {
   display: block;
   overflow: visible;
@@ -12,6 +12,10 @@
   display: block;
   width: 200px;
   height: 60px;
+}
+
+#logo svg text {
+  display: none;
 }
 
 /* Remove any "KI no no st o viou" text that might be showing */
