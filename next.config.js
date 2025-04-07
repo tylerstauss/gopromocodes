@@ -15,14 +15,6 @@ const nextConfig = {
     // Enables the styled-components plugin
     styledComponents: true,
   },
-  experimental: {
-    // Optimize CSS loading
-    optimizeCss: true,
-    // Force full CSS optimization
-    optimizeServerReact: true,
-    // Clear module cache between builds
-    incrementalCacheHandlerPath: false
-  },
   // Enable static exports if needed
   // output: 'export',
   // Configure redirects if needed
