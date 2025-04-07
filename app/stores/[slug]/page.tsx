@@ -244,6 +244,7 @@ async function getCategories() {
 
 // Separate component for the main store content
 async function StoreContent({ store, topStores, categories, session }: StoreContentProps) {
+  console.log('Session in StoreContent:', session); // Debug log
   const freeShippingCount = store.promoCodes.filter((code: { freeShipping: boolean }) => code.freeShipping).length;
 
   return (
@@ -351,18 +352,25 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
 
 // Server component
 export default async function StorePage({ params }: Props) {
+  const session = await getServerSession();
+  console.log('Session in StorePage:', session); // Debug log
+
   try {
     const slug = validateSlug(params.slug);
-    const [store, topStores, categories, session] = await Promise.all([
+    const [store, topStores, categories] = await Promise.all([
       getStore(slug),
       getTopStores(),
-      getCategories(),
-      getServerSession(authOptions)
+      getCategories()
     ]);
 
     return (
       <StorePageWrapper>
-        <StoreContent store={store} topStores={topStores} categories={categories} session={session} />
+        <StoreContent 
+          store={store} 
+          topStores={topStores} 
+          categories={categories} 
+          session={session} 
+        />
       </StorePageWrapper>
     );
   } catch (error) {
