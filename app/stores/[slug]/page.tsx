@@ -210,14 +210,14 @@ export default async function StorePage({ params }: Props) {
           <div className="bg-brand-red text-white py-3 px-4 rounded-t-lg">
             <h2 className="text-xl font-semibold">Current Codes</h2>
           </div>
-          <div className="bg-white rounded-b-lg shadow-custom divide-y divide-gray-200">
+          <div className="bg-white rounded-b-lg shadow-sm divide-y divide-gray-200">
             {store.promoCodes.length === 0 ? (
               <div className="p-4">
                 <p>No active promo codes at the moment. Check back soon!</p>
               </div>
             ) : (
               store.promoCodes.map((code) => (
-                <div key={code.id} className="border-10 border-brand-gray border-b-4 border-brand-gray rounded-lg p-4 mb-4">
+                <div key={code.id} className="bg-white rounded-lg shadow-sm p-6 mb-4">
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="text-brand-red font-trebuchet text-lg">
@@ -298,43 +298,35 @@ export default async function StorePage({ params }: Props) {
         {/* Sidebar */}
         <div className="md:w-1/3">
           {/* Store Stats */}
-          <div className="border-10 border-brand-gray bg-brand-gray rounded-lg mb-6">
-            <div className="bg-white rounded-lg p-4">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Store Statistics</h3>
-              <table className="w-full">
-                <tbody>
-                  <tr className="border-b border-gray-200">
-                    <td className="py-2 text-gray-600">Total Promo Codes</td>
-                    <td className="py-2 font-medium">{store.promoCodes.length}</td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="py-2 text-gray-600">Free Shipping Offers</td>
-                    <td className="py-2 font-medium">{freeShippingCount}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Store Statistics</h3>
+            <table className="w-full">
+              <tbody>
+                <tr className="border-b border-gray-200">
+                  <td className="py-2 text-gray-600">Total Promo Codes</td>
+                  <td className="py-2 font-medium">{store.promoCodes.length}</td>
+                </tr>
+                <tr className="border-b border-gray-200">
+                  <td className="py-2 text-gray-600">Free Shipping Offers</td>
+                  <td className="py-2 font-medium">{freeShippingCount}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           {/* Newsletter Signup */}
-          <div className="border-10 border-brand-gray bg-brand-gray rounded-lg mb-6">
-            <div className="bg-white rounded-lg p-4">
-              <NewsletterSignup />
-            </div>
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <NewsletterSignup />
           </div>
 
           {/* Top Stores */}
-          <div className="border-10 border-brand-gray bg-brand-gray rounded-lg mb-6">
-            <div className="bg-white rounded-lg p-4">
-              <TopStores stores={topStores} />
-            </div>
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <TopStores stores={topStores} />
           </div>
 
           {/* Categories */}
-          <div className="border-10 border-brand-gray bg-brand-gray rounded-lg mb-6">
-            <div className="bg-white rounded-lg p-4">
-              <Categories categories={categories} />
-            </div>
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <Categories categories={categories} />
           </div>
         </div>
       </div>
