@@ -38,6 +38,10 @@ interface RawStore {
   id: number;
   name: string;
   slug: string;
+  description: string | null;
+  url: string;
+  userSubmit: boolean;
+  metaDescription: string | null;
   weighted_clicks: number;
   total_clicks: number;
   recent_clicks: number;
@@ -50,12 +54,14 @@ interface StoreContentProps {
     description: string | null;
     url: string;
     userSubmit: boolean;
+    metaDescription: string | null;
     promoCodes: Array<{
       id: number;
       title: string;
       description: string | null;
       code: string;
       link: string;
+      expires: Date | null;
       freeShipping: boolean;
       storeId: number;
       clickStats: {
@@ -67,7 +73,7 @@ interface StoreContentProps {
     blogs: Array<{
       id: number;
       publishDate: string;
-      post: string;
+      post: string | null;
     }>;
   };
   topStores: Array<{
@@ -147,19 +153,19 @@ async function getStore(slug: string) {
           p.*,
           COALESCE(SUM(
             CASE 
-              WHEN c.date >= CURRENT_DATE - INTERVAL '7 days' THEN 2  -- Recent clicks count double
-              WHEN c.date >= CURRENT_DATE - INTERVAL '30 days' THEN 1  -- Older clicks count once
+              WHEN c.date >= (CURRENT_DATE AT TIME ZONE 'UTC') - INTERVAL '7 days' THEN 2
+              WHEN c.date >= (CURRENT_DATE AT TIME ZONE 'UTC') - INTERVAL '30 days' THEN 1
               ELSE 0
             END
           ), 0) as weighted_clicks,
           COUNT(c.id) as total_clicks,
-          COUNT(CASE WHEN c.date >= CURRENT_DATE - INTERVAL '7 days' THEN 1 END) as recent_clicks
+          COUNT(CASE WHEN c.date >= (CURRENT_DATE AT TIME ZONE 'UTC') - INTERVAL '7 days' THEN 1 END) as recent_clicks
         FROM "PromoCode" p
         LEFT JOIN "ClickLog" c ON p.id = c."promoCodeId"
         WHERE 
           p."storeId" = ${store.id}
           AND p.approved = true 
-          AND (p.expires IS NULL OR p.expires >= CURRENT_DATE)
+          AND (p.expires IS NULL OR p.expires >= (CURRENT_DATE AT TIME ZONE 'UTC'))
         GROUP BY p.id
       )
       SELECT *
@@ -280,8 +286,8 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
               <p>No active promo codes at the moment. Check back soon!</p>
             </div>
           ) : (
-            store.promoCodes.map((code: any) => (
-              <div key={code.id} className="bg-white rounded-lg shadow-sm p-6 mb-4">
+            store.promoCodes.map((code) => (
+              <div key={code.id} className="p-4">
                 <div className="flex justify-between items-start">
                   <div>
                     <p className="text-brand-red font-trebuchet text-lg">
@@ -295,7 +301,7 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
                       </TrackablePromoLink>
                     </p>
                     
-                    {code.description && code.description !== 'NULL' && (
+                    {code.description && (
                       <p className="mt-2 text-gray-600">{code.description}</p>
                     )}
                     
@@ -315,6 +321,12 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
                         </span>
                       )}
                     </p>
+                    
+                    {code.expires && (
+                      <p className="mt-2 text-sm text-gray-500">
+                        Expires: {new Date(code.expires).toLocaleDateString()}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -322,40 +334,26 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
           )}
         </div>
 
-        {/* User Submission Form */}
-        {store.userSubmit && (
-          <div className="bg-white rounded-lg shadow-sm p-6 mt-6">
-            <p>
-              Do you have a promotion code for {store.name}?
-              Add your {store.name} promo code here for others' benefit.
-            </p>
-            <p className="mt-4 text-sm text-gray-500">
-              To signup for {store.name} coupon codes, please enter your email address in the Newsletter box on the right side of the page.
-              <br /><br />
-              The {store.name} promotional codes listed above are available because GoPromoCodes.com is an affiliate of {store.name}. 
-              Tyler Stauss and Zoe Stauss manage this partnership. 
-              Meet <a href="https://plus.google.com/u/0/114616733302009885635?rel=author" rel="nofollow">Tyler</a>! 
-              Meet <a href="/zoe" rel="nofollow">Zoe!</a>
-              <br /><br />
-              Since this site allows users to submit content, we cannot guarantee the accuracy of the content.
-            </p>
-          </div>
-        )}
-
         {/* Store Blogs */}
-        <div className="bg-red-600 text-white py-3 px-4 rounded-t-lg mt-6">
-          <h2 className="text-xl font-semibold">Learn more about how to save the most at {store.name}</h2>
-        </div>
-        <div className="bg-white rounded-b-lg shadow divide-y divide-gray-200">
-          {store.blogs.map((blog: any) => (
-            <div key={blog.id} className="p-4">
-              <span className="text-sm text-gray-500">{blog.publishDate}</span>
-              <div className="mt-2 text-base font-medium text-gray-900">
-                <div dangerouslySetInnerHTML={{ __html: blog.post }} />
-              </div>
+        {store.blogs.length > 0 && (
+          <>
+            <div className="bg-red-600 text-white py-3 px-4 rounded-t-lg mt-6">
+              <h2 className="text-xl font-semibold">Learn more about how to save the most at {store.name}</h2>
             </div>
-          ))}
-        </div>
+            <div className="bg-white rounded-b-lg shadow divide-y divide-gray-200">
+              {store.blogs.map((blog) => (
+                <div key={blog.id} className="p-4">
+                  <span className="text-sm text-gray-500">{blog.publishDate}</span>
+                  {blog.post && (
+                    <div className="mt-2 text-base font-medium text-gray-900">
+                      <div dangerouslySetInnerHTML={{ __html: blog.post }} />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Sidebar */}
