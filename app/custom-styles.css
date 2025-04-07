@@ -6,148 +6,96 @@
 
 /* Logo styles */
 #logo {
-  display: block;
-  overflow: visible;
+  @apply block overflow-visible;
 }
 
 #logo svg {
-  display: block;
-  width: 200px;
-  height: 60px;
+  @apply block w-[200px] h-[60px];
 }
 
 /* Remove any "KI no no st o viou" text that might be showing */
 #logo svg text {
-  display: none;
+  @apply hidden;
 }
 
 /* Banner styles */
 .red-banner {
-  background-color: #d9172c;
-  padding: 0px 0 10px 22px;
-  font-weight: bold;
-  font-size: 20px;
-  color: #fff;
-  vertical-align: top;
+  @apply bg-brand-red px-6 py-2 font-bold text-xl text-white align-top rounded-md;
   text-shadow: 0 1px 0 #666;
-  border-radius: 0.3em;
 }
 
 .blue-banner {
+  @apply px-6 py-2 font-bold text-xl text-white align-top rounded-md;
   background: linear-gradient(-90deg, #25475a, #34637f, #25475a);
-  padding: 0px 0 10px 22px;
-  font-weight: bold;
-  font-size: 20px;
-  color: #fff;
-  vertical-align: top;
   text-shadow: 0 1px 0 #666;
-  border-radius: 0.3em;
 }
 
 .blue-banner h3 {
-  color: #fff;
-  font-size: 32px;
-  padding: 10px 0;
+  @apply text-white text-3xl py-2 text-center;
   text-shadow: 0 -1px 0 #000;
-  text-align: center;
 }
 
 .blue-banner h3 span.highlight {
-  color: #abe1fa;
+  @apply text-brand-highlight;
 }
 
 /* Coupon styles */
 .single-coupon {
-  border: 10px solid #ECECEC;
-  border-bottom: 4px solid #ECECEC;
-  border-radius: 10px;
-  padding: 10px 10px 20px 10px;
+  @apply border-[10px] border-b-4 border-brand-gray rounded-lg p-4 pb-6;
 }
 
 .coupon-title {
-  color: #d9172c;
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  font-size: 17px;
-  font-weight: normal;
+  @apply text-brand-red font-trebuchet text-lg font-normal;
 }
 
 .coupon-title a:hover {
-  text-decoration: underline;
+  @apply underline;
 }
 
 .coupon-expiration {
-  float: right;
-  position: relative;
-  padding: 0px;
-  font-family: "MyriadProRegular", Arial, Helvetica, sans-serif;
-  font-size: 11px;
+  @apply float-right relative p-0 font-myriad text-xs;
 }
 
 .coupon-expiration span {
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  font-weight: bold;
-  font-size: 12px;
+  @apply font-trebuchet font-bold text-sm;
 }
 
 /* Sidebar styles */
 .side-bar-element {
-  border: 10px solid #ECECEC;
-  background-color: #ECECEC;
-  border-radius: 5px;
-  margin-bottom: 20px;
+  @apply border-[10px] bg-brand-gray border-brand-gray rounded-md mb-5;
 }
 
 .side-bar-element p {
-  background-color: white;
-  border-radius: 5px;
-  padding: 10px 15px;
+  @apply bg-white rounded-md p-4;
 }
 
 .side-bar-element ul li {
-  background-color: white;
-  border-radius: 5px;
-  border-bottom: 1px solid #ECECEC;
-  margin-bottom: 1px;
+  @apply bg-white rounded-md border-b border-brand-gray mb-0.5;
 }
 
 .side-bar-element li a {
-  text-decoration: none;
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  font-size: 14px;
-  color: #0B3C57;
-  padding: 10px 15px;
-  display: block;
+  @apply no-underline font-trebuchet text-sm text-brand-blue-dark p-4 block;
 }
 
 .side-bar-element li a:hover {
-  color: white;
+  @apply text-white;
 }
 
 .side-bar-element ul li:hover {
-  background-color: #1a3748;
-  color: white;
+  @apply bg-brand-blue-dark text-white;
 }
 
 /* Email signup styles */
 .email-signup {
-  padding: 15px;
+  @apply p-4 rounded-md mb-5;
   background: linear-gradient(-90deg, #25475a, #34637f, #25475a);
-  border-radius: 0.3em;
-  margin-bottom: 20px;
 }
 
 .email-signup h3 {
-  color: #fff;
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  font-size: 20px;
-  color: #fff;
-  padding: 10px 0;
+  @apply text-white font-trebuchet text-xl py-2 text-center;
   text-shadow: 0 -1px 0 #000;
-  text-align: center;
 }
 
 .email-signup p {
-  font-family: 'MyriadProRegular';
-  font-size: 14px;
-  color: #fff;
+  @apply font-myriad text-sm text-white;
 } 
