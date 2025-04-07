@@ -249,9 +249,9 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
   return (
     <div className="flex flex-col md:flex-row gap-8">
       {/* Main Content Column */}
-      <div className="w-full md:w-2/3 space-y-8">
+      <div className="w-full md:w-2/3">
         {/* Store Info Card */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">{store.name} Promo Codes & Discounts</h1>
@@ -287,67 +287,47 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
         </div>
 
         {/* Promo Codes Section */}
-        <div>
-          <div className="bg-brand-red text-white py-3 px-4 rounded-t-lg">
-            <h2 className="text-xl font-semibold">Current Codes</h2>
-          </div>
-          <div className="bg-white rounded-b-lg shadow-sm divide-y divide-gray-200">
-            {store.promoCodes.map((code) => (
-              <div key={code.id} className="p-4">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-brand-red font-trebuchet text-lg">
-                      <TrackablePromoLink
-                        href={code.link}
-                        promoCodeId={code.id}
-                        storeId={code.storeId}
-                        className="text-brand-red hover:underline"
-                      >
-                        {code.title}
-                      </TrackablePromoLink>
-                    </p>
+        <div className="space-y-6">
+          {store.promoCodes.map((code) => (
+            <div key={code.id} className="bg-white p-6 rounded-lg shadow">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900">{code.title}</h2>
+                  {code.description && (
                     <p className="mt-2 text-gray-600">{code.description}</p>
-                    <p className="mt-2 font-medium">
-                      <span>Use code: </span>
-                      <TrackablePromoLink
-                        href={code.link}
-                        promoCodeId={code.id}
-                        storeId={code.storeId}
-                        className="text-blue-600 hover:underline"
-                      >
-                        {code.code}
-                      </TrackablePromoLink>
-                    </p>
-                    {code.expires && (
-                      <p className="mt-2 text-sm text-gray-500">
-                        Expires: {new Date(code.expires).toLocaleDateString()}
-                      </p>
-                    )}
-                  </div>
+                  )}
+                  {code.expires && (
+                    <div className="mt-2 text-sm text-gray-500">
+                      Expires: {new Date(code.expires).toLocaleDateString()}
+                    </div>
+                  )}
                 </div>
+                <TrackablePromoLink
+                  href={code.link}
+                  promoCodeId={code.id}
+                  storeId={code.storeId}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Get Code
+                </TrackablePromoLink>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
 
         {/* Blog Section */}
-        {store.blogs.length > 0 && (
-          <div>
-            <div className="bg-red-600 text-white py-3 px-4 rounded-t-lg">
-              <h2 className="text-xl font-semibold">
-                Learn more about how to save the most at {store.name}
-              </h2>
-            </div>
-            <div className="bg-white rounded-b-lg shadow divide-y divide-gray-200">
+        {store.blogs && store.blogs.length > 0 && (
+          <div className="mt-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Latest News</h2>
+            <div className="space-y-6">
               {store.blogs.map((blog) => (
-                <div key={blog.id} className="p-4">
-                  <span className="text-sm text-gray-500">
+                <div key={blog.id} className="bg-white p-6 rounded-lg shadow">
+                  <div className="text-sm text-gray-500 mb-2">
                     {new Date(blog.publishDate).toLocaleDateString()}
-                  </span>
-                  <div 
-                    className="mt-2 text-base font-medium text-gray-900"
-                    dangerouslySetInnerHTML={{ __html: blog.post || '' }}
-                  />
+                  </div>
+                  {blog.post && (
+                    <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: blog.post }} />
+                  )}
                 </div>
               ))}
             </div>
@@ -356,63 +336,14 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
       </div>
 
       {/* Sidebar Column */}
-      <div className="w-full md:w-1/3 space-y-6">
-        {/* Store Stats */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Store Statistics</h3>
-          <table className="w-full">
-            <tbody>
-              <tr className="border-b border-gray-200">
-                <td className="py-2 text-gray-600">Total Promo Codes</td>
-                <td className="py-2 font-medium">{store.promoCodes.length}</td>
-              </tr>
-              <tr className="border-b border-gray-200">
-                <td className="py-2 text-gray-600">Free Shipping Offers</td>
-                <td className="py-2 font-medium">{freeShippingCount}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        {/* Newsletter Signup */}
+      <div className="w-full md:w-1/3 space-y-8">
+        <Suspense fallback={<LoadingSpinner />}>
+          <TopStores stores={topStores} />
+        </Suspense>
         <NewsletterSignup />
-
-        {/* Top Stores */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Stores</h3>
-          <ul className="space-y-2">
-            {topStores.map((store) => (
-              <li key={store.id}>
-                <Link 
-                  href={`/stores/${store.slug}`}
-                  className="text-blue-600 hover:underline"
-                >
-                  {store.name}
-                </Link>
-                <span className="text-sm text-gray-500 ml-2">
-                  ({store.clickStats?.total || 0} clicks)
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Categories */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Categories</h3>
-          <ul className="space-y-1">
-            {categories.map((category) => (
-              <li key={category.id} className="bg-white rounded">
-                <Link
-                  href={`/categories/${category.slug}`}
-                  className="block px-3 py-2 text-blue-600 hover:underline font-trebuchet"
-                >
-                  {category.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Suspense fallback={<LoadingSpinner />}>
+          <Categories categories={categories} />
+        </Suspense>
       </div>
     </div>
   );
