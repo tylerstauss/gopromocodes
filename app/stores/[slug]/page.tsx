@@ -305,6 +305,15 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
                       >
                         {code.title}
                       </TrackablePromoLink>
+                      {session?.user?.isAdmin && (
+                        <Link
+                          href={`/admin/promocodes/${code.id}`}
+                          target="_blank"
+                          className="ml-2 text-sm text-blue-600 hover:text-blue-800"
+                        >
+                          Edit
+                        </Link>
+                      )}
                     </p>
                     <p className="mt-2 text-gray-600">{code.description}</p>
                     <p className="mt-2 font-medium">
@@ -420,7 +429,7 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
 
 // Server component
 export default async function StorePage({ params }: Props) {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   console.log('Session in StorePage:', session);
   console.log('Database URL:', process.env.DATABASE_URL);
   console.log('Production Database URL:', process.env.PROD_DATABASE_URL);

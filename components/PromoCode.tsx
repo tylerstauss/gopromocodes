@@ -15,9 +15,10 @@ interface PromoCodeProps {
     slug: string;
   };
   link: string;
+  isAdmin?: boolean;
 }
 
-const PromoCode = ({ id, title, code, description, expires, store, link }: PromoCodeProps) => {
+const PromoCode = ({ id, title, code, description, expires, store, link, isAdmin }: PromoCodeProps) => {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = () => {
@@ -57,6 +58,15 @@ const PromoCode = ({ id, title, code, description, expires, store, link }: Promo
             {store.name}
           </Link>
         </span>: {title}
+        {isAdmin && (
+          <Link
+            href={`/admin/promocodes/${id}`}
+            target="_blank"
+            className="ml-2 text-sm text-blue-600 hover:text-blue-800"
+          >
+            Edit
+          </Link>
+        )}
       </p>
       
       <div className="coupon-expiration">
