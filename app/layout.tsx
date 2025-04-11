@@ -12,6 +12,9 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'GoPromoCodes - Your Source for Savings',
   description: 'Find the latest promo codes, coupons, and deals from your favorite stores.',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default async function RootLayout({
