@@ -451,9 +451,13 @@ async function migratePromoCodes() {
     const tableName = 'promo_codes';
     addMigrationLog(`Starting promo codes migration...`);
 
-    const promoCodes = await sourceDb.$queryRawUnsafe(`SELECT * FROM "${tableName}"`);
+    // Filter out expired promo codes in the initial query
+    const promoCodes = await sourceDb.$queryRawUnsafe(`
+      SELECT * FROM "${tableName}"
+      WHERE expires IS NULL OR expires >= CURRENT_DATE
+    `);
     const count = Array.isArray(promoCodes) ? promoCodes.length : 0;
-    addMigrationLog(`Found ${count} promo codes to migrate`);
+    addMigrationLog(`Found ${count} non-expired promo codes to migrate`);
     
     let successCount = 0;
     let skippedCount = 0;
@@ -500,7 +504,7 @@ async function migratePromoCodes() {
         skippedCount++;
       }
     }
-    addMigrationLog(`Successfully migrated ${successCount}/${count} promo codes (${skippedCount} skipped)`);
+    addMigrationLog(`Successfully migrated ${successCount}/${count} non-expired promo codes (${skippedCount} skipped)`);
   } catch (error: any) {
     addMigrationLog(`Error in migratePromoCodes: ${error.message}`);
     throw error;
