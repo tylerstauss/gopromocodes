@@ -10,7 +10,7 @@ interface ProvidersProps {
 
 export default function Providers({ children, session }: ProvidersProps) {
   return (
-    <SessionProvider refetchInterval={0} session={session}>
+    <SessionProvider session={session}>
       {children}
     </SessionProvider>
   );

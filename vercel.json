@@ -1,38 +1,6 @@
 {
   "version": 2,
   "framework": "nextjs",
-  "redirects": [
-    {
-      "source": "/stores/:slug",
-      "destination": "/stores/:slug",
-      "permanent": true
-    },
-    {
-      "source": "/categories/:slug",
-      "destination": "/categories/:slug",
-      "permanent": true
-    },
-    {
-      "source": "/promocodes/:id",
-      "destination": "/promocodes/:id",
-      "permanent": true
-    },
-    {
-      "source": "/search",
-      "destination": "/search",
-      "permanent": true
-    },
-    {
-      "source": "/newest",
-      "destination": "/newest",
-      "permanent": true
-    },
-    {
-      "source": "/admin/:path*",
-      "destination": "/admin/:path*",
-      "permanent": true
-    }
-  ],
   "rewrites": [
     {
       "source": "/stores/:slug",
