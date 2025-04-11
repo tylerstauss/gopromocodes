@@ -14,5 +14,12 @@
       "source": "/promocodes/:id",
       "destination": "/promocodes/[id]"
     }
+  ],
+  "redirects": [
+    {
+      "source": "gopromocodes.com",
+      "destination": "https://www.gopromocodes.com",
+      "permanent": true
+    }
   ]
 }
