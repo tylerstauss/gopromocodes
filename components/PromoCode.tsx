@@ -98,7 +98,7 @@ const PromoCode = ({ id, title, code, description, expires, store, link, isAdmin
         
         <div>
           <a
-            href={link}
+            href={`/api/redirect?id=${id}`}
             target="_blank"
             rel="noopener noreferrer"
             onClick={logClick}

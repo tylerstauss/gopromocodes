@@ -275,14 +275,14 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
             {store.description}
             <br />
             Store located at:{' '}
-            <a 
-              href={store.url} 
-              target="_blank" 
-              rel="nofollow" 
+            <TrackablePromoLink
+              href={store.url}
+              promoCodeId={store.id}
+              storeId={store.id}
               className="text-blue-600 hover:underline"
             >
               {store.url}
-            </a>
+            </TrackablePromoLink>
           </p>
         </div>
 

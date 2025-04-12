@@ -142,7 +142,7 @@ export default async function CategoryPage({ params }: Props) {
                     </div>
                   </div>
                   <a
-                    href={promoCode.link}
+                    href={`/api/redirect?id=${promoCode.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"

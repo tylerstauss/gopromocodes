@@ -48,19 +48,21 @@ const TrackablePromoLink = ({
         throw new Error('Failed to log click');
       }
 
-      // After successful logging, navigate to the destination
+      // After successful logging, navigate to the redirect endpoint
+      const redirectUrl = `/api/redirect?id=${promoCodeId}`;
       if (target === '_blank') {
-        window.open(href, '_blank', 'noopener,noreferrer');
+        window.open(redirectUrl, '_blank', 'noopener,noreferrer');
       } else {
-        router.push(href);
+        router.push(redirectUrl);
       }
     } catch (error) {
       console.error('Error logging click:', error);
-      // If logging fails, still navigate to the destination
+      // If logging fails, still navigate to the redirect endpoint
+      const redirectUrl = `/api/redirect?id=${promoCodeId}`;
       if (target === '_blank') {
-        window.open(href, '_blank', 'noopener,noreferrer');
+        window.open(redirectUrl, '_blank', 'noopener,noreferrer');
       } else {
-        router.push(href);
+        router.push(redirectUrl);
       }
     } finally {
       setIsLogging(false);
@@ -69,7 +71,7 @@ const TrackablePromoLink = ({
 
   return (
     <Link 
-      href={href}
+      href={`/api/redirect?id=${promoCodeId}`}
       className={className}
       target={target}
       rel={rel}
