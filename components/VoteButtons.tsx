@@ -19,6 +19,15 @@ export default function VoteButtons({ promoCodeId, initialUp = 0, initialDown = 
     if (stored === '1' || stored === '-1') {
       setUserVote(parseInt(stored, 10) as 1 | -1);
     }
+
+    // Fetch actual counts from server
+    fetch(`/api/votes?promoCodeId=${promoCodeId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setUpCount(data.up);
+        setDownCount(data.down);
+      })
+      .catch(() => {});
   }, [promoCodeId]);
 
   const handleVote = async (vote: 1 | -1) => {
