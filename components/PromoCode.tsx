@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import VoteButtons from './VoteButtons';
 
 interface PromoCodeProps {
   id: number;
@@ -109,6 +110,8 @@ const PromoCode = ({ id, title, code, description, expires, store, link, isAdmin
         </div>
       </div>
       
+      <VoteButtons promoCodeId={id} />
+
       <div className="mt-4 text-right">
         <Link
           href={`/stores/${store.slug}`}

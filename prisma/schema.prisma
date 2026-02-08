@@ -86,6 +86,9 @@ model PromoCode {
   categories   CategoryPromoCode[]
   store        Store               @relation(fields: [storeId], references: [id])
   clicks       ClickLog[]
+  votes        PromoCodeVote[]
+
+  @@unique([storeId, code, title])
 }
 
 model CategoryPromoCode {
@@ -165,4 +168,16 @@ model ClickLog {
   @@index([storeId])
   @@index([promoCodeId])
   @@index([date])
+}
+
+model PromoCodeVote {
+  id          Int       @id @default(autoincrement())
+  promoCodeId Int
+  vote        Int       // 1 = thumbs up, -1 = thumbs down
+  ipAddress   String
+  createdAt   DateTime  @default(now())
+  promoCode   PromoCode @relation(fields: [promoCodeId], references: [id])
+
+  @@unique([promoCodeId, ipAddress])
+  @@index([promoCodeId])
 }

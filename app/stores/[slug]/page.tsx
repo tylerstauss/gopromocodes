@@ -14,6 +14,7 @@ import LoadingSpinner from '@/components/LoadingSpinner'
 import ErrorFallback from '@/components/ErrorFallback'
 import { Suspense } from 'react'
 import StorePageWrapper from '@/components/StorePageWrapper'
+import VoteButtons from '@/components/VoteButtons'
 
 type Props = {
   params: { slug: string }
@@ -332,6 +333,7 @@ async function StoreContent({ store, topStores, categories, session }: StoreCont
                         Expires: {new Date(code.expires).toLocaleDateString()}
                       </p>
                     )}
+                    <VoteButtons promoCodeId={code.id} />
                   </div>
                 </div>
               </div>

@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { CategoryWithRelations } from '@/types/prisma'
 import PageLayout from '@/components/PageLayout'
+import VoteButtons from '@/components/VoteButtons'
 
 type Props = {
   params: { slug: string }
@@ -150,6 +151,7 @@ export default async function CategoryPage({ params }: Props) {
                     Get Code
                   </a>
                 </div>
+                <VoteButtons promoCodeId={promoCode.id} />
               </div>
             ))
           }
