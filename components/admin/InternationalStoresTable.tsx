@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import FetchHoneyBulk from './FetchHoneyBulk'
 
 interface Store {
   id: number
@@ -173,8 +174,11 @@ export default function InternationalStoresTable({
   withoutCodes: Store[]
   withCodes: Store[]
 }) {
+  const storesWithDescriptions = withoutCodes.filter(s => s.description)
+
   return (
     <>
+      <FetchHoneyBulk stores={storesWithDescriptions} />
       <StoresTable stores={withoutCodes} title="0 Promo Codes" />
       {withCodes.length > 0 && (
         <StoresTable stores={withCodes} title="Has Promo Codes" />
