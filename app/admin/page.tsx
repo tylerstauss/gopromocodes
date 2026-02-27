@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { authOptions } from '@/lib/auth'
 import dynamic from 'next/dynamic'
+import { DuplicateRemovalTool } from '@/components/admin/DuplicateRemovalTool'
 
 const DataMigration = dynamic(() => import('@/components/admin/DataMigration'), {
   ssr: false,
@@ -20,6 +21,11 @@ const adminLinks = [
     title: 'Stores',
     description: 'Manage stores and their details',
     href: '/admin/stores',
+  },
+  {
+    title: 'International Stores',
+    description: 'Review and delete non-.com domain stores',
+    href: '/admin/stores/international',
   },
   {
     title: 'Categories',
@@ -79,6 +85,11 @@ export default async function AdminDashboard() {
       <div className="mt-8">
         <h2 className="text-2xl font-bold mb-4">Database Management</h2>
         <DataMigration />
+      </div>
+
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">Duplicate Removal</h2>
+        <DuplicateRemovalTool />
       </div>
     </div>
   )

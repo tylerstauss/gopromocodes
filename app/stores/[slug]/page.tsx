@@ -2,7 +2,7 @@ export const revalidate = 1800 // 30 minutes
 
 import { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import TrackablePromoLink from '@/components/TrackablePromoLink'
@@ -146,7 +146,7 @@ async function getStore(slug: string) {
     })
 
     if (!store) {
-      notFound()
+      permanentRedirect('/')
     }
 
     // Get promo codes with click stats
