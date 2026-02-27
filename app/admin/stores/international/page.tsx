@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/lib/auth'
 import InternationalStoresTable from '@/components/admin/InternationalStoresTable'
+import DeleteAllEmptyStores from '@/components/admin/DeleteAllEmptyStores'
 
 export const metadata: Metadata = {
   title: 'International Stores | Admin | GoPromoCodes',
@@ -34,7 +35,16 @@ export default async function InternationalStoresPage({
   const page = Math.max(1, parseInt(searchParams.page || '1', 10))
   const skip = (page - 1) * PAGE_SIZE
 
-  const [stores, totalCount] = await Promise.all([
+  const cleanupWhere = {
+    OR: [
+      { domain: { not: { endsWith: '.com' } } },
+      { domain: null },
+    ],
+    description: null,
+    promoCodes: { none: {} },
+  }
+
+  const [stores, totalCount, cleanupCount] = await Promise.all([
     prisma.store.findMany({
       where,
       include: { _count: { select: { promoCodes: true } } },
@@ -46,6 +56,7 @@ export default async function InternationalStoresPage({
       take: PAGE_SIZE,
     }),
     prisma.store.count({ where }),
+    prisma.store.count({ where: cleanupWhere }),
   ])
 
   const totalPages = Math.ceil(totalCount / PAGE_SIZE)
@@ -73,7 +84,8 @@ export default async function InternationalStoresPage({
             {' '}Deleting a store permanently redirects its URL to the homepage.
           </p>
         </div>
-        <div className="mt-4 sm:mt-0">
+        <div className="mt-4 sm:mt-0 flex items-center gap-3">
+          <DeleteAllEmptyStores count={cleanupCount} />
           <Link
             href="/admin/stores"
             className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
