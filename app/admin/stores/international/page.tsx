@@ -11,28 +11,44 @@ export const metadata: Metadata = {
   description: 'Review and clean up non-.com domain stores.',
 }
 
-export default async function InternationalStoresPage() {
+const PAGE_SIZE = 100
+
+const where = {
+  OR: [
+    { domain: { not: { endsWith: '.com' } } },
+    { domain: null },
+  ],
+} as const
+
+export default async function InternationalStoresPage({
+  searchParams,
+}: {
+  searchParams: { page?: string }
+}) {
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.isAdmin) {
     redirect('/')
   }
 
-  const stores = await prisma.store.findMany({
-    where: {
-      OR: [
-        { domain: { not: { endsWith: '.com' } } },
-        { domain: null },
+  const page = Math.max(1, parseInt(searchParams.page || '1', 10))
+  const skip = (page - 1) * PAGE_SIZE
+
+  const [stores, totalCount] = await Promise.all([
+    prisma.store.findMany({
+      where,
+      include: { _count: { select: { promoCodes: true } } },
+      orderBy: [
+        { promoCodes: { _count: 'asc' } },
+        { name: 'asc' },
       ],
-    },
-    include: {
-      _count: { select: { promoCodes: true } },
-    },
-    orderBy: [
-      { promoCodes: { _count: 'asc' } },
-      { name: 'asc' },
-    ],
-  })
+      skip,
+      take: PAGE_SIZE,
+    }),
+    prisma.store.count({ where }),
+  ])
+
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE)
 
   const mapped = stores.map(s => ({
     id: s.id,
@@ -52,8 +68,8 @@ export default async function InternationalStoresPage() {
         <div className="sm:flex-auto">
           <h1 className="text-2xl font-semibold text-gray-900">International / Non-.com Stores</h1>
           <p className="mt-2 text-sm text-gray-700">
-            {stores.length} stores with non-.com or missing domains.{' '}
-            <span className="text-red-600 font-medium">{withoutCodes.length} have 0 promo codes.</span>
+            {totalCount} total stores with non-.com or missing domains.
+            {' '}Showing {skip + 1}–{Math.min(skip + stores.length, totalCount)} of {totalCount}.
             {' '}Deleting a store permanently redirects its URL to the homepage.
           </p>
         </div>
@@ -68,6 +84,32 @@ export default async function InternationalStoresPage() {
       </div>
 
       <InternationalStoresTable withoutCodes={withoutCodes} withCodes={withCodes} />
+
+      {totalPages > 1 && (
+        <div className="mt-8 flex items-center justify-between">
+          <p className="text-sm text-gray-700">
+            Page {page} of {totalPages}
+          </p>
+          <div className="flex gap-2">
+            {page > 1 && (
+              <Link
+                href={`?page=${page - 1}`}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              >
+                ← Previous
+              </Link>
+            )}
+            {page < totalPages && (
+              <Link
+                href={`?page=${page + 1}`}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              >
+                Next →
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
