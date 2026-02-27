@@ -18,7 +18,7 @@ const where = {
     { domain: { not: { endsWith: '.com' } } },
     { domain: null },
   ],
-} as const
+}
 
 export default async function InternationalStoresPage({
   searchParams,
