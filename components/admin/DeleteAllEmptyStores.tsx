@@ -17,11 +17,16 @@ export default function DeleteAllEmptyStores({ count }: { count: number }) {
         body: JSON.stringify({ dryRun: false }),
       })
       const data = await res.json()
+      if (!res.ok) {
+        alert(`Error: ${data.error}`)
+        setStep('idle')
+        return
+      }
       setDeleted(data.deleted)
       setStep('done')
       router.refresh()
-    } catch {
-      alert('Deletion failed. Please try again.')
+    } catch (error) {
+      alert(`Deletion failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
       setStep('idle')
     }
   }
