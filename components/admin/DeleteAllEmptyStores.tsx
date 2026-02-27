@@ -16,7 +16,15 @@ export default function DeleteAllEmptyStores({ count }: { count: number }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ dryRun: false }),
       })
-      const data = await res.json()
+      const text = await res.text()
+      let data: any
+      try {
+        data = JSON.parse(text)
+      } catch {
+        alert(`Server error (status ${res.status}). Check Vercel logs for details.`)
+        setStep('idle')
+        return
+      }
       if (!res.ok) {
         alert(`Error: ${data.error}`)
         setStep('idle')

@@ -3,15 +3,7 @@ import { getServerSession } from 'next-auth'
 import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/lib/auth'
 
-const CHUNK_SIZE = 200
-
-function chunk<T>(arr: T[], size: number): T[][] {
-  const chunks: T[][] = []
-  for (let i = 0; i < arr.length; i += size) {
-    chunks.push(arr.slice(i, i + size))
-  }
-  return chunks
-}
+export const maxDuration = 60
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions)
@@ -38,21 +30,22 @@ export async function POST(request: Request) {
     })
 
     if (dryRun) {
-      return NextResponse.json({ count: stores.length, stores })
+      return NextResponse.json({ count: stores.length })
     }
 
-    const storeIds = stores.map(s => s.id)
-    const chunks = chunk(storeIds, CHUNK_SIZE)
+    const ids = stores.map(s => s.id)
 
-    for (const ids of chunks) {
-      await prisma.categoryPromoCode.deleteMany({ where: { storeId: { in: ids } } })
-      await prisma.clickLog.deleteMany({ where: { storeId: { in: ids } } })
-      await prisma.storeBlog.deleteMany({ where: { storeId: { in: ids } } })
-      await prisma.blog.updateMany({ where: { storeId: { in: ids } }, data: { storeId: null } })
-      await prisma.store.deleteMany({ where: { id: { in: ids } } })
+    if (ids.length === 0) {
+      return NextResponse.json({ deleted: 0 })
     }
 
-    return NextResponse.json({ deleted: stores.length })
+    await prisma.categoryPromoCode.deleteMany({ where: { storeId: { in: ids } } })
+    await prisma.clickLog.deleteMany({ where: { storeId: { in: ids } } })
+    await prisma.storeBlog.deleteMany({ where: { storeId: { in: ids } } })
+    await prisma.blog.updateMany({ where: { storeId: { in: ids } }, data: { storeId: null } })
+    await prisma.store.deleteMany({ where: { id: { in: ids } } })
+
+    return NextResponse.json({ deleted: ids.length })
   } catch (error) {
     console.error('Cleanup failed:', error)
     return NextResponse.json(
