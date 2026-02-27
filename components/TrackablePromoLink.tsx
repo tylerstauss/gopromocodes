@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { event as gaEvent } from '@/lib/gtag';
 
 interface TrackablePromoLinkProps {
   href: string;
@@ -31,6 +32,8 @@ const TrackablePromoLink = ({
     
     if (isLogging) return;
     setIsLogging(true);
+
+    gaEvent('promo_click', { promo_code_id: promoCodeId, store_id: storeId })
 
     try {
       const response = await fetch('/api/clicks', {

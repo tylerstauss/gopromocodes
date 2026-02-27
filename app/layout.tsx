@@ -6,7 +6,9 @@ import Script from 'next/script';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Providers from '../components/Providers';
+import GoogleAnalytics from '../components/GoogleAnalytics';
 import { authOptions } from '@/lib/auth';
+import { GA_ID } from '@/lib/gtag';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,7 +31,7 @@ export default async function RootLayout({
     <html lang="en">
       <head>
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-PZG0MNKW36"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -37,11 +39,12 @@ export default async function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-PZG0MNKW36');
+            gtag('config', '${GA_ID}');
           `}
         </Script>
       </head>
       <body className={`${inter.className} min-h-screen bg-gray-50`}>
+        <GoogleAnalytics />
         <Providers session={session}>
           <div className="min-h-screen flex flex-col">
             <Header />
