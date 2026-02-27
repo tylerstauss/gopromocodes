@@ -117,33 +117,36 @@ export async function POST(request: Request) {
             }
           })
 
-          if (!existingCode) {
-            // Create the promo code
-            const newCode = await prisma.promoCode.create({
-              data: {
-                storeId: store.id,
-                title: title.replace(/\n/g, " ").replace(/\r/g, " "),
-                code,
-                description: description.replace(/\n/g, " ").replace(/\r/g, " "),
-                link: linkDestination,
-                starts: startDate,
-                expires: endDate,
-                approved: true,
-                userSubmit: false,
-                homepage: false,
-                freeShipping: description.toLowerCase().includes('free shipping')
-              }
-            })
-
-            // Update the order ID
-            await prisma.promoCode.update({
-              where: { id: newCode.id },
-              data: { orderId: newCode.id }
-            })
-
-            results.push(newCode)
-            createdCount++
+          if (existingCode) {
+            console.log(`Skipping duplicate promo code for store ${store.name}: ${code} - ${title}`)
+            continue
           }
+
+          // Create the promo code
+          const newCode = await prisma.promoCode.create({
+            data: {
+              storeId: store.id,
+              title: title.replace(/\n/g, " ").replace(/\r/g, " "),
+              code,
+              description: description.replace(/\n/g, " ").replace(/\r/g, " "),
+              link: linkDestination,
+              starts: startDate,
+              expires: endDate,
+              approved: true,
+              userSubmit: false,
+              homepage: false,
+              freeShipping: description.toLowerCase().includes('free shipping')
+            }
+          })
+
+          // Update the order ID
+          await prisma.promoCode.update({
+            where: { id: newCode.id },
+            data: { orderId: newCode.id }
+          })
+
+          results.push(newCode)
+          createdCount++
         }
       } catch (error) {
         console.error('Error processing coupon:', error)

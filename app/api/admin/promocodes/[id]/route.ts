@@ -17,7 +17,38 @@ export async function DELETE(
 
     const promoCodeId = parseInt(params.id);
 
-    // Delete the promo code
+    // First, verify the promo code exists
+    const promoCode = await prisma.promoCode.findUnique({
+      where: { id: promoCodeId },
+      include: {
+        categories: true,
+        clicks: true
+      }
+    });
+
+    if (!promoCode) {
+      return new NextResponse('Promo code not found', { status: 404 });
+    }
+
+    // Delete all related CategoryPromoCode records
+    if (promoCode.categories.length > 0) {
+      await prisma.categoryPromoCode.deleteMany({
+        where: {
+          promoCodeId: promoCodeId
+        }
+      });
+    }
+
+    // Delete all related ClickLog records
+    if (promoCode.clicks.length > 0) {
+      await prisma.clickLog.deleteMany({
+        where: {
+          promoCodeId: promoCodeId
+        }
+      });
+    }
+
+    // Finally, delete the promo code
     await prisma.promoCode.delete({
       where: {
         id: promoCodeId,
@@ -47,6 +78,28 @@ export async function PUT(
   try {
     const data = await request.json();
     const id = parseInt(params.id);
+
+    // Check for existing promo code with the same storeId, code, and title
+    const existingPromoCode = await prisma.promoCode.findFirst({
+      where: {
+        storeId: data.storeId,
+        code: data.code,
+        title: data.title,
+        NOT: {
+          id: id // Exclude the current promo code
+        }
+      }
+    });
+
+    if (existingPromoCode) {
+      return new NextResponse(
+        JSON.stringify({ 
+          error: 'A promo code with this store, code, and title already exists',
+          existingPromoCode
+        }),
+        { status: 400 }
+      );
+    }
 
     const updatedPromoCode = await prisma.promoCode.update({
       where: { id },
