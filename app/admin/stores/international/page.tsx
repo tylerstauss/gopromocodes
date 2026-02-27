@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/lib/auth'
-import DeleteInternationalStore from '@/components/admin/DeleteInternationalStore'
+import InternationalStoresTable from '@/components/admin/InternationalStoresTable'
 
 export const metadata: Metadata = {
   title: 'International Stores | Admin | GoPromoCodes',
@@ -26,9 +26,7 @@ export default async function InternationalStoresPage() {
       ],
     },
     include: {
-      _count: {
-        select: { promoCodes: true },
-      },
+      _count: { select: { promoCodes: true } },
     },
     orderBy: [
       { promoCodes: { _count: 'asc' } },
@@ -36,8 +34,17 @@ export default async function InternationalStoresPage() {
     ],
   })
 
-  const withCodes = stores.filter(s => s._count.promoCodes > 0)
-  const withoutCodes = stores.filter(s => s._count.promoCodes === 0)
+  const mapped = stores.map(s => ({
+    id: s.id,
+    name: s.name,
+    slug: s.slug,
+    domain: s.domain,
+    description: s.description,
+    promoCodeCount: s._count.promoCodes,
+  }))
+
+  const withoutCodes = mapped.filter(s => s.promoCodeCount === 0)
+  const withCodes = mapped.filter(s => s.promoCodeCount > 0)
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -60,104 +67,7 @@ export default async function InternationalStoresPage() {
         </div>
       </div>
 
-      {/* Stores with 0 codes — primary cleanup targets */}
-      <section className="mb-12">
-        <h2 className="text-lg font-semibold text-gray-900 mb-3">
-          0 Promo Codes ({withoutCodes.length})
-        </h2>
-        <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
-          <table className="min-w-full divide-y divide-gray-300">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Store</th>
-                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Domain</th>
-                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Description</th>
-                <th className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Codes</th>
-                <th className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900 pr-6">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {withoutCodes.map((store) => (
-                <tr key={store.id} className="hover:bg-gray-50">
-                  <td className="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                    <Link href={`/stores/${store.slug}`} target="_blank" className="text-blue-600 hover:underline">
-                      {store.name}
-                    </Link>
-                  </td>
-                  <td className="px-3 py-4 text-sm text-gray-500">
-                    {store.domain || <span className="text-red-400 italic">none</span>}
-                  </td>
-                  <td className="px-3 py-4 text-sm text-gray-500 max-w-xs">
-                    {store.description
-                      ? <span className="line-clamp-2">{store.description}</span>
-                      : <span className="text-red-400 italic">no description</span>
-                    }
-                  </td>
-                  <td className="px-3 py-4 text-sm text-center text-gray-500">0</td>
-                  <td className="px-3 py-4 text-right pr-6">
-                    <DeleteInternationalStore storeId={store.id} storeName={store.name} />
-                  </td>
-                </tr>
-              ))}
-              {withoutCodes.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="py-8 text-center text-sm text-gray-500">
-                    No stores with 0 promo codes.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* Stores with codes — review before deleting */}
-      {withCodes.length > 0 && (
-        <section>
-          <h2 className="text-lg font-semibold text-gray-900 mb-3">
-            Has Promo Codes ({withCodes.length})
-          </h2>
-          <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
-            <table className="min-w-full divide-y divide-gray-300">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Store</th>
-                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Domain</th>
-                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Description</th>
-                  <th className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Codes</th>
-                  <th className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900 pr-6">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
-                {withCodes.map((store) => (
-                  <tr key={store.id} className="hover:bg-gray-50">
-                    <td className="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                      <Link href={`/stores/${store.slug}`} target="_blank" className="text-blue-600 hover:underline">
-                        {store.name}
-                      </Link>
-                    </td>
-                    <td className="px-3 py-4 text-sm text-gray-500">
-                      {store.domain || <span className="text-red-400 italic">none</span>}
-                    </td>
-                    <td className="px-3 py-4 text-sm text-gray-500 max-w-xs">
-                      {store.description
-                        ? <span className="line-clamp-2">{store.description}</span>
-                        : <span className="text-red-400 italic">no description</span>
-                      }
-                    </td>
-                    <td className="px-3 py-4 text-sm text-center font-medium text-gray-900">
-                      {store._count.promoCodes}
-                    </td>
-                    <td className="px-3 py-4 text-right pr-6">
-                      <DeleteInternationalStore storeId={store.id} storeName={store.name} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      )}
+      <InternationalStoresTable withoutCodes={withoutCodes} withCodes={withCodes} />
     </div>
   )
 }
