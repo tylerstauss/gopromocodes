@@ -1,12 +1,6 @@
 {
   "version": 2,
   "framework": "nextjs",
-  "crons": [
-    {
-      "path": "/api/cron/keep-alive",
-      "schedule": "*/5 * * * *"
-    }
-  ],
   "rewrites": [
     {
       "source": "/stores/:slug",
