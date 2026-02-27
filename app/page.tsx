@@ -1,3 +1,5 @@
+export const revalidate = 900 // 15 minutes
+
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -165,12 +167,21 @@ async function getStats() {
 }
 
 export default async function Home() {
-  const [promoCodes, topStores, categories, stats] = await Promise.all([
-    getPromoCodes(),
-    getTopStores(),
-    getCategories(),
-    getStats()
-  ])
+  let promoCodes: Awaited<ReturnType<typeof getPromoCodes>> = []
+  let topStores: Awaited<ReturnType<typeof getTopStores>> = []
+  let categories: Awaited<ReturnType<typeof getCategories>> = []
+  let stats = { totalStores: 0, totalPromoCodes: 0, totalValidOffers: 0, totalFreeShipping: 0 }
+
+  try {
+    ;[promoCodes, topStores, categories, stats] = await Promise.all([
+      getPromoCodes(),
+      getTopStores(),
+      getCategories(),
+      getStats()
+    ])
+  } catch (error) {
+    console.error('Failed to load home page data:', error)
+  }
 
   return (
     <div className="bg-gray-50">

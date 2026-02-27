@@ -1,3 +1,5 @@
+export const revalidate = 3600 // 1 hour
+
 import { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
 import { notFound, redirect } from 'next/navigation'
