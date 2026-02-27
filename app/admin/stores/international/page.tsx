@@ -40,8 +40,10 @@ export default async function InternationalStoresPage({
       { domain: { not: { endsWith: '.com' } } },
       { domain: null },
     ],
-    description: null,
-    promoCodes: { none: {} },
+    AND: [
+      { OR: [{ description: null }, { description: '' }] },
+      { promoCodes: { none: {} } },
+    ],
   }
 
   const [stores, totalCount, cleanupCount] = await Promise.all([

@@ -19,8 +19,10 @@ export async function POST(request: Request) {
         { domain: { not: { endsWith: '.com' } } },
         { domain: null },
       ],
-      description: null,
-      promoCodes: { none: {} },
+      AND: [
+        { OR: [{ description: null }, { description: '' }] },
+        { promoCodes: { none: {} } },
+      ],
     },
     select: { id: true, name: true, slug: true },
   })
