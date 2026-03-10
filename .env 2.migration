@@ -1,0 +1,8 @@
+# .env.migration
+# Environment variables for the data migration script
+
+# Source database (Heroku)
+HEROKU_DATABASE_URL=postgresql://u70h4u28oddhep:pecb979cf0b924044de61a4caf7b0e10807ad1fd6d52c481987e1945aac291fb0@c6e0dko05cagr1.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/db47gl0bnafae8?schema=public
+
+# Destination database (Local)
+DATABASE_URL=postgresql://tylerstauss@localhost:5432/gopromocodes_dev 

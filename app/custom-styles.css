@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles from original Ruby app */
+
+/* Logo styles */
+#logo {
+  @apply block overflow-visible;
+}
+
+#logo svg {
+  @apply block w-[200px] h-[60px];
+}
+
+/* Remove any "KI no no st o viou" text that might be showing */
+#logo svg text {
+  @apply hidden;
+}
+
+/* Banner styles */
+.red-banner {
+  @apply bg-brand-red px-6 py-2 font-bold text-xl text-white align-top rounded-md;
+  text-shadow: 0 1px 0 #666;
+}
+
+.blue-banner {
+  @apply px-6 py-2 font-bold text-xl text-white align-top rounded-md;
+  background: linear-gradient(-90deg, #25475a, #34637f, #25475a);
+  text-shadow: 0 1px 0 #666;
+}
+
+.blue-banner h3 {
+  @apply text-white text-3xl py-2 text-center;
+  text-shadow: 0 -1px 0 #000;
+}
+
+.blue-banner h3 span.highlight {
+  @apply text-brand-highlight;
+}
+
+/* Coupon styles */
+.single-coupon {
+  @apply border-[10px] border-b-4 border-brand-gray rounded-lg p-4 pb-6;
+}
+
+.coupon-title {
+  @apply text-brand-red font-trebuchet text-lg font-normal;
+}
+
+.coupon-title a:hover {
+  @apply underline;
+}
+
+.coupon-expiration {
+  @apply float-right relative p-0 font-myriad text-xs;
+}
+
+.coupon-expiration span {
+  @apply font-trebuchet font-bold text-sm;
+}
+
+/* Sidebar styles */
+.side-bar-element {
+  @apply border-[10px] bg-brand-gray border-brand-gray rounded-md mb-5;
+}
+
+.side-bar-element p {
+  @apply bg-white rounded-md p-4;
+}
+
+.side-bar-element ul li {
+  @apply bg-white rounded-md border-b border-brand-gray mb-0.5;
+}
+
+.side-bar-element li a {
+  @apply no-underline font-trebuchet text-sm text-brand-blue-dark p-4 block;
+}
+
+.side-bar-element li a:hover {
+  @apply text-white;
+}
+
+.side-bar-element ul li:hover {
+  @apply bg-brand-blue-dark text-white;
+}
+
+/* Email signup styles */
+.email-signup {
+  @apply p-4 rounded-md mb-5;
+  background: linear-gradient(-90deg, #25475a, #34637f, #25475a);
+}
+
+.email-signup h3 {
+  @apply text-white font-trebuchet text-xl py-2 text-center;
+  text-shadow: 0 -1px 0 #000;
+}
+
+.email-signup p {
+  @apply font-myriad text-sm text-white;
+} 

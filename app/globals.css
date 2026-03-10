@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Logo styles - only keeping what's necessary */
+#logo {
+  display: block;
+  overflow: visible;
+}
+
+#logo svg {
+  display: block;
+  width: 200px;
+  height: 60px;
+}
+
+#logo svg text {
+  display: none;
+}

@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "framework": "nextjs",
+  "rewrites": [
+    {
+      "source": "/stores/:slug",
+      "destination": "/stores/[slug]"
+    },
+    {
+      "source": "/categories/:slug",
+      "destination": "/categories/[slug]"
+    },
+    {
+      "source": "/promocodes/:id",
+      "destination": "/promocodes/[id]"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "gopromocodes.com",
+      "destination": "https://www.gopromocodes.com",
+      "permanent": true
+    }
+  ]
+}
