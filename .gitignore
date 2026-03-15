@@ -64,6 +64,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# compiled scripts output
+/dist/
+
 # IDE
 .idea/
 .vscode/

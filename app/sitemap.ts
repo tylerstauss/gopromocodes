@@ -32,7 +32,7 @@ export default async function sitemap() {
 
   // Generate store routes
   const storeRoutes = stores.map(store => ({
-    url: `${baseUrl}/stores/${store.slug}`,
+    url: `${baseUrl}/stores/${encodeURIComponent(store.slug)}`,
     lastModified: store.updatedAt,
     changeFrequency: 'daily' as const,
     priority: 0.8,
@@ -40,7 +40,7 @@ export default async function sitemap() {
 
   // Generate category routes
   const categoryRoutes = categories.map(category => ({
-    url: `${baseUrl}/categories/${category.slug}`,
+    url: `${baseUrl}/categories/${encodeURIComponent(category.slug)}`,
     lastModified: category.updatedAt,
     changeFrequency: 'weekly' as const,
     priority: 0.6,

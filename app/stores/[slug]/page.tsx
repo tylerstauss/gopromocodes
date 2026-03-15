@@ -184,6 +184,12 @@ async function getStore(slug: string) {
     })
 
     if (!store) {
+      const storeByOldSlug = await prisma.store.findFirst({
+        where: { oldSlug: slug }
+      })
+      if (storeByOldSlug) {
+        permanentRedirect(`/stores/${storeByOldSlug.slug}`)
+      }
       permanentRedirect('/')
     }
 

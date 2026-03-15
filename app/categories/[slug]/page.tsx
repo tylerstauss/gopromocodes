@@ -2,7 +2,7 @@ export const revalidate = 3600 // 1 hour
 
 import { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import Link from 'next/link'
 import { CategoryWithRelations } from '@/types/prisma'
 import PageLayout from '@/components/PageLayout'
@@ -18,6 +18,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   })
 
   if (!category) {
+    const categoryByOldSlug = await prisma.category.findFirst({
+      where: { oldSlug: params.slug }
+    })
+    if (categoryByOldSlug) {
+      permanentRedirect(`/categories/${categoryByOldSlug.slug}`)
+    }
     return {
       title: 'Category Not Found - GoPromoCodes',
       description: 'The requested category could not be found.'
@@ -68,6 +74,12 @@ async function getCategory(slug: string): Promise<CategoryWithRelations> {
   })
 
   if (!category) {
+    const categoryByOldSlug = await prisma.category.findFirst({
+      where: { oldSlug: slug }
+    })
+    if (categoryByOldSlug) {
+      permanentRedirect(`/categories/${categoryByOldSlug.slug}`)
+    }
     notFound()
   }
 
